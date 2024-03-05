@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="wrap">
-    <div class="cube">
+    <div class="cube" id="cube">
         <div class="side cube-top">
             <h2>Top</h2>
             <p>If you smile upon the wrold, it will smile upon you.</p>
@@ -32,28 +32,41 @@
             <p>If you smile upon the wrold, it will smile upon you.</p>
         </div>
         <div class="side cube-front">
-            <table class="table-auto overflow-scroll w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <tbody>
-                <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 hover:shadow-md">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">.circleci</th>
-                    <td>Save (circleci) cache at the end of a job (#29141)</td>
-                    <td>2 weeks ago</td>
-                </tr>
-                <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 hover:shadow-md">
+            <ul class="table-auto overflow-scroll w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <li id="list" class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 hover:shadow-md">
+                    <a scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">.circleci
+                    <p>Save (circleci) cache at the end of a job (#29141)</p>
+                    <p>2 weeks ago</p></a>
+                    <ul id="sublist">
+                        <li>TROUBLESHOOT.md
+                            Fixed minor typos (#28489)
+                            2 months ago
+                        </li>
+                        <li>config.yml
+                            Fix the check of models supporting FA/SDPA not run (#28202)
+                            3 months ago</li>
+                        <li>create_circleci_config.py
+                            Add UDOP (#22940)
+                            13 hours ago
+                        </li>
+                    </ul>
+
+                </li>
+                <li class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 hover:shadow-md">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">.github</th>
                     <td>Save (circleci) cache at the end of a job (#29141)</td>
                     <td>2 weeks ago</td>
-                </tr>
-                <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 hover:shadow-md">
+                </li>
+                <li class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 hover:shadow-md">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">docker</th>
                     <td>Save (circleci) cache at the end of a job (#29141)</td>
                     <td>2 weeks ago</td>
-                </tr>
-                <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 hover:shadow-md">
+                </li>
+                <li class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 hover:shadow-md">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">docs</th>
                     <td>Save (circleci) cache at the end of a job (#29141)</td>
                     <td>2 weeks ago</td>
-                </tr>
+                </li>
 
 <!--                <div>  examples</div>-->
 <!--                <div>  model_cards</div>-->
@@ -72,8 +85,7 @@
 <!--                <div>  ISSUES.md</div>-->
 <!--                <div>  LICENSE</div>-->
 <!--                <div>  Makefile</div>-->
-                </tbody>
-            </table>
+            </ul>
 <!--            <div>-->
 <!--                <p>  README.md</p>-->
 <!--                <p>  README_de.md</p>-->
@@ -100,3 +112,5 @@
     </div>
 </body>
 </html>
+
+<script type="module" src="./cube.js"></script>
