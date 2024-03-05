@@ -11,6 +11,12 @@ body {
   justify-content: center;
   align-items: center;
 }
+.sublist{
+  display:none;
+}
+.list:hover .sublist{
+  display:inline-block;
+}
 .cube {
   width: 400px;
   height: 400px;
@@ -54,6 +60,11 @@ body {
     transform: rotateY(0deg) rotateX(45deg) rotateZ(45deg);
   }
 }
-.cube:hover {
-  animation-play-state: paused;
+@keyframes rotate_front{
+    0%{
+      transform: rotateY(0deg);
+    }
+    100%{
+      transform: rotateY(30deg);
+    }
 }
