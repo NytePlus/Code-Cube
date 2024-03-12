@@ -1,0 +1,53 @@
+.modal {
+    display: none; /* 默认隐藏 */
+    position: fixed; /* 留在原地 */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* 方框的位置 */
+    left: 0;
+    top: 0;
+    width: 100%; /* 全屏宽度 */
+    height: 100%; /* 全高 */
+    overflow: auto; /* 如果需要启用滚动 */
+    background-color: rgb(0,0,0); /* 后备颜色 */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* 模态内容 */
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
+  
+  /* 关闭按钮 */
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .dragging {
+    opacity: 0.5;
+  }
+  
+  #avatarContainer {
+    background-image: url(./img/user_icon.png);
+    background-size: cover;
+    background-position: center;
+  }
+
+  #searchBox  {
+    background-image: url(./img/search.jpg);
+    background-size: cover;
+    background-position: center;
+  }
