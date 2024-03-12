@@ -19,14 +19,25 @@
             <div id="avatarContainer" class="grid project text-center w-full aspect-square bg-gray-100 hover:shadow-md rounded-lg" draggable="true">
                 
             </div>
+            <div id="menu" hidden>
+                <ul>
+                  <li id="changeAvatar">更换头像</li>
+                  <li id="editProfile">编辑个人信息</li>
+                </ul>
+              </div>
             <input type="file" id="avatarUpload" hidden/>
             <button id="addProject" class="grid project bg-gray-100 w-full aspect-square hover:shadow-md rounded-lg0 text-white font-bold py-2 px-4 " draggable="true">
                 +
             </button>
 
-            <button id="searchBox" class="grid project text-center w-full aspect-square bg-gray-100 hover:shadow-md rounded-lg" draggable="true">
+            <button id="searchButton" class="grid project text-center w-full aspect-square bg-gray-100 hover:shadow-md rounded-lg" draggable="true">
                 
             </button>
+
+            <div id="searchBox" hidden>
+                <input type="text" placeholder="Search what you want...">
+                <button>Go!</button>
+            </div>
         </div>
         <div id="myModal" class="modal">
             <!-- 模态内容 -->
@@ -43,8 +54,6 @@
                 </form>
             </div>
         </div>
-
-
     </div>
     <script src="./homepage.js"></script>
 </body>

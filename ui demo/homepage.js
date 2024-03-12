@@ -1,3 +1,4 @@
+//储存所有自建项目的数组
 const projectsData = [
   { name: "示例项目", access: "public" }
 
@@ -60,7 +61,7 @@ projectsData.forEach(project => {
   createProject(project.name, project.access);
 });
 
-//拖拽模块
+/*拖拽模块*/
 
 let draggedItem = null;
 
@@ -78,7 +79,7 @@ if (e.target.classList.contains('project')) {
 });
 
 document.addEventListener('dragover', e => {
-e.preventDefault(); // 需要阻止默认行为以允许放置
+e.preventDefault(); // 阻止默认行为
 });
 
 document.addEventListener('drop', e => {
@@ -120,21 +121,47 @@ draggingCardOrder = Array.from(container.querySelectorAll('.project'));
 });
 */
 
-//头像
+/*头像＆个人模块*/
+
 document.getElementById('avatarContainer').addEventListener('click', function() {
-document.getElementById('avatarUpload').click(); // 模拟点击文件上传输入
+  // 点击头像切换菜单显示状态
+  const menu = document.getElementById('menu');
+  menu.style.display = 'block';
+});
+
+document.getElementById('changeAvatar').addEventListener('click', function() {
+  // 触发更换头像
+  document.getElementById('avatarUpload').click();
 });
 
 document.getElementById('avatarUpload').addEventListener('change', function(e) {
-const file = e.target.files[0];
-if (file) {
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const avatarContainer = document.getElementById('avatarContainer');
-    avatarContainer.style.backgroundImage = `url('${e.target.result}')`;
-    avatarContainer.style.backgroundSize = 'cover'; // 确保图片铺满容器
-    avatarContainer.style.backgroundPosition = 'center'; // 图片居中
-  };
-  reader.readAsDataURL(file);
-}
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      // 更新头像图片
+      const avatarContainer = document.getElementById('avatarContainer');
+      avatarContainer.style.backgroundImage = `url('${e.target.result}')`;
+      avatarContainer.style.backgroundSize = 'cover'; // 确保图片铺满容器
+      avatarContainer.style.backgroundPosition = 'center'; // 图片居中
+      const menu = document.getElementById('menu');
+      menu.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
 });
+
+// 这里添加编辑个人信息的逻辑
+document.getElementById('editProfile').addEventListener('click', function() {
+  // 显示编辑个人信息的界面 To be continued
+  const menu = document.getElementById('menu');
+  menu.style.display = 'none';
+});
+
+/*搜索模块*/
+document.getElementById('searchButton').addEventListener('click', function() {
+  // 切换搜索框显示状态
+  const searchBox = document.getElementById('searchBox');
+  searchBox.style.display = 'block';
+});
+
