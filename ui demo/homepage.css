@@ -1,4 +1,4 @@
-.modal {
+  .modal {
     display: none; /* 默认隐藏 */
     position: fixed; /* 留在原地 */
     z-index: 1; /* Sit on top */
@@ -45,7 +45,7 @@
     background-size: cover;
     background-position: center;
   }
-
+/*
   #searchButton  {
     background-image: url(./img/search.jpg);
     background-size: cover;
@@ -54,17 +54,23 @@
 
   #searchBox  {
     position: relative;
+    flex: auto;
     transform: translateX(-50%);
+    background-color: white;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     padding: 8px;
     border-radius: 4px;
+    margin-left: 60px;
+    width: 300%;
+    height: 50px;
   }
-
+*/
   #menu {
     position: absolute;
     width: 120px;
     box-shadow: 0 0 8px rgba(0,0,0,0.1);
     border-radius: 5px;
+    background-color: pink;
   }
   
   #menu ul {
@@ -76,4 +82,101 @@
   #menu ul li {
     padding: 8px;
     cursor: pointer;
+  }
+
+  .project-content {
+    display: none;
+    position: absolute;
+    margin-left: 10%;
+    width: 60%;
+    height: 50%;
+    background-color: #f9f9f9; /* 或根据需要调整 */
+    border: 1px solid #ddd; /* 或根据需要调整 */
+    z-index: 1; /* 确保内容显示在其他元素之上 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    
+  }
+  
+  .project-access {
+    display: inline-block;
+    padding: 1px 10px;
+    margin: 1px 2px;
+    width: auto;
+    background-color: aliceblue;
+    color: dodgerblue;
+    font-size: small;
+    border-radius: 30px;
+  }
+
+  .project-name {
+    margin: 0;
+    color: #333; /* 名称颜色 */
+    font-size: 20px; /* 名称字体大小 */
+  }
+  
+  .project-description {
+    margin-top: 10px;
+    color: #666; /* 描述文字颜色 */
+    font-size: 16px; /* 描述文字大小 */
+  }
+
+  /* 鼠标悬浮在项目方块上时显示内容 */
+  .project:hover .project-content {
+    display: block;
+  }
+
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #333;
+    align-items: center; 
+    color: white;
+    padding: 10px;
+  }
+  
+  .search-container {
+    position: relative;
+    margin-right: 30%;
+  }
+  
+  #searchBox {
+    padding: 5px;
+    
+  }
+  
+  .dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    color: black;
+    border: 1px solid #ddd;
+    z-index: 1000;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  /* 可选：为下拉列表项添加样式 */
+  .dropdown div {
+    padding: 10px;
+    cursor: pointer;
+  }
+  .dropdown div:hover {
+    background-color: #f0f0f0;
+  }
+  
+
+  .blueLabel{
+    display: inline-block;
+    padding: 1px 10px;
+    margin: 1px 2px;
+    width: auto;
+    background-color: aliceblue;
+    color: dodgerblue;
+    font-size: small;
+    border-radius: 30px;
   }
