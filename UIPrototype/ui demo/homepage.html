@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link href="./output.css" rel="stylesheet">
+    <link rel="stylesheet" href="./homepage.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    <div class="min-h-screen bg-gray-50">
+        <nav class="navbar">
+            <div class="logo">Logo</div>
+            <div class="search-container">
+                <input type="text" id="searchBox" placeholder="搜索...">
+                <div id="dropdown" class="dropdown" hidden>
+                    <div class="menu-item">Repositories</div>
+                    <div class="menu-item">Code</div>
+                    <div class="menu-item">Issues</div>
+                    <div class="menu-item">Users</div>
+                    <div class="menu-item">Discussions</div>
+                </div>
+            </div>
+        </nav>
+
+        <div id="projectsContainer" class="grid grid-cols-8 gap-10 text-center p-10 relative align-middle">
+            <!--<div id="projects" class="text-center w-full aspect-square bg-gray-100 hover:shadow-md rounded-lg">
+                示例
+                Projects
+            </div>-->
+            <div id="avatarContainer"
+                class="grid project text-center w-full aspect-square bg-gray-100 hover:shadow-md rounded-lg"
+                draggable="true">
+            </div>
+            
+            <button id="addProject"
+                class="grid project bg-gray-100 w-full aspect-square hover:shadow-md rounded-lg0 text-white font-bold py-2 px-4 "
+                draggable="true">
+                +
+            </button>
+            <!--搜索方块
+            <button id="searchButton" class="grid project text-center w-full aspect-square bg-gray-100 hover:shadow-md rounded-lg" draggable="true">
+                
+            </button>
+
+            <div id="searchBox" hidden>
+                <input type="text" placeholder="Search what you want...">
+                <button>Go!</button>
+            </div>-->
+        </div>
+        <div id="menu" hidden>
+            <ul>
+                <li id="changeAvatar">更换头像</li>
+                <li id="editProfile">编辑个人信息</li>
+            </ul>
+        </div>
+        <input type="file" id="avatarUpload" hidden />
+        <div id="myModal" class="modal">
+            <!-- 模态内容 -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p>Create new repository</p>
+                <form id="newProjectForm">
+                    <input type="text" id="projectName" placeholder="项目名称" required>
+                    <select id="projectAccess">
+                        <option value="private ">私有</option>
+                        <option value="public">公开</option>
+                    </select>
+                    <input type="text" id="description" placeholder="描述" required>
+                    <input type="text" id="labelInput" placeholder="输入标签，以逗号分隔">
+
+                    <!-- 添加的标签将显示在这里 -->
+                    <div id="labelContainer"></div>
+                    <button type="submit">创建项目</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="./homepage.js"></script>
+</body>
+
+</html>
