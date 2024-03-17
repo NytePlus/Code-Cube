@@ -1,5 +1,9 @@
 let cube = document.getElementById("cube");
-let folders = cube.getElementsByClassName("iconTextPair");
+let folders = cube.getElementsByClassName("folder");
+let files = cube.getElementsByClassName("file");
+let fileWindow = document.getElementsByClassName("fileWindow");
+fileWindow[0].style.display = 'inline';
+fileWindow[1].style.display = 'none';
 
 function getSublayer(layer)
 {
@@ -42,7 +46,7 @@ function onclickFunctionFolder() {
         displaySublayer(this);
         this.onmouseout = this.onmouseover = function () {}
         this.select = true;
-        this.className = "iconTextPair";
+        this.className = "folder";
         for (let i = 0; i < folders.length; i++)
             if (folders[i] != this){
                 hideSublayer(folders[i]);
@@ -54,14 +58,29 @@ function onclickFunctionFolder() {
         this.onmouseover = onmouseoverFunctionFolder;
         this.onmouseout = onmouseoutFunctionFolder;
         this.select = false;
-        this.className = "iconTextPair";
+        this.className = "folder";
         for (let i = 0; i < folders.length; i++)
             if (folders[i] != this){
                 folders[i].onmouseover = onmouseoverFunctionFolder;
                 folders[i].onmouseout = onmouseoutFunctionFolder;
                 folders[i].select = false;
-                folders[i].className = "iconTextPair";
+                folders[i].className = "folder";
             }
+    }
+}
+
+function onclickFunctionFile() {
+    let fileWindow = document.getElementsByClassName("fileWindow");
+    let path = this.parentNode.name + this.name;
+    if(fileWindow[0].style.display == 'none')
+    {
+        fileWindow[0].style.display = 'inline';
+        fileWindow[1].style.display = 'none';
+    }
+    else
+    {
+        fileWindow[0].style.display = 'none';
+        fileWindow[1].style.display = 'inline';
     }
 }
 
@@ -73,7 +92,12 @@ for(let i = 0; i < folders.length; i ++)
     folders[i].onclick = onclickFunctionFolder;
 }
 
-for(let i = 1; i <= 6; i ++){
+for(let i = 0; i < files.length; i ++)
+{
+    files[i].onclick = onclickFunctionFile;
+}
+
+for(let i = 0; i <= 6; i ++){
     let layerI = cube.getElementsByClassName(`side layer-${i}`);
     for(let j = 0; j < layerI.length; j ++){
         layerI[j].onmouseout = onmouseoutFunctionLayer;
