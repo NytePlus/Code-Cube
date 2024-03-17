@@ -120,6 +120,7 @@ document.addEventListener('dragstart', e => {
   if (e.target.classList.contains('project')) {
     draggedItem = e.target;
     e.target.style.opacity = 0.5;
+    
   }
 });
 
@@ -226,3 +227,14 @@ document.getElementById('dropdown').addEventListener('click', function (event) {
   event.stopPropagation();
 });
 
+const grid = document.getElementById('projectsContainer');
+const children = grid.children;
+const childrenOrder = [];
+const orderedChildren = Array.from(children).sort((a, b) => {
+  return window.getComputedStyle(a).order - window.getComputedStyle(b).order;
+});
+
+// 获取排序后子元素的order值
+const orderedChildrenOrder = orderedChildren.map(child => window.getComputedStyle(child).order);
+
+console.log(orderedChildrenOrder); // 输出基于CSS order属性的排序后的顺序
