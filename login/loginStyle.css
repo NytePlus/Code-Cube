@@ -69,7 +69,6 @@ body, html {
     height: 10px;
     background-color: white;
     border-radius: 50%; /* 使背景变为圆形 */
-    font-size: 0px; /* 由于现在使用背景色表示雪花，可以将字体大小设为0 */
     user-select: none;
     pointer-events: none;
     animation-name: fall;
