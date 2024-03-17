@@ -1,0 +1,83 @@
+/* 基本页面和输入框样式 */
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #ff5f6d, #ffc371);
+
+
+
+
+
+
+}
+
+#inputLabel {
+    margin: 5px;
+    color: white;
+}
+
+input{
+    margin: 5px;
+}
+
+/* 输出样式增强 */
+#output {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: salmon; /* 轻灰色背景 */
+    border-radius: 5px; /* 边框圆角 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* 简单的阴影 */
+    width: 300px; /* 固定宽度 */
+    text-align: center; /* 文本居中 */
+}
+
+/* 用户名和密码的样式 */
+.user-info {
+    color: #333; /* 深灰色文本 */
+    font-weight: bold; /* 加粗文本 */
+    margin: 10px 0; /* 上下边距 */
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+#snow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: rgba(0,0,0,0); /* 可以根据需要调整背景色 */
+}
+
+.snowflake {
+    position: absolute;
+    top: -10px;
+    color: white;
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border-radius: 50%; /* 使背景变为圆形 */
+    font-size: 0px; /* 由于现在使用背景色表示雪花，可以将字体大小设为0 */
+    user-select: none;
+    pointer-events: none;
+    animation-name: fall;
+    animation-timing-function: linear;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(100vh);
+    }
+}
