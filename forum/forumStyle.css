@@ -1,0 +1,33 @@
+.header-title{
+    padding-left: 50px;
+}
+.header-updateTime{
+    color: #555555;
+    padding-left: 50px;
+}
+.forum-post {
+    width: 60%;
+}
+.user-post {
+    margin: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+.user-info {
+    margin-bottom: 20px;
+}
+.avatar {
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.post-content {
+    margin-top: 20px;
+}
+.text-background {
+    /*background-color: #f6f8fa; !* 浅灰色背景 *!*/
+    /*padding: 5px; !* 文字周围的空间 *!*/
+    /*border-radius: 5px; !* 边框圆角 *!*/
+}
