@@ -104,16 +104,45 @@ const projectsData = [
     labels: "python"
   },
 ];
+var menu = document.getElementById("menu");
+
+var cube_modal = document.getElementById("cube-Modal");
+
+// 获取打开模态框的按钮
+var cube_btn = document.getElementById("addProject");
+
+// 获取关闭模态的 <span> 元素
+var cube_span = document.getElementsByClassName("cube-close")[0];
+
+
+
+// 当用户点击按钮时，打开模态
+cube_btn.onclick = function () {
+  cube_modal.style.display = "block";
+}
+
+// 当用户点击 <span> (x) 时，关闭模态
+cube_span.onclick = function () {
+  cube_modal.style.display = "none";
+}
+
+// 当用户点击模态之外的任何地方时，关闭它
+window.onclick = function (event) {
+  if (event.target == cube_modal) {
+    cube_modal.style.display = "none";
+  }
+}
+
 
 var modal = document.getElementById("myModal");
 
 // 获取打开模态框的按钮
-var btn = document.getElementById("addProject");
+var btn = document.getElementById("editProject");
 
 // 获取关闭模态的 <span> 元素
 var span = document.getElementsByClassName("close")[0];
 
-var menu = document.getElementById("menu");
+
 
 // 当用户点击按钮时，打开模态
 btn.onclick = function () {
@@ -148,6 +177,7 @@ document.getElementById('newProjectForm').addEventListener('submit', function (e
 
   // 可选：清空表单以便下一次输入
   modal.style.display = "none";
+  
   this.reset();
 });
 
@@ -162,10 +192,10 @@ function createProject(name, access, description, labelString) {
   const labelsHtml = labels.map(label => `<span class="blueLabel">${label}</span>`).join('');
   projectElement.innerHTML = `
     <p>${name}</p>
-    <p>${access}</p>
+    <p>${access === 'private' ? '私有' : '公共'}</p>
     <p>${labelsHtml}</p>
     <div class="project-content" hidden>
-      <h3 class="project-name">${name} ${access}</p>
+      <h3 class="project-name">${name} ${access === 'private' ? '私有' : '公共'}</p>
       <p>${labelsHtml}</p>  
       <p class="project-description">${description}</p>
       <button class="project-create">添加文件</button>

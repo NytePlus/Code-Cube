@@ -13,6 +13,28 @@
   }
   
   /* 模态内容 */
+  .cube-modal-content {
+    background-color: transparent;
+    margin: auto;
+    padding: 20px;
+    width: 40%;
+  }
+  
+  /* 关闭按钮 */
+  .cube-close {
+    color: gray;
+    float: right;
+    font-size: 100px;
+    font-weight: bold;
+  }
+  
+  .cube-close:hover,
+  .cube-close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
   .modal-content {
     background-color: #fefefe;
     margin: auto;
@@ -196,3 +218,5 @@
     background-color: transparent;
     border: 1px dashed gray;
   }
+
+  
