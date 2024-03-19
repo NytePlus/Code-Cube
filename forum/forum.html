@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>论坛界面</title>
+    <link rel="stylesheet" href="forumStyle.css">
+    <!-- 引入代码高亮的库 -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+    <div>
+        <h1 class="header-title"> Problems with saving standalone gemma-2b-it after fine-tuning with LoRA on TPU v3-8 #29659 </h1>
+        <p class="header-updateTime">更新时间:2024.3.18 00:00:00</p>
+    </div>
+
+    <hr>
+
+    <div class="forum-post">
+        <div class="user-post">
+            <div class="user-info">
+                <img src="avatar-test.jpg" alt="用户头像" class="avatar">
+                <span>用户1</span>
+            </div>
+            <div class="post-content">
+                <p>I modified the code a little bit to make some sanity checks.</p>
+                <pre><code class="python">def train():
+    gemma2it = AutoModelForCausalLM.from_pretrained("google/gemma-2b-it") # sanity check model
+
+    tokenizer =  AutoTokenizer.from_pretrained("NousResearch/gemma-2b-it-tokenizer")
+    model = AutoModelForCausalLM.from_pretrained("google/gemma-2b-it", torch_dtype=torch.bfloat16)
+    dataset = load_dataset("pawkanarek/poke_test", split="train")
+    lora_config = LoraConfig(r=8, target_modules=["k_proj", "v_proj"], task_type="CAUSAL_LM")
+    fsdp_config = {"fsdp_transformer_layer_cls_to_wrap": ["GemmaDecoderLayer"], "xla": True, "xla_fsdp_v2": True, "xla_fsdp_grad_ckpt": True}
+    trainer = SFTTrainer(
+        model=model,
+        train_dataset=dataset,
+        tokenizer = tokenizer,
+        args=TrainingArguments(
+            per_device_train_batch_size=64,
+            num_train_epochs=4,
+            output_dir="output/trained_model",
+            optim="adafactor",
+            dataloader_drop_last = True,  # Required for SPMD.
+            fsdp="full_shard",
+            fsdp_config=fsdp_config,
+        ),
+        peft_config=lora_config,
+        max_seq_length=2048,
+    )
+    # 1
+    trainer.train()
+    print("comparing gemma2it with trainer.model")
+    compare_weights(gemma2it, trainer.model) # different GemmaForCausalLM:2506172416 params vs SpmdFullyShardedDataParallel:3031123968 params
+
+    # 2
+    merged_model = trainer.model.merge_and_unload()
+    print("comparing gemma2it with merged_model")
+    compare_weights(gemma2it, merged_model) # different GemmaForCausalLM:2506172416 params vs GemmaForCausalLM:3030460416 params
+
+    # 3
+    print("saving merged_model")
+    merged_model.to("cpu")
+    merged_model.save_pretrained("output/merged_model")
+    compare_weights(gemma2it, merged_model) # different GemmaForCausalLM:2506172416 params vs GemmaForCausalLM:3030460416 params
+
+    # 4
+    print("comparing loaded merged_model from disk with in-memory merged_model")
+    loaded_merged_model = AutoModelForCausalLM.from_pretrained("output/merged_model")
+    compare_weights(merged_model, loaded_merged_model) # different GemmaForCausalLM:3030460416 params vs GemmaForCausalLM:2506172416 params
+
+    # 5
+    print("comparing gemma2it with loaded merged_model from disk")
+    compare_weights(gemma2it, loaded_merged_model) # models  GemmaForCausalLM and GemmaForCausalLM are the same
+            </code></pre>
+            </div>
+        </div>
+        <div class="user-post">
+            <div class="user-info">
+                <img src="avatar-test2.jpg" alt="用户头像" class="avatar">
+                <span>用户2</span>
+            </div>
+            <p>Hi @PawKanarek</p>
+            <p></p>
+            <p>Please reference #29388 , by the way do you have testing the LoRA fine tune performance on TPU XLA? I have some explore for some LoRA but it has no any effective for the base model and the generate message just very same as base model.</p>
+        </div>
+        <div class="user-post">
+            <div class="user-info">
+                <img src="avatar-test3.jpg" alt="用户头像" class="avatar">
+                <span>用户3</span>
+            </div>
+            <p>Hi @zorrofox, and thanks for insight! Looks like my transformers fork didn't included change from that PR.
+                What kind of fine-tune performance are you talking about? You want to know how long does it take to train model with LoRA, or how well model is behaving after fine-tuning?</p>
+        </div>
+    </div>
+
+
+</body>
+</html>
