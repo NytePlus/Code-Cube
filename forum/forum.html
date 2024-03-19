@@ -4,21 +4,25 @@
     <meta charset="UTF-8">
     <title>论坛界面</title>
     <link rel="stylesheet" href="forumStyle.css">
+<!--    引入editor.md-->
+    <link rel="stylesheet" href="../node_modules/editor.md/css/editormd.min.css" />
+<!--将markdown渲染成HTML-->
+    <link rel="stylesheet" href="../node_modules/editor.md/css/editormd.preview.css" />
     <!-- 引入代码高亮的库 -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body>
+<!-- 标题部分   -->
     <div>
         <h1 class="header-title"> Problems with saving standalone gemma-2b-it after fine-tuning with LoRA on TPU v3-8 #29659 </h1>
         <p class="header-updateTime">更新时间:2024.3.18 00:00:00</p>
     </div>
 
     <hr>
-
+<!-- 论坛主页面部分   -->
     <div class="forum-post">
+<!-- 每一楼分别是一个user-post       -->
         <div class="user-post">
             <div class="user-info">
                 <img src="avatar-test.jpg" alt="用户头像" class="avatar">
@@ -96,6 +100,70 @@
         </div>
     </div>
 
+<!--编辑框部分-->
+    <div class="user-editor-info">
+        <div class="user-info">
+            <img src="avatar-test4.jpg" alt="您" class="avatar">
+            <span>请畅所欲言吧！</span>
+        </div>
+        <div id="editor">
+        <!-- Tips: Editor.md can auto append a `<textarea>` tag -->
+        <textarea style="display:none;">### Hello Editor.md !</textarea>
+        </div>
+        <button class="submit-button">发送</button>
+    </div>
 
+
+
+
+
+
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../node_modules/editor.md/editormd.js"></script>
+<script src="../node_modules/editor.md/lib/marked.min.js"></script>
+<script src="../node_modules/editor.md/lib/prettify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<!--依赖于jquery，要放在后面-->
+<script type="text/javascript">
+    $(function() {
+        // 初始化编辑器
+        var editor = editormd("editor", {
+            width: "95%",
+            height: "100%",
+            path: "../node_modules/editor.md/lib/",
+            saveHTMLToTextarea: true
+        });
+
+
+        // 处理发送按钮点击事件
+        $('.submit-button').click(function() {
+            var markdownContent = editor.getMarkdown(); // 获取编辑器中的 Markdown 内容
+            var htmlContent = editor.getHTML(); // 获取转换后的 HTML 内容
+
+            if (!markdownContent.trim()) {
+                // 如果内容为空或只有空白字符，阻止发送并提示用户
+                alert("请先输入一些内容再发送。");
+                return false; // 阻止进一步的事件处理
+            }
+
+            // 创建新的 user-post 元素
+            var newUserPost = $('<div class="user-post">').html(`
+            <div class="user-info">
+                <img src="avatar-test4.jpg" alt="用户头像" class="avatar">
+                <span>您</span>
+            </div>
+            <div class="post-content">${htmlContent}</div>
+        `);
+
+            // 将新帖子添加到论坛中
+            $('.forum-post').append(newUserPost);
+
+            // 清空编辑器
+            editor.clear();
+        });
+    });
+
+</script>
 </body>
 </html>

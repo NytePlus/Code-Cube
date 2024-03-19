@@ -14,6 +14,12 @@
     border-radius: 10px;
     border: 1px solid #ddd;
 }
+.user-editor-info{
+    width: 80%;
+    padding: 50px 20px 0px 20px;
+    margin: 20px;
+
+}
 .user-info {
     margin-bottom: 20px;
 }
@@ -26,8 +32,30 @@
 .post-content {
     margin-top: 20px;
 }
-.text-background {
-    /*background-color: #f6f8fa; !* 浅灰色背景 *!*/
-    /*padding: 5px; !* 文字周围的空间 *!*/
-    /*border-radius: 5px; !* 边框圆角 *!*/
+#editor {
+    height: 250px !important;
+    margin-left: 50px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 默认状态，无文本时的浅绿色 */
+.submit-button {
+    background-color: #94d3a2;
+    color: white;
+    display: block;
+    margin-left: auto;
+    margin-right: 0;
+    padding: 10px 20px;
+    border: 1px solid #8fcc9d;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 10px;
+
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* 鼠标悬停时的深绿色 */
+.submit-button:hover {
+    background-color: #1f883d; /* 深绿色 */
 }
