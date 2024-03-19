@@ -34,9 +34,9 @@
                 class="grid project text-center w-full aspect-square bg-gray-100 hover:shadow-md rounded-lg"
                 draggable="true">
             </div>
-            
+
             <button id="addProject"
-                class="grid project bg-gray-100 w-full aspect-square hover:shadow-md rounded-lg0 text-white font-bold py-2 px-4 "
+                class="grid project bg-gray-100 w-full aspect-square hover:shadow-md rounded-lg0 text-black font-bold py-2 px-4 "
                 draggable="true">
                 +
             </button>
@@ -59,26 +59,27 @@
         <input type="file" id="avatarUpload" hidden />
         <div id="myModal" class="modal">
             <!-- 模态内容 -->
-            <div class="modal-content">
+            <div class="modal-content border-solid border">
                 <span class="close">&times;</span>
                 <p>Create new repository</p>
                 <form id="newProjectForm">
-                    <input type="text" id="projectName" placeholder="项目名称" required>
-                    <select id="projectAccess">
-                        <option value="private ">私有</option>
+                    <input type="text" id="projectName" placeholder="项目名称" required class="border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                    <select id="projectAccess" class="border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        <option value="private">私有</option>
                         <option value="public">公开</option>
                     </select>
-                    <input type="text" id="description" placeholder="描述" required>
-                    <input type="text" id="labelInput" placeholder="输入标签，以逗号分隔">
-
-                    <!-- 添加的标签将显示在这里 -->
-                    <div id="labelContainer"></div>
-                    <button type="submit">创建项目</button>
+                    <input type="text" id="description" placeholder="描述" required class="border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                    <input type="text" id="labelInput" placeholder="输入标签，以逗号分隔" class="border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                    <button type="submit" class="border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500">创建项目</button>
                 </form>
             </div>
         </div>
     </div>
     <script src="./homepage.js"></script>
 </body>
+
+
+<script type="text/javascript" src="./dragmode.js"></script>
+
 
 </html>
