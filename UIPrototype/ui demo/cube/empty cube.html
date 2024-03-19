@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Rotating Cube @VincentTV</title>
+    <link rel="stylesheet" href="./cube.css">
+    <link href="./output.css" rel="stylesheet">
+<!-- 引入代码高亮的库 -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+<!-- 引入渲染markdown文件的库 -->
+    <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2/webcomponents-loader.min.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@1/src/zero-md.min.js"></script>
+</head>
+<body>
+    <div class="flex content-center">
+        <div class="wrap">
+            <div class="cube" id="cube">
+                <div class="side cube-top">
+                    <h2>Top</h2>
+                    <p></p>
+                </div>
+                <div class="side cube-bottom">
+                    <h2>Bottom</h2>
+                    <p></p>
+                </div>
+                <div class="side cube-left">
+                    <h2>Left</h2>
+                    <p></p>
+                </div>
+                <div class="side-highlight cube-right">
+                    <div class="title">
+                        <img class="flex w-8 h-8 border-2 border-gray-200" src="../img/huggingface.png" alt="huggingface">
+                        <h2 class="font-serif text-2xl">Add title</h2>
+                        <div class="grayLabel">public</div>
+                    </div>
+                    <div>
+                        <h1 class="font-bold">About</h1>
+                        <p>add description</p>
+                    </div>
+                    <div class="table">
+                        <a class="blueLabel">+</a>
+
+                    </div>
+                    <div class="iconTextPair">
+                        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                            <path d="M255.66 112c-77.94 0-157.89 45.11-220.83 135.33a16 16 0 00-.27 17.77C82.92 340.8 161.8 400 255.66 400c92.84 0 173.34-59.38 221.79-135.25a16.14 16.14 0 000-17.47C428.89 172.28 347.8 112 255.66 112z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48"/>
+                            <circle cx="256" cy="256" r="80" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="48"/>
+                        </svg>
+                        <span class="px-1">Watch</span>
+                        <div>0</div>
+                    </div>
+                    <div class="iconTextPair">
+                        <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                            <path d="M480 208H308L256 48l-52 160H32l140 96-54 160 138-100 138 100-54-160z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="48"/>
+                        </svg>
+                        <span class="px-1">Star</span>
+                        <div>0</div>
+                    </div>
+                    <div>
+                        <h1 class="font-bold">Contributors</h1>
+                        <div class="table">
+                            <a>
+                                <img class="avatar" src="https://avatars.githubusercontent.com/u/35901082?s=64&v=4">
+                            </a>
+                        </div>
+                    </div>
+                    <div>
+                        <h1 class="font-bold">Languages</h1>
+                        <div class="table">
+                            <a class="iconTextPair">
+                                <svg style="color:#3572A5;" aria-hidden="true" height="16" viewBox="0 0 16 16" width="16" data-view-component="true">
+                                    <path d="M8 4a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"></path>
+                                </svg>
+                                <span class="text-black px-1">Python</span>
+                                <span>0%</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="side cube-back">
+                    <h2>Back</h2>
+                    <p></p>
+                </div>
+                <div class="side cube-front" id="">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="./cube.js"></script>

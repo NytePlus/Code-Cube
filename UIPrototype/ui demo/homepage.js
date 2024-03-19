@@ -37,17 +37,112 @@ const projectsData = [
     description: "Algorithms and Data Structures implemented in JavaScript for beginners, following best practices.",
     labels: "javascript"
   },
+  {
+    name: "示例项目7",
+    access: "private",
+    description: "Large single page application with 45 pages built on vue.",
+    labels: "vue, javascript"
+  },
+  {
+    name: "示例项目8",
+    access: "public",
+    description: "The library for web and native user interfaces.",
+    labels: "react, javascript"
+  },
+  {
+    name: "示例项目9",
+    access: "public",
+    description: "The Go programming language",
+    labels: "go"
+  },
+  {
+    name: "示例项目10",
+    access: "public",
+    description: "The official repo for the design of the C# programming language",
+    labels: "csharp"
+  },
+  {
+    name: "示例项目11",
+    access: "public",
+    description: "Docker Official Image packaging for PHP",
+    labels: "php"
+  },
+  {
+    name: "示例项目12",
+    access: "public",
+    description: "C client library for etcd with full features support",
+    labels: "c"
+  },
+  {
+    name: "示例项目13",
+    access: "public",
+    description: "This is an example",
+    labels: "c, csharp"
+  },
+  {
+    name: "示例项目14",
+    access: "private",
+    description: "This is an example.",
+    labels: "java"
+  },
+  {
+    name: "示例项目15",
+    access: "private",
+    description: "This is an example.",
+    labels: "node.js"
+  },
+  {
+    name: "示例项目16",
+    access: "private",
+    description: "This is an example.",
+    labels: "shell"
+  },
+  {
+    name: "示例项目17",
+    access: "public",
+    description: "This is an example.",
+    labels: "python"
+  },
 ];
+var menu = document.getElementById("menu");
+
+var cube_modal = document.getElementById("cube-Modal");
+
+// 获取打开模态框的按钮
+var cube_btn = document.getElementById("addProject");
+
+// 获取关闭模态的 <span> 元素
+var cube_span = document.getElementsByClassName("cube-close")[0];
+
+
+
+// 当用户点击按钮时，打开模态
+cube_btn.onclick = function () {
+  cube_modal.style.display = "block";
+}
+
+// 当用户点击 <span> (x) 时，关闭模态
+cube_span.onclick = function () {
+  cube_modal.style.display = "none";
+}
+
+// 当用户点击模态之外的任何地方时，关闭它
+window.onclick = function (event) {
+  if (event.target == cube_modal) {
+    cube_modal.style.display = "none";
+  }
+}
+
 
 var modal = document.getElementById("myModal");
 
 // 获取打开模态框的按钮
-var btn = document.getElementById("addProject");
+var btn = document.getElementById("editProject");
 
 // 获取关闭模态的 <span> 元素
 var span = document.getElementsByClassName("close")[0];
 
-var menu = document.getElementById("menu");
+
 
 // 当用户点击按钮时，打开模态
 btn.onclick = function () {
@@ -82,6 +177,7 @@ document.getElementById('newProjectForm').addEventListener('submit', function (e
 
   // 可选：清空表单以便下一次输入
   modal.style.display = "none";
+  
   this.reset();
 });
 
@@ -91,17 +187,18 @@ function createProject(name, access, description, labelString) {
   const projectElement = document.createElement('div');
   projectElement.setAttribute('draggable', true); // 使项目可拖拽
   projectElement.classList.add('grid', 'relative', 'project', 'text-center', 'w-full', 'aspect-square', 'bg-gray-100', 'hover:shadow-md', 'rounded-lg');
-  
+
   const labels = labelString.split(',').map(label => label.trim());
   const labelsHtml = labels.map(label => `<span class="blueLabel">${label}</span>`).join('');
   projectElement.innerHTML = `
     <p>${name}</p>
-    <p>${access}</p>
+    <p>${access === 'private' ? '私有' : '公共'}</p>
     <p>${labelsHtml}</p>
     <div class="project-content" hidden>
-      <h3 class="project-name">${name} ${access}</p>
+      <h3 class="project-name">${name} ${access === 'private' ? '私有' : '公共'}</p>
       <p>${labelsHtml}</p>  
       <p class="project-description">${description}</p>
+      <button class="project-create">添加文件</button>
     </div>
   `
     ;
@@ -113,50 +210,6 @@ projectsData.forEach(project => {
 });
 
 /*拖拽模块*/
-
-let draggedItem = null;
-
-document.addEventListener('dragstart', e => {
-  if (e.target.classList.contains('project')) {
-    draggedItem = e.target;
-    e.target.style.opacity = 0.5;
-    
-  }
-});
-
-document.addEventListener('dragend', e => {
-  if (e.target.classList.contains('project')) {
-    e.target.style.opacity = "";
-  }
-});
-
-document.addEventListener('dragover', e => {
-  e.preventDefault(); // 阻止默认行为
-});
-
-document.addEventListener('drop', e => {
-  e.preventDefault(); // 阻止默认行为
-  const projectsContainer = document.getElementById('projectsContainer');
-  const afterElement = getDragAfterElement(projectsContainer, e.clientY);
-  if (draggedItem && afterElement !== draggedItem) {
-    projectsContainer.insertBefore(draggedItem, afterElement);
-  }
-  draggedItem = null; // 重置拖拽项目
-});
-
-function getDragAfterElement(container, y) {
-  const draggableElements = [...container.querySelectorAll('.project:not(.dragging)')];
-
-  return draggableElements.reduce((closest, child) => {
-    const box = child.getBoundingClientRect();
-    const offset = y - box.top - box.height / 2;
-    if (offset < 0 && offset > closest.offset) {
-      return { offset: offset, element: child };
-    } else {
-      return closest;
-    }
-  }, { offset: Number.NEGATIVE_INFINITY }).element;
-}
 
 /*
 const container = document.getElementById('projectsContainer');
@@ -227,14 +280,13 @@ document.getElementById('dropdown').addEventListener('click', function (event) {
   event.stopPropagation();
 });
 
+/*Debug 控制台*/
 const grid = document.getElementById('projectsContainer');
 const children = grid.children;
 const childrenOrder = [];
-const orderedChildren = Array.from(children).sort((a, b) => {
-  return window.getComputedStyle(a).order - window.getComputedStyle(b).order;
-});
+for (let i = 0; i < children.length; i++) {
+  // 将子元素的顺序（或者其他标识符）添加到数组中
+  childrenOrder.push(i + 1); // 或使用其他标识符，如子元素的id或文本内容等
+}
 
-// 获取排序后子元素的order值
-const orderedChildrenOrder = orderedChildren.map(child => window.getComputedStyle(child).order);
-
-console.log(orderedChildrenOrder); // 输出基于CSS order属性的排序后的顺序
+console.log(childrenOrder); // 输出基于CSS order属性的排序后的顺序

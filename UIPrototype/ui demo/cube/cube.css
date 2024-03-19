@@ -40,7 +40,6 @@ body {
   background-color: #ffffffe6;
 }
 .cube .cube-top {
-  visibility: hidden;
   transform: rotateY(0deg) translateZ(200px);
 }
 .cube .cube-bottom {
