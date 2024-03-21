@@ -16,12 +16,12 @@ body, html {
 }
 .stateDiv{
     width: 50px;
-    height: 50px;
-    border-width: 2px;
+    height: 48px;
+    border-width: 1px;
     border-color: white;
     background: black;
     color: white;
-    padding-left:2px;
+    padding-left:4px;
     font-size: 25px;
 }
 .stateDiv div{
@@ -50,13 +50,13 @@ body, html {
     outline:none;
     margin: 0;
     font-size: 25px;
-    width: 460px;
+    width: 424px;
     height: 46px;
-    border-width: 1px;
-    border-color: white;
+    border-width: 0;
+    border-color: black;
     background-color: black;
     color: white;
-    animation: splay 0.5s linear;
+    /*animation: splay 0.5s linear;*/
 }
 @keyframes splay {
     0% {
@@ -71,6 +71,7 @@ body, html {
 }
 
 .zipInput{
+    text-overflow: ellipsis;
     background-color: black;
     color: white;
     box-shadow: none;
@@ -79,9 +80,9 @@ body, html {
     margin: 0;
     width: 46px;
     height: 46px;
-    border-width: 1px;
+    border-width: 0;
     border-color: black;
-    animation: zip 0.5s linear;
+    /*animation: zip 0.5s linear;*/
 }
 @keyframes zip {
     0% {
@@ -159,4 +160,15 @@ body, html {
     to {
         transform: translateY(100vh);
     }
+}
+
+
+.icon {
+    width: 45px;
+    height: 48px;
+    background: black;
+    color: white;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
 }

@@ -1,26 +1,22 @@
+const icons=
+    [/*0:question mark*/"<path d=\"M160 164s1.44-33 33.54-59.46C212.6 88.83 235.49 84.28 256 84c18.73-.23 35.47 2.94 45.48 7.82C318.59 100.2 352 120.6 352 164c0 45.67-29.18 66.37-62.35 89.18S248 298.36 248 324\" fill=\"none\" stroke=\"white\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" stroke-width=\"40\"/>\n" +
+    "<circle cx=\"248\" cy=\"399.99\" r=\"32\" fill=\"white\"/>",
+    /*1:login-ing*/"<path d=\"M336 208v-95a80 80 0 00-160 0v95\" fill=\"none\" stroke=\"white\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"45\"/>\n" +
+    "<rect x=\"96\" y=\"208\" width=\"320\" height=\"272\" rx=\"48\" ry=\"48\" fill=\"none\" stroke=\"white\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"45\"/>",
+    /*2:register-ing*/"<path d=\"M376 144c-3.92 52.87-44 96-88 96s-84.15-43.12-88-96c-4-55 35-96 88-96s92 42 88 96z\" fill=\"none\" stroke=\"white\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"32\"/>\n" +
+    "<path d=\"M288 304c-87 0-175.3 48-191.64 138.6-2 10.92 4.21 21.4 15.65 21.4H464c11.44 0 17.62-10.48 15.65-21.4C463.3 352 375 304 288 304z\" fill=\"none\" stroke=\"white\" stroke-miterlimit=\"10\" stroke-width=\"32\"/>\n" +
+    "<path fill=\"none\" stroke=\"white\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"32\" d=\"M88 176v112M144 232H32\"/>\n",
+    /*3:login succeed*/"<path d=\"M336 112a80 80 0 00-160 0v96\" fill=\"none\" stroke=\"green\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"45\"/>\n" +
+    "<rect x=\"96\" y=\"208\" width=\"320\" height=\"272\" rx=\"48\" ry=\"48\" fill=\"none\" stroke=\"green\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"45\"/>",
+    /*4:register succeed*/"<path fill=\"none\" stroke=\"green\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"45\" d=\"M416 128L192 384l-96-96\"/>\n"];
+
+const hint=['r=register  l=login', '输入r注册，输入l登录', 'l or r?', 'l | r', '如果已有账号，请输入l（log in）', '如果没有账号，请输入r注册(register)', '不区分大小写', ' >_<'];
 document.addEventListener('DOMContentLoaded', () => {
-    const input = document.getElementById('userInput');
-    const label = document.getElementById('inputLabel');
-    const output = document.getElementById('output');
-    usersnamePasswordDiv = document.getElementById('usersnamePasswordDiv');
+    let usersnamePasswordDiv = document.getElementById('usersnamePasswordDiv');
+    let stateIcon = document.getElementById("stateIcon");
     let divState = 0;
     let usersnameState = 0;
-    let isUsernameEntered = false; // 用于跟踪用户名是否已输入
-    let mode = ''; // 当前模式：''（无）、'register'、'login'
-    let username = ''; // 用于存储输入的用户名
-
-    function setInitialState() {
-        output.innerHTML = '输入r并按下Enter注册<br>输入l并按下Enter登录';
-        label.textContent = '请输入R以注册，L以登录（不区分大小写）';
-        input.value = '';
-        mode = '';
-        isUsernameEntered = false; // 重置用户名输入状态
-        input.type = 'text'; // 重置输入框类型
-        username = ''; // 重置用户名
-    }
-
-
-    //setInitialState(); // 初始化状态
+    let hintId = 1;
 
     document.addEventListener('keydown', (event) =>
     {
@@ -42,8 +38,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     usersnameState = divState = 1;
                     cursor.style.visibility = 'hidden';
                     l.style.color = 'white';
+                    stateIcon.innerHTML = icons[1];
                 }
-                if(event.key === 'r' || event.key === 'R')
+                else if(event.key === 'r' || event.key === 'R')
                 {
                     event.preventDefault(); // 阻止默认的Enter键行为
                     usersnameInput.removeAttribute('disabled');
@@ -52,10 +49,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     usersnameState = divState = 2;
                     cursor.style.visibility = 'hidden';
                     r.style.color = 'white';
+                    stateIcon.innerHTML = icons[2];
+                }
+                else
+                {
+                    usersnameInput.setAttribute('placeholder', hint[hintId]);
+                    hintId = hintId === hint.length - 1 ? 0: hintId + 1;
                 }
                 break;
             case 1://login激活状态
-                if(event.key === 'Enter')
+                if(event.key === 'Enter' || event.key === ' ')
                 {
                     usersnameInput.setAttribute('disabled', 'disabled');
                     passwordInput.removeAttribute('disabled');
@@ -63,8 +66,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     usersnameInput.className = 'zipInput';
                     passwordInput.className = 'input';
                     divState = 3;
+                    event.preventDefault(); // 阻止默认的Space键行为
                 }
-                if(event.key === 'Backspace' && usersnameInput.selectionStart === 0)
+                if((event.key === 'Backspace' || event.key === 'ArrowLeft') && usersnameInput.selectionStart === 0)
                 {
                     divState = 0;
                     event.preventDefault(); // 阻止默认的Enter键行为
@@ -72,10 +76,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     usersnameInput.setAttribute('disabled', 'disabled');
                     usersnameInput.setAttribute('placeholder', "r=register  l=login");
                     l.style.color = 'gray';
+                    stateIcon.innerHTML = icons[0];
                 }
                 break;
             case 2://register激活状态
-                if(event.key === 'Enter')
+                if(event.key === 'Enter' || event.key === ' ')
                 {
                     usersnameInput.setAttribute('disabled', 'disabled');
                     passwordInput.removeAttribute('disabled');
@@ -83,8 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     usersnameInput.className = 'zipInput';
                     passwordInput.className = 'input';
                     divState = 3;
+                    event.preventDefault(); // 阻止默认的Space键行为
                 }
-                if(event.key === 'Backspace' && usersnameInput.selectionStart === 0)
+                if((event.key === 'Backspace' || event.key === 'ArrowLeft') && usersnameInput.selectionStart === 0)
                 {
                     divState = 0;
                     event.preventDefault(); // 阻止默认的Backspace键行为
@@ -92,24 +98,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     usersnameInput.setAttribute('placeholder', "r=register  ");
                     usersnameInput.setAttribute('disabled', 'disabled');
                     r.style.color = 'gray';
+                    stateIcon.innerHTML = icons[0];
                 }
                 break;
             case 3://password激活状态
-                if(event.key === 'Enter')
+                if(event.key === 'Enter' || event.key === ' ')
                 {
                     passwordInput.focus();
-                    if(usersnameState === 1)
+                    event.preventDefault(); // 阻止默认的Space键行为
+                    if(usersnameState === 2)
                     {
-                        password2Input.focus();
                         passwordInput.setAttribute('disabled', 'disabled');
                         password2Input.removeAttribute('disabled');
                         password2Input.className = 'input';
                         passwordInput.className = 'zipInput';
+                        password2Input.focus();
                         divState = 4;
                     }
-                    else divState = 5;
+                    else
+                    {
+                        divState = 5;
+                        stateIcon.innerHTML = icons[3];
+                    }
                 }
-                if(event.key === 'Backspace' && passwordInput.selectionStart === 0)
+                if((event.key === 'Backspace' || event.key === 'ArrowLeft')&& passwordInput.selectionStart === 0)
                 {
                     divState = usersnameState;
                     usersnameInput.className = 'input';
@@ -121,12 +133,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 break;
             case 4://confirm password激活状态
-                if(event.key === 'Enter')
+                if(event.key === 'Enter' || event.key === ' ')
                 {
-                    passwordInput.focus();
+                    event.preventDefault(); // 阻止默认的Space键行为
+                    stateIcon.innerHTML = icons[4];
                     divState = 6;
                 }
-                if(event.key === 'Backspace' && password2Input.selectionStart === 0)
+                if((event.key === 'Backspace' || event.key === 'ArrowLeft') && password2Input.selectionStart === 0)
                 {
                     password2Input.className = 'zipInput';
                     passwordInput.className = 'input';
@@ -138,79 +151,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 break;
             case 5://login成功状态
-
                 break;
             case 6://register成功状态
-
                 break;
         }
-    });
-
-    // input.addEventListener('keypress', (event) => {
-    //     if (event.key === 'Enter') {
-    //         const inputValue = input.value.trim(); // 获取并清理输入值
-    //         event.preventDefault(); // 阻止默认的Enter键行为
-    //
-    //         if (inputValue === 'l' && mode !== 'login') {
-    //             mode = 'login';
-    //             label.textContent = '登录模式：请输入您的用户名吧！';
-    //             output.innerHTML = '还未注册？输入 R 按下 Enter 试试！';
-    //             isUsernameEntered = false;
-    //             input.value = '';
-    //             input.type = 'text';
-    //             return;
-    //         }
-    //
-    //         // 允许从任何状态切换到注册模式
-    //         if (inputValue === 'r' && mode !== 'register') {
-    //             mode = 'register';
-    //             label.textContent = '注册模式：请取一个自己喜欢的名字吧！';
-    //             output.innerHTML = '已有账号？输入 L 按下 Enter 试试！';
-    //             isUsernameEntered = false;
-    //             input.value = '';
-    //             input.type = 'text';
-    //             return;
-    //         }
-    //
-    //             if (mode === 'register') {
-    //                 if (!isUsernameEntered) {
-    //                     username = inputValue;
-    //                     output.innerHTML = `注册模式: 您的新名字是： ${inputValue}`;
-    //                     label.textContent = '请输入您的密码，记住不要太简单！';
-    //                     input.type = 'password'; // 更改为密码输入
-    //                     isUsernameEntered = true; // 标记用户名已输入
-    //                 }
-    //                 else {
-    //                     // 这里假设密码已输入
-    //                     output.innerHTML = `注册完成，欢迎新用户 ${username}！`;
-    //                     //setInitialState(); // 重置为初始状态
-    //                 }
-    //             }
-    //             else if (mode === 'login') {
-    //             // 登录模式的相关处理
-    //                 if (!isUsernameEntered) {
-    //                     username = inputValue; // 存储输入的用户名
-    //                     output.innerHTML = `登录模式: 欢迎回来！ ${username}`;
-    //                     label.textContent = '请输入您的密码：';
-    //                     input.type = 'password'; // 更改为密码输入
-    //                     isUsernameEntered = true; // 标记用户名已输入
-    //                 }
-    //                 else {
-    //                     // 这里假设密码已输入，可以进行验证
-    //                     output.innerHTML = `尝试登录中... 欢迎回来！${username}`;
-    //                     //setInitialState(); // 重置为初始状态
-    //                     // 在实际应用中，这里应当发送请求到后端验证用户名和密码
-    //                 }
-    //             }
-    //
-    //         input.value = ''; // 准备接受下一次输入
-    //     }
-    // });
-    input.focus();
-
-    // 确保输入框始终获得焦点
-    input.addEventListener('blur', () => {
-        setTimeout(() => input.focus(), 0); // 当输入框失去焦点时重新获得焦点
     });
 });
 
