@@ -40,6 +40,9 @@ body {
   background-color: #ffffffe6;
 }
 .cube .cube-top {
+  transform: rotateY(0deg) translateZ(200px);
+}
+.cube .cube-top-hidden {
   display: none;
   transform: rotateY(0deg) translateZ(200px);
 }

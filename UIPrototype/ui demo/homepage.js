@@ -1,107 +1,124 @@
 //储存所有自建项目的数组
 const projectsData = [
   {
-    name: "示例项目1",
+    name: "transformers",
     access: "public",
-    description: "Description: This is an example.",
-    labels: "frontend, javascript"
+    description: "Description: 🤗 Transformers: State-of-the-art Machine Learning for Pytorch, TensorFlow, and JAX.",
+    labels: "python, nlp, machine-learning, natural-language-processing",
+    url: "./cube/cube.html"
   },
 
   {
     name: "示例项目2",
     access: "private",
     description: "High-quality QR Code generator library in Java, Rust, C++.",
-    labels: "c++, java"
+    labels: "c++, java",
+    url: ""
   },
   {
     name: "示例项目3",
     access: "public",
     description: "ChatGPT Desktop Application (Mac, Windows and Linux)",
-    labels: "chatgpt, python, machine-learning"
+    labels: "chatgpt, python, machine-learning",
+    url: ""
   },
   {
     name: "示例项目4",
     access: "private",
     description: "Repository to track the progress in Natural Language Processing (NLP), including the datasets and the current state-of-the-art.",
-    labels: "nlp, deep-learning"
+    labels: "nlp, deep-learning",
+    url: ""
   },
   {
     name: "示例项目5",
     access: "public",
     description: "A professional front-end template for building fast, robust, and adaptable web apps or sites.",
-    labels: "html5, css3"
+    labels: "html5, css3",
+    url: ""
   },
   {
     name: "示例项目6",
     access: "private",
     description: "Algorithms and Data Structures implemented in JavaScript for beginners, following best practices.",
-    labels: "javascript"
+    labels: "javascript",
+    url: ""
   },
   {
     name: "示例项目7",
     access: "private",
     description: "Large single page application with 45 pages built on vue.",
-    labels: "vue, javascript"
+    labels: "vue, javascript",
+    url: ""
   },
   {
     name: "示例项目8",
     access: "public",
     description: "The library for web and native user interfaces.",
-    labels: "react, javascript"
+    labels: "react, javascript",
+    url: ""
   },
   {
     name: "示例项目9",
     access: "public",
     description: "The Go programming language",
-    labels: "go"
+    labels: "go",
+    url: ""
   },
   {
     name: "示例项目10",
     access: "public",
     description: "The official repo for the design of the C# programming language",
-    labels: "csharp"
+    labels: "csharp",
+    url: ""
   },
   {
     name: "示例项目11",
     access: "public",
     description: "Docker Official Image packaging for PHP",
-    labels: "php"
+    labels: "php",
+    url: ""
   },
   {
     name: "示例项目12",
     access: "public",
     description: "C client library for etcd with full features support",
-    labels: "c"
+    labels: "c",
+    url: ""
   },
   {
     name: "示例项目13",
     access: "public",
     description: "This is an example",
-    labels: "c, csharp"
+    labels: "c, csharp",
+    url: ""
   },
   {
     name: "示例项目14",
     access: "private",
     description: "This is an example.",
-    labels: "java"
+    labels: "java",
+    url: ""
   },
   {
     name: "示例项目15",
     access: "private",
     description: "This is an example.",
-    labels: "node.js"
+    labels: "node.js",
+    url: ""
   },
   {
     name: "示例项目16",
     access: "private",
     description: "This is an example.",
-    labels: "shell"
+    labels: "shell",
+    url: ""
   },
   {
     name: "示例项目17",
     access: "public",
     description: "This is an example.",
-    labels: "python"
+    labels: "python",
+    url: ""
   },
 ];
 var menu = document.getElementById("menu");
@@ -173,7 +190,7 @@ document.getElementById('newProjectForm').addEventListener('submit', function (e
   const projectLabels = document.getElementById('labelInput').value; // 获取标签
 
   // 使用这些数据创建新的项目方块
-  createProject(projectName, projectAccess, projectDescription, projectLabels);
+  createProject(projectName, projectAccess, projectDescription, projectLabels, "");
 
   // 可选：清空表单以便下一次输入
   modal.style.display = "none";
@@ -181,7 +198,7 @@ document.getElementById('newProjectForm').addEventListener('submit', function (e
   this.reset();
 });
 
-function createProject(name, access, description, labelString) {
+function createProject(name, access, description, labelString, url) {
   const projectsContainer = document.getElementById('projectsContainer');
   const addProjectButton = document.getElementById('addProject');
   const projectElement = document.createElement('div');
@@ -202,11 +219,12 @@ function createProject(name, access, description, labelString) {
     </div>
   `
     ;
+  projectElement.onclick = function() {window.location.href = url;}
   projectsContainer.insertBefore(projectElement, addProjectButton);
 }
 
 projectsData.forEach(project => {
-  createProject(project.name, project.access, project.description, project.labels);
+  createProject(project.name, project.access, project.description, project.labels, project.url);
 });
 
 /*拖拽模块*/

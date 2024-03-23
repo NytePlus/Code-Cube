@@ -151,8 +151,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 break;
             case 5://login成功状态
+                window.location.href = "../homepage.html";
                 break;
             case 6://register成功状态
+                window.location.href = "../homepage.html";
                 break;
         }
     });

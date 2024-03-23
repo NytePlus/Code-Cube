@@ -112,10 +112,9 @@
   .project-content {
     display: none;
     position: absolute;
-    margin-left: 5%;
-    width: 30%;
-    height: 20%;
-    overflow: hidden;
+    margin-left: 50%;
+    width: 400px;
+    height: 180px;
     background-color: #f9f9f9; /* 或根据需要调整 */
     border: 1px solid #ddd; /* 或根据需要调整 */
     z-index: 1; /* 确保内容显示在其他元素之上 */
