@@ -10,7 +10,7 @@ const icons=
     "<rect x=\"96\" y=\"208\" width=\"320\" height=\"272\" rx=\"48\" ry=\"48\" fill=\"none\" stroke=\"green\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"45\"/>",
     /*4:register succeed*/"<path fill=\"none\" stroke=\"green\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"45\" d=\"M416 128L192 384l-96-96\"/>\n"];
 
-const hint=['r=register  l=login', '输入r注册，输入l登录', 'l or r?', 'l | r', '如果已有账号，请输入l（log in）', '如果没有账号，请输入r注册(register)', '不区分大小写', ' >_<'];
+const hint=['输入r注册，输入l登录', 'r=register  l=login', 'l or r?', 'l | r', '如果已有账号，请输入l（log in）', '如果没有账号，请输入r注册(register)', '不区分大小写', ' >_<'];
 document.addEventListener('DOMContentLoaded', () => {
     let usersnamePasswordDiv = document.getElementById('usersnamePasswordDiv');
     let stateIcon = document.getElementById("stateIcon");
