@@ -11,7 +11,8 @@ const exampleRepos = [
         owner: {
             name: "John Doe",
             avatar_url: "https://randomuser.me/api/portraits/men/32.jpg"
-        }
+        },
+        isStarred: false
     },
     {
         id: 2,
@@ -22,7 +23,8 @@ const exampleRepos = [
         owner: {
             name: "Jane Doe",
             avatar_url: "https://randomuser.me/api/portraits/women/32.jpg"
-        }
+        },
+        isStarred: true
     },
     {
         id: 3,
@@ -33,7 +35,8 @@ const exampleRepos = [
         owner: {
             name: "Alice Johnson",
             avatar_url: "https://randomuser.me/api/portraits/women/44.jpg"
-        }
+        },
+        isStarred: false
     },
     {
         id: 4,
@@ -44,7 +47,8 @@ const exampleRepos = [
         owner: {
             name: "Mike Bennett",
             avatar_url: "https://randomuser.me/api/portraits/men/45.jpg"
-        }
+        },
+        isStarred: false
     },
     {
         id: 5,
@@ -55,7 +59,8 @@ const exampleRepos = [
         owner: {
             name: "Chris Wayne",
             avatar_url: "https://randomuser.me/api/portraits/men/46.jpg"
-        }
+        },
+        isStarred: false
     },
     {
         id: 6,
@@ -66,24 +71,39 @@ const exampleRepos = [
         owner: {
             name: "Laura Smith",
             avatar_url: "https://randomuser.me/api/portraits/women/47.jpg"
-        }
+        },
+        isStarred: true
     }
 ];
 
 function App() {
-    const [repos, setRepos] = useState(exampleRepos);  // 使用useState管理数据
-    const reorderRepos = (startIndex, endIndex) => {
-        const result = Array.from(repos);
-        const [removed] = result.splice(startIndex, 1);
-        result.splice(endIndex, 0, removed);
+    const [repos, setRepos] = useState(exampleRepos);
 
-        setRepos(result);
+    const onDragEnd = (result) => {
+        const { source, destination } = result;
+        if (!destination) return;
+
+        const items = Array.from(repos);
+        const [reorderedItem] = items.splice(source.index, 1);
+        items.splice(destination.index, 0, reorderedItem);
+
+        setRepos(items);
     };
 
+    const toggleStar = (id) => {
+        const newRepos = repos.map(repo => {
+            if (repo.id === id) {
+                const newStarCount = repo.isStarred ? repo.stars - 1 : repo.stars + 1;
+                return {...repo, isStarred: !repo.isStarred, stars: newStarCount};
+            }
+            return repo;
+        });
+        setRepos(newRepos);
+    };
 
     return (
         <div>
-            <Layout repos={repos} reorderRepos={reorderRepos} />
+            <Layout repos={repos} onDragEnd={onDragEnd} toggleStar={toggleStar}/>
         </div>
     );
 }
