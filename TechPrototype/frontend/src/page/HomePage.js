@@ -1,9 +1,21 @@
 import React from 'react';
 import { useState } from "react";
-import Header from './header';
-import RepoList from './RepoList';
-import {Grid, ToggleButtonGroup, ToggleButton, Box, IconButton} from '@mui/material';
-import { Paper, Fab, Tooltip } from '@mui/material';
+import Header, {StyledInputBase} from '../component/header';
+import RepoList from '../component/RepoList';
+import TelegramIcon from '@mui/icons-material/Telegram';
+import EditIcon from '@mui/icons-material/Edit';
+import moment from 'moment'
+import {
+    Grid,
+    ToggleButtonGroup,
+    ToggleButton,
+    Box,
+    IconButton,
+    SpeedDial,
+    SpeedDialIcon,
+    SpeedDialAction, Paper, Typography, Input
+} from '@mui/material';
+import { Fab, Tooltip } from '@mui/material';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
@@ -19,14 +31,42 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ForumIcon from '@mui/icons-material/Forum';
 import AndroidIcon from '@mui/icons-material/Android';
+import DragHandleIcon from "@mui/icons-material/DragHandle";
+import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
+import Card from "@mui/material/Card";
+import {useAuth} from "../component/AuthProvider";
+import {postMessage} from "../service/message";
 
-const Layout = ({ repos, onDragEnd, toggleStar }) => {
+const HomePage = ({ repos, onDragEnd, toggleStar }) => {
+    const auth = useAuth()
+
     const [viewMode, setViewMode] = useState('list'); // 默认视图模式为列表
-    const [toolsOpen, setToolsOpen] = useState(false);
-
-    const toggleTools = () => {
-        setToolsOpen(!toolsOpen);
+    const [agentOpen, setAgentOpen] = useState(false);
+    const [input, setInput] = useState('')
+    // const [toolsOpen, setToolsOpen] = useState(false);
+    //
+    // const toggleTools = () => {
+    //     setToolsOpen(!toolsOpen);
+    // };
+    const handleAgentChange = (event) => {
+        setAgentOpen(!agentOpen);
     };
+
+    const handleInputChange = (event) => {
+        setInput(event.target.value)
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const message = {
+            path: '/conversation/agent',
+            content: input,
+            date: moment().format('YYYY-MM-DD HH:mm:ss'),
+            user: auth.user
+        }
+        const res = postMessage(message)
+        console.log(res)
+    }
 
     const handleViewChange = (event, nextView) => {
         if (nextView !== null) {
@@ -108,22 +148,49 @@ const Layout = ({ repos, onDragEnd, toggleStar }) => {
                         </IconButton>
                     </Box>
 
-                    <Fab color="secondary" sx={{ position: 'fixed', bottom: 20, right: 20 }} onClick={toggleTools} size="small">
-                        {toolsOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                    </Fab>
-                    {toolsOpen && (
+                    {/*<Fab color="secondary" sx={{ position: 'fixed', bottom: 20, right: 20 }} onClick={toggleTools} size="small">*/}
+                    {/*    {toolsOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}*/}
+                    {/*</Fab>*/}
+                    {/*{toolsOpen && (*/}
                         <Box sx={{ position: 'fixed', bottom: 70, right: 20, display: 'flex', flexDirection: 'column' }}>
-                            <Tooltip title="Forum entry" placement="left">
-                                <IconButton><ForumIcon /></IconButton>
-                            </Tooltip>
-                            <Tooltip title="Agent" placement="left">
-                                <IconButton><AndroidIcon /></IconButton>
-                            </Tooltip>
+                    {/*        <Tooltip title="Forum entry" placement="left">*/}
+                    {/*            <IconButton><ForumIcon /></IconButton>*/}
+                    {/*        </Tooltip>*/}
+                    {/*        <Tooltip title="Agent" placement="left">*/}
+                    {/*            <IconButton><AndroidIcon /></IconButton>*/}
+                    {/*        </Tooltip>*/}
+                            <SpeedDial
+                                ariaLabel="SpeedDial openIcon example"
+                                sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                                icon={<SpeedDialIcon openIcon={<EditIcon />} />}
+                            >
+                                <SpeedDialAction key={"Agent"} icon={<AndroidIcon />}
+                                                 tooltipTitle={"Agent"} onClick={handleAgentChange}/>
+                                <SpeedDialAction key={"Forum"} icon={<ForumIcon />}
+                                                 tooltipTitle={"Fourm"}/>
+                            </SpeedDial>
+                            {agentOpen && <Card sx={{mr: 10}}>
+                                <div style={{display: 'flex'}}>
+                                    <Typography sx={{mt: 1}} variant="h5"></Typography>
+                                    <Box sx={{flexGrow: 1}}/>
+                                    <IconButton size="large" color="inherit">
+                                        <ClearOutlinedIcon/>
+                                    </IconButton>
+                                </div>
+                                <div style={{display: 'flex'}}>
+                                    <Input onChange={handleInputChange}/>
+                                    <Box sx={{flexGrow: 1}}/>
+                                    <IconButton type="submit" onMouseDown={handleSubmit} sx={{p: '10px'}}>
+                                        <TelegramIcon/>
+                                    </IconButton>
+                                </div>
+                            </Card>
+                            }
                         </Box>
-                    )}
+                    {/*)}*/}
                 </Grid>
             </Grid>
         </>
     );
 };
-export default Layout;
+export default HomePage;
