@@ -48,4 +48,4 @@ export async function post(url, data){
 }
 
 export const SPRINGBOOTURL = 'http://localhost:8080';
-export const FLASKURL = "http://202.120.6.211:13000";
+export const FLASKURL = "http://localhost:8890";

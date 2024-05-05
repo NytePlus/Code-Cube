@@ -1,10 +1,10 @@
 import {FLASKURL, post} from "./common";
 
 export async function postMessage(message){
-    const url = `${FLASKURL}/comment/post`
+    const url = `${FLASKURL}/conversation/agent`
     let res
     try{
-        res = post(url, message)
+        res = await post(url, message)
     }catch(e){
         console.log(e)
         res = {

@@ -13,7 +13,7 @@ import {
     IconButton,
     SpeedDial,
     SpeedDialIcon,
-    SpeedDialAction, Paper, Typography, Input
+    SpeedDialAction, Typography, Input
 } from '@mui/material';
 import { Fab, Tooltip } from '@mui/material';
 import ViewListIcon from '@mui/icons-material/ViewList';
@@ -56,7 +56,7 @@ const HomePage = ({ repos, onDragEnd, toggleStar }) => {
         setInput(event.target.value)
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const message = {
             path: '/conversation/agent',
@@ -64,7 +64,7 @@ const HomePage = ({ repos, onDragEnd, toggleStar }) => {
             date: moment().format('YYYY-MM-DD HH:mm:ss'),
             user: auth.user
         }
-        const res = postMessage(message)
+        const res = await postMessage(message)
         console.log(res)
     }
 
