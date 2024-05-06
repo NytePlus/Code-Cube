@@ -6,7 +6,7 @@ import Markdown from 'react-markdown'
 import rehypeHighlight from 'rehype-highlight'
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
-import {useCube, useCubeDispatch} from "./RepoLayout";
+import {useCube, useCubeDispatch} from "../page/RepoPage";
 import ViewInArIcon from "@mui/icons-material/ViewInAr";
 
 const style = {
@@ -71,18 +71,14 @@ export const DragCard = ({ index, moveCard, card, id}) => {
             isDragging: monitor.isDragging(),
         }),
     })
-    const state = useCube();
     const opacity = isDragging ? 0 : 1
     drag(drop(ref))
     if(card.type === 'cube')
         return (
-            <Card sx={{gridColumn: `span ${state?card.col:1}`, gridRow: `span ${state?card.row:2}`}} ref={preview} style={{...style, opacity}} data-handler-id={handlerId}>
+            <Card sx={{gridColumn: `span 1`, gridRow: `span 2`}} ref={preview} style={{...style, opacity}} data-handler-id={handlerId}>
                 <div ref={preview} style={{display: 'flex'}}>
                     <Typography sx={{mt: 1}} variant="h5">{card.title}</Typography>
                     <Box sx={{flexGrow: 1}}/>
-                        <IconButton size="large" color="inherit" onClick={() => {dispatch({type: 'switch'})}}>
-                            <ViewInArIcon/>
-                        </IconButton>
                     <div ref={ref}>
                         <IconButton size="large" color="inherit">
                             <DragHandleIcon sx={{cursor: 'move'}}/>

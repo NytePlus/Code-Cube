@@ -20,6 +20,4 @@ def agent():
     print(response)
     return jsonify({"reply": response}), 200
 
-
-
 app.run()

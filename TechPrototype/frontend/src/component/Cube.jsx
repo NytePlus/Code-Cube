@@ -1,14 +1,11 @@
-import {useState, createContext, useContext, useReducer} from 'react'
+import React, {useState, createContext, useContext, useReducer, Component, createRef, memo, useMemo} from 'react'
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import {Box, IconButton, Typography} from "@mui/material";
-import {useCube} from "./RepoLayout";
-
-const LayersContext = createContext(null);
-const LayersDispatchContext = createContext(null);
-const PreviewContext = createContext(null);
-const PreviewDispatchContext = createContext(null);
+import {Box, Button, IconButton, Typography} from "@mui/material";
+import {useCube, useCubeDispatch, useLayers, useLayersDispatch, usePreview, usePreviewDispatch} from "../page/RepoPage";
+import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
+import ViewInArIcon from "@mui/icons-material/ViewInAr";
 
 function File({item})
 {
@@ -72,9 +69,11 @@ function Folder({name, layer, display, setDisplay})
 }
 function FileSide({dir, Zoffset})
 {
+    const state = useCube()
     const [transform3d, setTransform3d] = useState('')
     const [background, setBackground] = useState('')
     const [overflow, setOverflow] = useState('hidden')
+    const [display, setDisplay] = useState(false)
     const preview = usePreview()
     function onMouseEnterHandler()
     {
@@ -88,16 +87,13 @@ function FileSide({dir, Zoffset})
         setBackground('')
         if(dir.path !== preview) setOverflow('hidden')
     }
-    const [display, setDisplay] = useState(false)
     if(dir && dir.files.length >= 0)
         return (
-            <div style={{width: '100%',
-                height: '100%',
-                padding: 10,
-                overflow: `${dir.path !== preview?overflow:''}`,
-                position: 'absolute',
-                border: '1px solid #000',
-                transform: `rotateX(-90deg) translateZ(${Zoffset}px) ${transform3d}`}}
+            <div style={{width: '100%', height: '100%', padding: 10, background: 'white',
+                overflow: `${dir.path !== preview?overflow:''}`, position: 'absolute', border: '1px solid #000',
+                transform: state ? `rotateX(-90deg) translateZ(${Zoffset}px) ${transform3d}` :
+                    `rotateX(-90deg) translateZ(${Zoffset * 0.6}px) ${transform3d}`,
+                transition: 'transform 0.5s ease-out'}}
                  onMouseEnter={() => onMouseEnterHandler()} onMouseLeave={() => onMouseLeaveHandler()}>
                 <div style={{height: 'min-content', width:'min-content', background: `${background}`}}>
                     {(dir.path !== preview)? <Typography sx={{mb:-0.5, whiteSpace:'nowrap'}} variant="h6">{dir.path}</Typography>:
@@ -115,13 +111,16 @@ function FileSide({dir, Zoffset})
 
 function LeftSide()
 {
+    const state = useCube();
     return (
         <div style={{width: '100%',
             height: '100%',
             position: 'absolute',
             border: '1px solid #000',
             padding: 10,
-            transform: 'rotateY(-90deg) translateZ(100px) rotateZ(90deg) translateX(20px) translateY(-15px)'}}>
+            transition: 'transform 0.5s ease-out',
+            transform: state ? 'rotateY(-90deg) translateZ(180px) rotateZ(90deg) translateX(20px) translateY(-15px)' :
+                'rotateY(-90deg) translateZ(100px) rotateZ(90deg) translateX(20px) translateY(-15px)'}}>
             Side
         </div>
     )
@@ -129,87 +128,60 @@ function LeftSide()
 
 function BottomSide()
 {
+    const state = useCube();
     return (
         <div style={{width: '100%',
             height: '100%',
             position: 'absolute',
             border: '1px solid #000',
             padding: 10,
-            transform: 'rotateY(180deg) translateZ(125px) translateX(10px)'}}>
-            Side
+            transition: 'transform 0.5s ease-out',
+            transform: state ? 'rotateY(180deg) translateZ(250px) translateX(10px)' :
+                'rotateY(180deg) translateZ(125px) translateX(10px)'}}>
+        </div>
+    )
+}
+
+function TopSide()
+{
+    const state = useCube();
+    const dispatch = useCubeDispatch();
+    return (
+        <div style={{width: '100%',
+            height: '100%',
+            position: 'absolute',
+            border: '1px solid #000',
+            padding: 10,
+            transition: 'transform 0.5s ease-out',
+            transform: state ? 'rotateY(180deg) translateZ(-250px) translateX(10px)' :
+                'rotateY(180deg) translateZ(-115px) translateX(10px)'}}>
+            <IconButton sx={{m: "37%"}}size="large" color="inherit" onClick={() => {dispatch({type: 'switch'})}}>
+                <ViewInArIcon/>
+            </IconButton>
         </div>
     )
 }
 
 function RightSide()
 {
+    const state = useCube();
     return (
         <div style={{width: '100%',
             height: '100%',
             position: 'absolute',
             border: '1px solid #000',
             padding: 10,
-            transform: 'rotateY(90deg) translateZ(110px) rotateZ(-90deg) translateX(-10px)'}}>
+            transition: 'transform 0.5s ease-out',
+            transform: state ? 'rotateY(90deg) translateZ(200px) rotateZ(-90deg) translateX(-10px)' :
+                'rotateY(90deg) translateZ(110px) rotateZ(-90deg) translateX(-10px)'}}>
             Side
         </div>
     )
 }
-export function useLayers() {
-    return useContext(LayersContext);
-}
-export function useLayersDispatch() {
-    return useContext(LayersDispatchContext);
-}
-export function usePreview() {
-    return useContext(PreviewContext);
-}
-export function usePreviewDispatch() {
-    return useContext(PreviewDispatchContext);
-}
 
-function previewReducer(preview, action){
-    switch (action.type){
-        case 'preview':
-        {
-            return action.info.layer + '/' + action.info.name
-        }
-        case 'endpreview':
-        {
-            return ''
-        }
-        default:
-        {
-            throw Error('Unknown action: ' + action.type);
-        }
-    }
-}
-function layersReducer(layers, action) {
-    switch (action.type) {
-        case 'changed':
-        {
-            // Cannot Change layers directly in reducer!
-            let i = layers.length - 1
-            while(i > 0 && layers[i] !== action.info.layer)
-                i --
-            return [...layers.slice(0, i + 1), action.info.layer + '/' + action.info.name]
-        }
-        case 'remove':
-        {
-            // Cannot Change layers directly in reducer!
-            let i = layers.length - 1
-            while(i > 0 && layers[i] !== action.info.layer)
-                i --
-            return [...layers.slice(0, i + 1)]
-        }
-        default:
-        {
-            throw Error('Unknown action: ' + action.type);
-        }
-    }
-}
-
-function FileFlat({dir})
+export function FileFlat({dir})
 {
+    const state = useCube()
     const [display, setDisplay] = useState(true)
     const dispatch = useLayersDispatch();
     function back()
@@ -222,7 +194,8 @@ function FileFlat({dir})
         })
     }
     return (<div style={{
-        width: '100%', height: '100%', overflow: 'scroll', align: 'begin'
+        width: '100%', height: '100%', overflow: 'scroll', align: 'begin',
+        transition: 'opacity 0.5s ease-out', opacity: state ? '0': '1', background: "white"
     }}>
         <div style={{display: 'flex'}}>
             <Typography sx={{mb: -0.5, whiteSpace: 'nowrap'}} variant="h6">{dir.path}</Typography>
@@ -242,30 +215,16 @@ function FileFlat({dir})
     </div>)
 }
 
-function Cube({prop}) {
-    const state = useCube();
-    const [layers, dispatch] = useReducer(layersReducer, ['F:/PycharmProjects/transformers']);
-    const [preview, previewDispatch] = useReducer(previewReducer, '');
-        return (<LayersContext.Provider value={layers}>
-            <LayersDispatchContext.Provider value={dispatch}>
-                <PreviewContext.Provider value={preview}>
-                    <PreviewDispatchContext.Provider value={previewDispatch}>
-                    {
-                        state?
-                            <div style={{paddingLeft: '30%', paddingTop: '20%'}}>
-                                <div className='cube'>
-                                    <FileCube prop={prop}/>
-                                    <LeftSide></LeftSide>
-                                    <BottomSide></BottomSide>
-                                    <RightSide></RightSide>
-                                </div>
-                            </div>:
-                        <FileFlat dir={prop.find(item => item.path === layers[layers.length - 1])}></FileFlat>
-                    }
-                    </PreviewDispatchContext.Provider>
-                </PreviewContext.Provider>
-            </LayersDispatchContext.Provider>
-        </LayersContext.Provider>)
+export function Cube({prop}){
+    const state = useCube()
+    return (
+        <div className={['cube', !state && 'cube-rotate'].join(' ')}>
+            <FileCube prop={prop}/>
+            <LeftSide></LeftSide>
+            <TopSide></TopSide>
+            <BottomSide></BottomSide>
+            <RightSide></RightSide>
+        </div>)
 }
 
 function FileCube({prop}) {
@@ -274,7 +233,8 @@ function FileCube({prop}) {
     return (
         <>
             {layers.map((path, index) => {
-                return (<FileSide dir={prop.find(item => item.path === path)} Zoffset={-400 / layers.length * index + 200}></FileSide>)
+                return (<FileSide dir={prop.find(item => item.path === path)}
+                                  Zoffset={-400 / layers.length * index + 200}></FileSide>)
             })}
             {
                 preview !== '' ? <FileSide dir={prop.find(item => item.path === preview)} Zoffset={-200}>Preview</FileSide> :
@@ -283,5 +243,3 @@ function FileCube({prop}) {
         </>
     )
 }
-
-export default Cube

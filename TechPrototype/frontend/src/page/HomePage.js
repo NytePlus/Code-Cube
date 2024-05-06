@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState } from "react";
-import Header, {StyledInputBase} from '../component/header';
+import Header from '../component/header';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import RepoList from '../component/RepoList';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import EditIcon from '@mui/icons-material/Edit';
@@ -28,7 +29,6 @@ import ReplyIcon from '@mui/icons-material/Reply';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ForumIcon from '@mui/icons-material/Forum';
 import AndroidIcon from '@mui/icons-material/Android';
 import DragHandleIcon from "@mui/icons-material/DragHandle";
@@ -152,7 +152,7 @@ const HomePage = ({ repos, onDragEnd, toggleStar }) => {
                     {/*    {toolsOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}*/}
                     {/*</Fab>*/}
                     {/*{toolsOpen && (*/}
-                        <Box sx={{ position: 'fixed', bottom: 70, right: 20, display: 'flex', flexDirection: 'column' }}>
+                        <Box sx={{ position: 'fixed', bottom: 50, right: 20, display: 'flex', flexDirection: 'column' }}>
                     {/*        <Tooltip title="Forum entry" placement="left">*/}
                     {/*            <IconButton><ForumIcon /></IconButton>*/}
                     {/*        </Tooltip>*/}
@@ -162,7 +162,7 @@ const HomePage = ({ repos, onDragEnd, toggleStar }) => {
                             <SpeedDial
                                 ariaLabel="SpeedDial openIcon example"
                                 sx={{ position: 'absolute', bottom: 16, right: 16 }}
-                                icon={<SpeedDialIcon openIcon={<EditIcon />} />}
+                                icon={<SpeedDialIcon openIcon={<ExpandMoreIcon />} />}
                             >
                                 <SpeedDialAction key={"Agent"} icon={<AndroidIcon />}
                                                  tooltipTitle={"Agent"} onClick={handleAgentChange}/>

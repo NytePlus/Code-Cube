@@ -3,6 +3,7 @@ import HomePage from "../page/HomePage";
 import AuthProvider from "./AuthProvider";
 import React, {useState} from "react";
 import {exampleRepos} from "../source/exampleRepo";
+import RepoPage from "../page/RepoPage";
 
 
 export default function AppRouter() {
@@ -33,8 +34,7 @@ export default function AppRouter() {
     return <BrowserRouter>
         <AuthProvider>
             <Routes>
-                <Route index element={
-                    <HomePage repos={repos} onDragEnd={onDragEnd} toggleStar={toggleStar}/>} />
+                <Route index element={<RepoPage/>} />
                 <Route path="/home" element={
                     <HomePage repos={repos} onDragEnd={onDragEnd} toggleStar={toggleStar}/>} />
             </Routes>
