@@ -16,8 +16,8 @@ import java.util.Date;
 @Table(name = "messages")
 public class Message {
     @Id
-    @JoinColumn(name = "path")
-    private String path;
+    @JoinColumn(name = "id")
+    private String id;
 
     @Column(name = "content")
     private String content;
@@ -28,4 +28,8 @@ public class Message {
     @ManyToOne
     @JoinColumn(name = "user")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "conversation")
+    private Conversation conversation;
 }

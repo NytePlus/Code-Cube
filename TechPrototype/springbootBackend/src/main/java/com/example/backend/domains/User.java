@@ -13,22 +13,22 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(name = "User")
 public class User {
     @Id
-    @Column(name = "path")
-    private String path;
+    @Column(name = "UserID")
+    private String id;
 
-    @Column(name = "name")
+    @Column(name = "Username")
     private String name;
 
-    @Column(name = "avatar")
+    @Column(name = "Avatar")
     private byte[] avatar;
 
-    @OneToMany(mappedBy = "init_user")
-    private List<Repository> initRepositoryList;
+    @OneToMany(mappedBy = "initUser")
+    private List<Repo> initRepositoryList;
 
-    @OneToMany(mappedBy = "init_user")
+    @OneToMany(mappedBy = "initUser")
     private List<Discussion> initDiscussionList;
 
     @OneToMany(mappedBy = "user")
@@ -41,7 +41,7 @@ public class User {
     @JoinTable(name = "user_repositories",
             joinColumns = @JoinColumn(name = "star_user"),
             inverseJoinColumns = @JoinColumn(name = "star_repo"))
-    private List<Repository> starRepositoryList;
+    private List<Repo> starRepositoryList;
 
     @ManyToMany
     @JoinTable(name = "user_discussions",
@@ -53,5 +53,5 @@ public class User {
     @JoinTable(name = "user_conversations",
             joinColumns = @JoinColumn(name = "part_user"),
             inverseJoinColumns = @JoinColumn(name = "part_conv"))
-    private List<Discussion> partConversationList;
+    private List<Conversation> partConversationList;
 }

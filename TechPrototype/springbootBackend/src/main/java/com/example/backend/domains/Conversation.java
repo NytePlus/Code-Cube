@@ -16,10 +16,10 @@ import java.util.List;
 @Table(name = "conversations")
 public class Conversation {
     @Id
-    @Column(name = "path")
-    private String path;
+    @Column(name = "id")
+    private String id;
 
-    @OneToMany(mappedBy = "converation")
+    @OneToMany(mappedBy = "conversation")
     private List<Message> messageList;
 
     @ManyToMany(mappedBy = "partConversationList")

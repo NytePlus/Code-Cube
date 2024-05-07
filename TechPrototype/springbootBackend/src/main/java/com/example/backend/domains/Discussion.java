@@ -16,15 +16,15 @@ import java.util.List;
 @Table(name = "discussions")
 public class Discussion {
     @Id
-    @Column(name = "path")
-    private String path;
+    @Column(name = "id")
+    private String id;
 
     @Column(name = "name")
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "init_user")
-    private User init_user;
+    private User initUser;
 
     @OneToMany(mappedBy = "discussion")
     private List<Comment> commentList;

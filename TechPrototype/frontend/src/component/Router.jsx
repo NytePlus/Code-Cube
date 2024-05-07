@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePage from "../page/HomePage";
 import AuthProvider from "./AuthProvider";
+import LoginPage from "../page/LoginPage"
 import React, {useState} from "react";
 import {exampleRepos} from "../source/exampleRepo";
 import RepoPage from "../page/RepoPage";
@@ -35,8 +36,8 @@ export default function AppRouter() {
         <AuthProvider>
             <Routes>
                 <Route index element={<RepoPage/>} />
-                <Route path="/home" element={
-                    <HomePage repos={repos} onDragEnd={onDragEnd} toggleStar={toggleStar}/>} />
+                <Route path="/home" element={<LoginPage/>} />
+                <Route path="/repo" element={<HomePage repos={repos} onDragEnd={onDragEnd} toggleStar={toggleStar}/>}/>
             </Routes>
         </AuthProvider>
     </BrowserRouter>

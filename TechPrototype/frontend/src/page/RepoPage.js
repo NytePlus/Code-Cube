@@ -6,7 +6,7 @@ import {HTML5Backend} from "react-dnd-html5-backend";
 import {DndProvider} from "react-dnd";
 import {Cube, FileFlat} from "../component/Cube";
 import Header from "../component/header";
-import {IconButton, SpeedDial, SpeedDialAction, SpeedDialIcon} from "@mui/material";
+import {SpeedDial, SpeedDialAction, SpeedDialIcon} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AndroidIcon from "@mui/icons-material/Android";
 import ForumIcon from "@mui/icons-material/Forum";
@@ -125,8 +125,8 @@ const RepoPage = () => {
                 text: '',
                 row: 3,
                 col: 2,
-                child:
-                    <FileFlat dir={data.find(item => item.path === layers[layers.length - 1])}/>
+                child:<></>
+                    // <FileFlat dir={data.find(item => item.path === layers[layers.length - 1])}/>
             },
             {
                 id: 4,

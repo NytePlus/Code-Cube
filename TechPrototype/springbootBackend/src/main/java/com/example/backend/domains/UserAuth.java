@@ -17,9 +17,9 @@ import lombok.Setter;
 @Table(name = "user_auth")
 public class UserAuth {
     @Id
-    @Column(name = "path")
-    private String path;
+    @Column(name = "UserID")
+    private String id;
 
-    @Column(name = "password")
+    @Column(name = "Password")
     private String password;
 }

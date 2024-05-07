@@ -14,10 +14,10 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "repositories")
-public class Repository {
+public class Repo {
     @Id
-    @Column(name = "path")
-    private String path;
+    @Column(name = "id")
+    private String id;
 
     @Column(name = "name")
     private String name;

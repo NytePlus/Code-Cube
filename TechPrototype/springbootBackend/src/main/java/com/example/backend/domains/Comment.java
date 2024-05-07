@@ -17,13 +17,13 @@ import java.util.List;
 @Table(name = "comments")
 public class Comment {
     @Id
-    @Column(name = "path")
-    private String path;
+    @Column(name = "id")
+    private String id;
     @Column(name = "content")
     private String content;
 
-    @Column(name = "like")
-    private Integer like;
+    @Column(name = "likes")
+    private Integer likes;
 
     @Column(name = "date")
     private Date date;
