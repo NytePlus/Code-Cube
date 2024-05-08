@@ -16,8 +16,8 @@ import java.util.List;
 @Table(name = "repositories")
 public class Repo {
     @Id
-    @Column(name = "id")
-    private String id;
+    @Column(name = "path")
+    private String path;
 
     @Column(name = "name")
     private String name;

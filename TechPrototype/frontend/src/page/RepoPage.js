@@ -6,10 +6,7 @@ import {HTML5Backend} from "react-dnd-html5-backend";
 import {DndProvider} from "react-dnd";
 import {Cube, FileFlat} from "../component/Cube";
 import Header from "../component/header";
-import {SpeedDial, SpeedDialAction, SpeedDialIcon} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import AndroidIcon from "@mui/icons-material/Android";
-import ForumIcon from "@mui/icons-material/Forum";
+import RightTools from "../component/RightTools";
 
 const CubeContext = createContext(null);
 const CubeDispatchContext = createContext(null);
@@ -17,7 +14,7 @@ const LayersContext = createContext(null);
 const LayersDispatchContext = createContext(null);
 const PreviewContext = createContext(null);
 const PreviewDispatchContext = createContext(null);
-
+const RepoContext = createContext(null);
 
 export function useLayers() {
     return useContext(LayersContext);
@@ -37,6 +34,10 @@ export function useCube() {
 }
 export function useCubeDispatch() {
     return useContext(CubeDispatchContext);
+}
+
+export function useRepo(){
+    return useContext(RepoContext)
 }
 
 function previewReducer(preview, action){
@@ -95,6 +96,7 @@ function cubeReducer(cube, action)
 
 const RepoPage = () => {
     const [data, setData] = useState(transformers_dir)
+    const [name, setName] = useState('transformers')
     const [cube, dispatch] = useReducer(cubeReducer, false)
     const [layers, layerDispatch] = useReducer(layersReducer, ['F:/PycharmProjects/transformers']);
     const [preview, previewDispatch] = useReducer(previewReducer, '');
@@ -161,42 +163,38 @@ const RepoPage = () => {
 
         return (
             <DndProvider backend={HTML5Backend}>
-                <CubeContext.Provider value={cube}>
-                    <CubeDispatchContext.Provider value={dispatch}>
-                        <LayersContext.Provider value={layers}>
-                            <LayersDispatchContext.Provider value={layerDispatch}>
-                                <PreviewContext.Provider value={preview}>
-                                    <PreviewDispatchContext.Provider value={previewDispatch}>
-                                        <Header/>
-                                        <div style={{height: 500, paddingLeft: '45%', paddingTop: '15%'}}>
-                                            <Cube prop={data}/>
-                                        </div>
-                                        <SpeedDial
-                                            ariaLabel="SpeedDial openIcon example"
-                                            sx={{position: 'absolute', bottom: 16, right: 16}}
-                                            icon={<SpeedDialIcon openIcon={<ExpandMoreIcon/>}/>}
-                                        >
-                                            <SpeedDialAction key={"Agent"} icon={<AndroidIcon/>}
-                                                             tooltipTitle={"Agent"}/>
-                                            <SpeedDialAction key={"Forum"} icon={<ForumIcon/>}
-                                                             tooltipTitle={"Fourm"}/>
-                                        </SpeedDial>
-                                        <div style={{
-                                            margin: 15,
-                                            height: 4000,
-                                            display: 'grid',
-                                            gap: 15,
-                                            gridTemplateRows: 'repeat(20, minmax(0, 1fr))',
-                                            gridTemplateColumns: 'repeat(4, minmax(0, 1fr))'
-                                        }}>
-                                            {cards.map((card, i) => renderCard(card, i))}
-                                        </div>
-                                    </PreviewDispatchContext.Provider>
-                                </PreviewContext.Provider>
-                            </LayersDispatchContext.Provider>
-                        </LayersContext.Provider>
-                    </CubeDispatchContext.Provider>
-                </CubeContext.Provider>
+                <RepoContext.Provider value={{data, name}}>
+                    <CubeContext.Provider value={cube}>
+                        <CubeDispatchContext.Provider value={dispatch}>
+                            <LayersContext.Provider value={layers}>
+                                <LayersDispatchContext.Provider value={layerDispatch}>
+                                    <PreviewContext.Provider value={preview}>
+                                        <PreviewDispatchContext.Provider value={previewDispatch}>
+                                            <div style={{overflowX: 'hidden'}}>
+                                                <Header/>
+                                                <div style={{height: 500, paddingLeft: '45%', paddingTop: '15%'}}>
+                                                    <Cube prop={data}/>
+                                                </div>
+                                                <div style={{
+                                                    margin: 15,
+                                                    height: 4000,
+                                                    display: 'grid',
+                                                    gap: 15,
+                                                    gridTemplateRows: 'repeat(20, minmax(0, 1fr))',
+                                                    gridTemplateColumns: 'repeat(4, minmax(0, 1fr))'
+                                                }}>
+                                                    {cards.map((card, i) => renderCard(card, i))}
+                                                </div>
+                                                <RightTools/>
+                                            </div>
+                                        </PreviewDispatchContext.Provider>
+                                    </PreviewContext.Provider>
+                                </LayersDispatchContext.Provider>
+                            </LayersContext.Provider>
+                        </CubeDispatchContext.Provider>
+                    </CubeContext.Provider>
+                </RepoContext.Provider>
+
             </DndProvider>
         )
     }

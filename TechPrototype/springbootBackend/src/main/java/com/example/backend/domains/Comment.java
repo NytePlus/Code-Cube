@@ -17,6 +17,7 @@ import java.util.List;
 @Table(name = "comments")
 public class Comment {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private String id;
     @Column(name = "content")

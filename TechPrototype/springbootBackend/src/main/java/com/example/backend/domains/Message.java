@@ -16,6 +16,7 @@ import java.util.Date;
 @Table(name = "messages")
 public class Message {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JoinColumn(name = "id")
     private String id;
 

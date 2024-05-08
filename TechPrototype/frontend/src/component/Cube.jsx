@@ -3,7 +3,15 @@ import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutl
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {Box, Button, IconButton, Switch, Typography} from "@mui/material";
-import {useCube, useCubeDispatch, useLayers, useLayersDispatch, usePreview, usePreviewDispatch} from "../page/RepoPage";
+import {
+    useCube,
+    useCubeDispatch,
+    useLayers,
+    useLayersDispatch,
+    usePreview,
+    usePreviewDispatch,
+    useRepo
+} from "../page/RepoPage";
 import ViewInArIcon from "@mui/icons-material/ViewInAr";
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
 import PublicOutlinedIcon from '@mui/icons-material/PublicOutlined';
@@ -12,6 +20,10 @@ import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import { Upload, GetProp, UploadFile, UploadProps } from 'antd'
+import DriveFolderUploadOutlinedIcon from '@mui/icons-material/DriveFolderUploadOutlined';
+import {SPRINGBOOTURL} from "../service/common";
+import {useAuth} from "./AuthProvider";
 
 function File({item})
 {
@@ -126,15 +138,16 @@ function FrontSide()
     const state = useCube()
     return (
         <div style={{
-            background: 'transparent',
+            background: 'transparent', display: 'flex',
             transform: state?`rotateX(-90deg) translateZ(300px) ${transform3d}` : `rotateX(-90deg) translateZ(120px)`
         }} className={'side'}
              onMouseEnter={() => onMouseEnterHandler()} onMouseLeave={() => onMouseLeaveHandler()}>
-            <AdminPanelSettingsIcon sx={{opacity:0.5, color: '#4caf50', fontSize: 200}}/>
-            {hover?<>
-            <Typography sx={{whiteSpace: 'nowrap', color:'#4caf50'}} variant="h4">仓库状态 私有</Typography>
-            <Switch color={'success'}/>
-            </>:<></>}
+            <AdminPanelSettingsIcon sx={{opacity:hover?1:0.8, color: '#4caf50', fontSize: 200}}/>
+            {hover?<div>
+                <Typography sx={{boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
+                    whiteSpace: 'nowrap', color:'#4caf50'}} variant="h4">仓库状态 私有</Typography>
+                <Switch color={'success'}/>
+            </div>:<></>}
         </div>
 )
 }
@@ -260,7 +273,7 @@ function RightStar() {
     const [hover, setHover] = useState(false)
     const [transform3d, setTransform3d] = useState('')
     function onMouseEnterHandler() {
-        setTransform3d('rotateY(-45deg)  rotateX(45deg)')
+        setTransform3d('translate3d(-1000px, -1414px, 1000px) rotateY(-45deg)  rotateX(45deg)')
         setHover(true)
     }
 
@@ -272,20 +285,32 @@ function RightStar() {
         <div className={'side-option'} style={{
             transform: state ? `rotateY(90deg) translateZ(230px) rotateZ(-90deg) translateX(-10px) ${transform3d}` :
                 'rotateY(90deg) translateZ(110px) rotateZ(-90deg) translateX(-10px)',
-            background: hover?'white':'transparent'
+            background: hover?'rgba(256, 256, 256, 0.5)':'rgba(256, 256, 256, 0)',
+            display: 'flex'
         }}
              onMouseEnter={() => onMouseEnterHandler()} onMouseLeave={() => onMouseLeaveHandler()}>
-            <StarBorderRoundedIcon sx={{opacity: 0.5, fontSize: 150, color: '#424242'}}/>
-            {hover?<Typography sx={{whiteSpace: 'nowrap', color: '#424242'}} variant="h4">收藏</Typography>:<></>}
+            <StarBorderRoundedIcon sx={{opacity: hover?1:0.8, fontSize: 150, color: '#424242'}}/>
+            {hover?<div><Typography sx={{
+                whiteSpace: 'nowrap', color: '#424242', boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)'
+            }} variant="h4">收藏</Typography></div>:<></>}
         </div>)
 }
 
 function RightUpload(){
     const state = useCube()
+    const [fileList, setFileList] = useState([]);
     const [hover, setHover] = useState(false)
     const [transform3d, setTransform3d] = useState('')
+    const auth = useAuth()
+    const repo = useRepo()
+
+    const onChange = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
+        console.log(newFileList)
+    };
+
     function onMouseEnterHandler() {
-        setTransform3d('rotateY(-45deg)  rotateX(45deg)')
+        setTransform3d('translate3d(-1000px, -1414px, 1000px) rotateY(-45deg)  rotateX(45deg)')
         setHover(true)
     }
 
@@ -297,20 +322,34 @@ function RightUpload(){
         <div className={'side-option'} style={{
             transform: state ? `rotateY(90deg) translateZ(330px) rotateZ(-90deg) translateX(-10px) ${transform3d}` :
                 'rotateY(90deg) translateZ(110px) rotateZ(-90deg) translateX(-10px)',
-            background: hover?'white':'transparent'
+            background: hover?'rgba(256, 256, 256, 0.5)':'rgba(256, 256, 256, 0)',
+            display: 'flex'
         }}
              onMouseEnter={() => onMouseEnterHandler()} onMouseLeave={() => onMouseLeaveHandler()}>
-            <FileUploadOutlinedIcon sx={{opacity: 0.5, fontSize: 150, color: '#424242'}}/>
-            {hover?<Typography sx={{whiteSpace: 'nowrap', color: '#424242'}} variant="h4">上传文件</Typography>:<></>}
+            <FileUploadOutlinedIcon sx={{opacity: hover?1:0.8, fontSize: 150, color: '#424242'}}/>
+            {hover? <div><Typography sx={{
+                whiteSpace: 'nowrap', color: '#424242',
+                boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)'
+            }} variant="h4">上传</Typography>
+                <Upload
+                        fileList={fileList}
+                        onChange={onChange}
+                        action={SPRINGBOOTURL + '/fileUpload'}
+                        data={file => {
+                            return {user: auth.User, repo: repo.name, path: file["webkitRelativePath"]}}}
+                        directory>
+                    <Button><DriveFolderUploadOutlinedIcon/></Button>
+                </Upload>
+            </div> : <></>}
         </div>)
 }
 
-function RightSet(){
+function RightSet() {
     const state = useCube()
     const [hover, setHover] = useState(false)
     const [transform3d, setTransform3d] = useState('')
     function onMouseEnterHandler() {
-        setTransform3d('rotateY(-45deg)  rotateX(45deg)')
+        setTransform3d('translate3d(-1000px, -1414px, 1000px) rotateY(-45deg)  rotateX(45deg)')
         setHover(true)
     }
 
@@ -322,11 +361,13 @@ function RightSet(){
         <div className={'side-option'} style={{
             transform: state ? `rotateY(90deg) translateZ(440px) rotateZ(-90deg) translateX(-10px) ${transform3d}` :
                 'rotateY(90deg) translateZ(110px) rotateZ(-90deg) translateX(-10px)',
-            background: hover?'white':'transparent'
+            background: hover?'rgba(256, 256, 256, 0.6)':'rgba(256, 256, 256, 0)',
+            display: 'flex'
         }}
              onMouseEnter={() => onMouseEnterHandler()} onMouseLeave={() => onMouseLeaveHandler()}>
-            <SettingsOutlinedIcon sx={{opacity: 0.5, fontSize: 150, color: '#424242'}}/>
-            {hover?<Typography sx={{whiteSpace: 'nowrap', color: '#424242'}} variant="h4">设置</Typography>:<></>}
+            <SettingsOutlinedIcon sx={{opacity: hover?1:0.8, fontSize: 150, color: '#424242'}}/>
+            {hover?<div><Typography sx={{ whiteSpace: 'nowrap', color: '#424242',
+                boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)'}} variant="h4"> 设置 </Typography></div>:<></>}
         </div>)
 }
 

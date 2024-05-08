@@ -1,5 +1,6 @@
 package com.example.backend.dao;
 
+import com.example.backend.domains.File;
 import com.example.backend.repository.FileRepo;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -8,4 +9,8 @@ import org.springframework.stereotype.Service;
 public class FileDao {
     @Resource
     FileRepo fileRepo;
+
+    public void addFile(File file){
+        fileRepo.save(file);
+    }
 }

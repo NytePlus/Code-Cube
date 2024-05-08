@@ -1,11 +1,11 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
 import HomePage from "../page/HomePage";
 import AuthProvider from "./AuthProvider";
+import InstructionProvider from './InstructionProvider';
 import LoginPage from "../page/LoginPage"
 import React, {useState} from "react";
 import {exampleRepos} from "../source/exampleRepo";
 import RepoPage from "../page/RepoPage";
-
 
 export default function AppRouter() {
     const [repos, setRepos] = useState(exampleRepos);
@@ -34,11 +34,13 @@ export default function AppRouter() {
 
     return <BrowserRouter>
         <AuthProvider>
-            <Routes>
-                <Route index element={<RepoPage/>} />
-                <Route path="/home" element={<LoginPage/>} />
-                <Route path="/repo" element={<HomePage repos={repos} onDragEnd={onDragEnd} toggleStar={toggleStar}/>}/>
-            </Routes>
+            <InstructionProvider>
+                <Routes>
+                    <Route index element={<HomePage repos={repos} onDragEnd={onDragEnd} toggleStar={toggleStar}/>} />
+                    <Route path="/home" element={<LoginPage/>} />
+                    <Route path="/repo" element={<RepoPage/>}/>
+                </Routes>
+            </InstructionProvider>
         </AuthProvider>
     </BrowserRouter>
 }

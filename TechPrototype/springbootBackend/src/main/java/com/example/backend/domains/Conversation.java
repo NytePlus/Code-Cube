@@ -16,6 +16,7 @@ import java.util.List;
 @Table(name = "conversations")
 public class Conversation {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private String id;
 
