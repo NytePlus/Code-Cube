@@ -16,7 +16,7 @@ public class UserAuth {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserID")
-    private String id;
+    private Integer id;
 
     @Column(name = "Password")
     private String password;

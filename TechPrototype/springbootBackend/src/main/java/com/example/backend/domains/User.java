@@ -1,5 +1,9 @@
 package com.example.backend.domains;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,11 +18,12 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "User")
+
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserID")
-    private String id;
+    private Integer id;
 
     @Column(name = "Username")
     private String name;
@@ -26,15 +31,15 @@ public class User {
     @Column(name = "Avatar")
     private byte[] avatar;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "initUser")
     private List<Repo> initRepositoryList;
 
-    @OneToMany(mappedBy = "initUser")
-    private List<Discussion> initDiscussionList;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Comment> commentList;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Message> messageList;
 

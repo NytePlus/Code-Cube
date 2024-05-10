@@ -1,5 +1,6 @@
 package com.example.backend.domains;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,8 +19,9 @@ public class Conversation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private String id;
+    private Integer id;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "conversation")
     private List<Message> messageList;
 
