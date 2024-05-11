@@ -13,17 +13,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "User")
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "UserID")
-    private String id;
+    @Column(name = "id")
+    private Integer id;
 
-    @Column(name = "Username")
+    @Column(name = "username")
     private String name;
 
-    @Column(name = "Avatar")
+    @Column(name = "avatar")
     private byte[] avatar;
 
     @OneToMany(mappedBy = "initUser")

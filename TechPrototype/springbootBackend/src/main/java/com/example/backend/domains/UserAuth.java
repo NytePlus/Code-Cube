@@ -15,9 +15,9 @@ import lombok.Setter;
 public class UserAuth {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "UserID")
-    private String id;
+    @Column(name = "id")
+    private Integer id;
 
-    @Column(name = "Password")
+    @Column(name = "password")
     private String password;
 }

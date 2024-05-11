@@ -1,5 +1,6 @@
 package com.example.backend.domains;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,7 @@ public class File {
     @Column(name = "type")
     private String type;
 
+    @JsonIgnore
     @Column(name = "content")
     private byte[] content;
 

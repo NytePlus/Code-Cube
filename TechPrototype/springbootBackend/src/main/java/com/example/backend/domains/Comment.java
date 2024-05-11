@@ -19,7 +19,8 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private String id;
+    private Integer id;
+
     @Column(name = "content")
     private String content;
 
