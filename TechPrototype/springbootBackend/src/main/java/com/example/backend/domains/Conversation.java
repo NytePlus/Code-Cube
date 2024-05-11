@@ -1,5 +1,6 @@
 package com.example.backend.domains;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public class Conversation {
     @Column(name = "id")
     private Integer id;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "conversation")
     private List<Message> messageList;
 

@@ -7,6 +7,8 @@ import com.example.backend.repository.UserRepo;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserDao {
     @Resource
@@ -24,4 +26,7 @@ public class UserDao {
     public User getByName(String name){
         return userRepo.findByName(name);
     }
+
+    public Optional<User> findById(Integer id) { return userRepo.findById(id); }
+
 }

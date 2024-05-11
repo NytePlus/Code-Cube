@@ -17,7 +17,11 @@ import java.util.Date;
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+<<<<<<< HEAD
     @Column(name = "id")
+=======
+    @JoinColumn(name = "id")
+>>>>>>> f0c63a2da344ac3ec798dc8404c8124b28ea9f36
     private Integer id;
 
     @Column(name = "content")

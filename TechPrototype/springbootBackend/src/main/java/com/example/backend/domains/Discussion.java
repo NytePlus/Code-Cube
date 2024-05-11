@@ -1,5 +1,9 @@
 package com.example.backend.domains;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +26,7 @@ public class Discussion {
 
     @Column(name = "name")
     private String name;
+
 
     @ManyToOne
     @JoinColumn(name = "init_user")
