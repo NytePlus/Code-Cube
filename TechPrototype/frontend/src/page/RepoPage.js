@@ -7,6 +7,9 @@ import {DndProvider} from "react-dnd";
 import {Cube, FileFlat} from "../component/Cube";
 import Header from "../component/header";
 import RightTools from "../component/RightTools";
+import {useParams} from "react-router-dom";
+import {getRepo} from "../service/repo";
+import {useAuth} from "../component/AuthProvider";
 
 const CubeContext = createContext(null);
 const CubeDispatchContext = createContext(null);
@@ -95,7 +98,10 @@ function cubeReducer(cube, action)
 }
 
 const RepoPage = () => {
-    const [data, setData] = useState(transformers_dir)
+    const repoName = useParams()
+    const auth = useAuth()
+    //const repoData = getRepo({user: auth.user, repo:repoName})
+    const repoData = transformers_dir
     const [name, setName] = useState('transformers')
     const [cube, dispatch] = useReducer(cubeReducer, false)
     const [layers, layerDispatch] = useReducer(layersReducer, ['F:/PycharmProjects/transformers']);
@@ -128,7 +134,7 @@ const RepoPage = () => {
                 row: 3,
                 col: 2,
                 child:<></>
-                    // <FileFlat dir={data.find(item => item.path === layers[layers.length - 1])}/>
+                    // <FileFlat dir={repoData.find(item => item.path === layers[layers.length - 1])}/>
             },
             {
                 id: 4,
@@ -163,7 +169,7 @@ const RepoPage = () => {
 
         return (
             <DndProvider backend={HTML5Backend}>
-                <RepoContext.Provider value={{data, name}}>
+                <RepoContext.Provider value={{repoData, name}}>
                     <CubeContext.Provider value={cube}>
                         <CubeDispatchContext.Provider value={dispatch}>
                             <LayersContext.Provider value={layers}>
@@ -173,7 +179,7 @@ const RepoPage = () => {
                                             <div style={{overflowX: 'hidden'}}>
                                                 <Header/>
                                                 <div style={{height: 500, paddingLeft: '45%', paddingTop: '15%'}}>
-                                                    <Cube prop={data}/>
+                                                    <Cube prop={repoData}/>
                                                 </div>
                                                 <div style={{
                                                     margin: 15,

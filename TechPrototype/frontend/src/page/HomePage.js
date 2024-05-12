@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useState } from "react";
 import Header from '../component/header';
 import RepoList from '../component/RepoList';
@@ -8,6 +8,16 @@ import {
     ToggleButton,
     Box,
     IconButton,
+    Dialog,
+    Paper,
+    Typography,
+    DialogContent,
+    DialogTitle,
+    DialogContentText,
+    DialogActions,
+    Button,
+    Input,
+    Switch,
 } from '@mui/material';
 import { Fab, Tooltip } from '@mui/material';
 import ViewListIcon from '@mui/icons-material/ViewList';
@@ -17,19 +27,66 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SearchIcon from '@mui/icons-material/Search';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import EmailIcon from '@mui/icons-material/Email';
 import ReplyIcon from '@mui/icons-material/Reply';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import RightTools from '../component/RightTools'
+import ViewInArIcon from "@mui/icons-material/ViewInAr";
+import PublicOutlinedIcon from "@mui/icons-material/PublicOutlined";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import {createRepo, getAllPublicRepo} from "../service/repo";
+import {useAuth} from "../component/AuthProvider";
+import {exampleRepos} from "../source/exampleRepo";
+import {MuiChipsInput} from "mui-chips-input";
 
-const HomePage = ({ repos, onDragEnd, toggleStar }) => {
+const HomePage = () => {
+    const auth = useAuth()
     const [viewMode, setViewMode] = useState('list'); // 默认视图模式为列表
-    // const [toolsOpen, setToolsOpen] = useState(false);
-    //
-    // const toggleTools = () => {
-    //     setToolsOpen(!toolsOpen);
-    // };
+    const [repoCreateOpen, setRepoCreateOpen] = useState(false)
+    const [publish, setPublish] = useState(false)
+    const [repoCreateName, setRepoCreateName] = useState('')
+    const [repoCreateIntro, setRepoCreateIntro] = useState('')
+    const [repos, setRepos] = useState([]);
+    const [chips, setChips] = useState(["1"]);
+
+    const handleChipChange = (event) => {
+        setChips(event)
+    }
+    const getReposData = async() => {
+        let repos = await getAllPublicRepo();
+        setRepos(repos);
+    }
+
+    useEffect(() => {
+        getReposData();
+    }, [])
+
+    const toggleStar = (id) => {
+        const newRepos = repos.map(repo => {
+            if (repo.id === id) {
+                const newStarCount = repo.isStarred ? repo.star - 1 : repo.star + 1;
+                return {...repo, isStarred: !repo.isStarred, star: newStarCount};
+            }
+            return repo;
+        });
+        setRepos(newRepos);
+    };
+
+    const onDragEnd = (result) => {
+        const { source, destination } = result;
+        if (!destination) return;
+
+        const items = Array.from(repos);
+        const [reorderedItem] = items.splice(source.index, 1);
+        items.splice(destination.index, 0, reorderedItem);
+
+        setRepos(items);
+    };
+
 
     const handleViewChange = (event, nextView) => {
         if (nextView !== null) {
@@ -43,9 +100,74 @@ const HomePage = ({ repos, onDragEnd, toggleStar }) => {
         });
     };
 
+    const handleCreateRepo = () => {
+        createRepo({user: {name: "root", password: "123"},//{name: auth.user, password: auth.password},
+            path: '/' + auth.user + '/' + repoCreateName,
+            publish: publish, introduction: repoCreateIntro,
+            tagNameList: chips})
+        setRepoCreateOpen(false)
+        setChips([])
+    }
+
+    const handleCreateRepoClose = () => {
+        setRepoCreateOpen(! repoCreateOpen)
+        setPublish(false)
+    }
+
+    const handlePublish = () => {
+        setPublish(! publish)
+    }
+
+    const handleCreateRepoName = (e) => {
+        setRepoCreateName(e.target.value)
+    }
+
+    const handleCreateRepoIntro = (e) => {
+        setRepoCreateIntro(e.target.value)
+    }
+
     return (
         <>
             <Header />
+            <Dialog
+                open={repoCreateOpen}
+                onClose={handleCreateRepoClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <Dialog
+                    open={repoCreateOpen}
+                    onClose={handleCreateRepoClose}>
+                    <DialogTitle id="alert-dialog-title" sx={{display: 'flex'}}>
+                        {"新建仓库"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <Box sx={{display: 'flex'}}>
+                            <Typography sx={{mt: 2,whiteSpace:'nowrap'}} variant="subtitle1">仓库名</Typography>
+                            <Input sx={{pt: 2}} onChange={handleCreateRepoName}></Input>
+                        </Box>
+                        <Box sx={{display: 'flex'}}>
+                            <Typography sx={{mt: 2,whiteSpace:'nowrap'}} variant="subtitle1">简介</Typography>
+                            <Input sx={{pt: 2}} onChange={handleCreateRepoIntro}></Input>
+                        </Box>
+                        <Box sx={{display: 'flex', mt: 2}}>
+                            <Switch onClick={handlePublish} color={'success'}/>
+                            {publish ? <PublicOutlinedIcon sx={{color:"green", fontSize:30}}/>:<AdminPanelSettingsIcon sx={{fontSize:30}}/>}
+                            {publish ? <Typography sx={{ml:1, whiteSpace:'nowrap'}} variant="subtitle1">公开</Typography>:
+                                <Typography sx={{ml:1, whiteSpace:'nowrap'}} variant="subtitle1">私有</Typography>}
+                        </Box>
+                        <MuiChipsInput value={chips} onChange={handleChipChange} />
+                    </DialogContent>
+                    <DialogActions>
+                        <IconButton onClick={handleCreateRepo}>
+                            <CheckOutlinedIcon/>
+                        </IconButton>
+                        <IconButton onClick={handleCreateRepoClose}>
+                            <ClearOutlinedIcon/>
+                        </IconButton>
+                    </DialogActions>
+                </Dialog>
+            </Dialog>
             <Grid container spacing={2} sx={{ height: '100vh', mt: 8 }} style={{ marginTop: '24px' }}>
                 <Grid item xs={1} md={0.5} sx={{ position: 'relative' }}>
                     <Box sx={{ position: 'absolute', top: 0, left: 20, height: '100%' }}>
@@ -90,6 +212,11 @@ const HomePage = ({ repos, onDragEnd, toggleStar }) => {
                         <Tooltip title="Search in repos" placement="left">
                             <Fab color="default" size="small" sx={{ mt: 1 }} onClick={() => {}}>
                                 <SearchIcon />
+                            </Fab>
+                        </Tooltip>
+                        <Tooltip title="Create my repo" placement="left">
+                            <Fab color="success" size="small" sx={{ mt: 1 }} onClick={() => handleCreateRepoClose()}>
+                                <ViewInArIcon/>
                             </Fab>
                         </Tooltip>
                     </Box>

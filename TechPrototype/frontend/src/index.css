@@ -199,3 +199,10 @@ input{
   display: flex;
   align-items: center;
 }
+
+.cube-animation {
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  transform-style: preserve-3d;
+}

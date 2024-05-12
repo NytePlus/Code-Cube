@@ -24,10 +24,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-<<<<<<< HEAD
 
-=======
->>>>>>> f0c63a2da344ac3ec798dc8404c8124b28ea9f36
     @Column(name = "content")
     private String content;
 

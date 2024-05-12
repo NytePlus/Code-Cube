@@ -17,20 +17,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-<<<<<<< HEAD
-@Table(name = "user")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-=======
 @Table(name = "User")
 
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserID")
->>>>>>> f0c63a2da344ac3ec798dc8404c8124b28ea9f36
     private Integer id;
 
     @Column(name = "username")

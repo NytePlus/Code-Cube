@@ -122,7 +122,7 @@ function Folder({name, layer, disChild, setDisChild})
     </div>)
 }
 
-function FrontSide()
+export function FrontSide()
 {
     const [hover, setHover] = useState(false)
     const [transform3d, setTransform3d] = useState('')
@@ -152,7 +152,7 @@ function FrontSide()
 )
 }
 
-function FileSide({dir, Zoffset}) {
+export function FileSide({dir, Zoffset}) {
     const state = useCube()
     const [disChild, setDisChild] = useState(['', ''])
     const [transform3d, setTransform3d] = useState('')
@@ -206,7 +206,7 @@ function FileSide({dir, Zoffset}) {
         )
 }
 
-function LeftSide() {
+export function LeftSide() {
     const state = useCube();
     return (
         <div style={{
@@ -216,15 +216,15 @@ function LeftSide() {
             boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
             padding: 10,
             transition: 'transform 0.5s ease-out',
-            transform: state ? 'rotateY(-90deg) translateZ(180px) rotateZ(90deg) translateX(20px) translateY(-15px)' :
-                'rotateY(-90deg) translateZ(100px) rotateZ(90deg) translateX(20px) translateY(-15px)'
+            transform: state ? 'rotateY(-90deg) translateZ(180px) rotateZ(90deg) translateX(10px)' :
+                'rotateY(-90deg) translateZ(110px) rotateZ(90deg) translateX(10px)'
         }}>
             Side
         </div>
     )
 }
 
-function BottomSide() {
+export function BottomSide() {
     const state = useCube();
     return (
         <div style={{
@@ -234,22 +234,22 @@ function BottomSide() {
             boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
             padding: 10,
             transition: 'transform 0.5s ease-out',
-            transform: state ? 'rotateY(180deg) translateZ(250px) translateX(10px)' :
-                'rotateY(180deg) translateZ(125px) translateX(10px)'
+            transform: state ? 'rotateY(180deg) translateZ(250px) translateY(10px)' :
+                'rotateY(180deg) translateZ(110px) translateY(10px)'
         }}>
         </div>
     )
 }
 
-function TopSide() {
+export function TopSide() {
     const state = useCube();
     const dispatch = useCubeDispatch();
     return (
         <>
             <div style={{
                 boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)', padding: 10,
-                transform: state ? 'rotateY(180deg) translateZ(-270px) translateX(10px)' :
-                    'rotateY(180deg) translateZ(-115px) translateX(10px)'
+                transform: state ? 'rotateY(180deg) translateZ(-270px) translateY(10px)' :
+                    'rotateY(180deg) translateZ(-115px) translateY(10px)'
             }} className={'side'}>
                 <IconButton sx={{m: "37%"}} size="large" color="inherit" onClick={() => {
                     dispatch({type: 'switch'})
@@ -268,7 +268,7 @@ function TopSide() {
         </>
     )
 }
-function RightStar() {
+export function RightStar() {
     const state = useCube()
     const [hover, setHover] = useState(false)
     const [transform3d, setTransform3d] = useState('')
@@ -296,7 +296,7 @@ function RightStar() {
         </div>)
 }
 
-function RightUpload(){
+export function RightUpload(){
     const state = useCube()
     const [fileList, setFileList] = useState([]);
     const [hover, setHover] = useState(false)
@@ -344,7 +344,7 @@ function RightUpload(){
         </div>)
 }
 
-function RightSet() {
+export function RightSet() {
     const state = useCube()
     const [hover, setHover] = useState(false)
     const [transform3d, setTransform3d] = useState('')
@@ -371,7 +371,7 @@ function RightSet() {
         </div>)
 }
 
-function RightSide() {
+export function RightSide() {
     const state = useCube();
     return (
         <>

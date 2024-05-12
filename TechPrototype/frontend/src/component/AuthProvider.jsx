@@ -11,12 +11,13 @@ const AuthProvider = ({ children }) => {
     const loginAction = async (username, password) => {
         try {
             const res = await login(username, password);
+            console.log({res: res})
             if (res === true) {
                 setUser(username);
                 setToken(password);
                 localStorage.setItem("user", username);
                 localStorage.setItem("site", password);
-                navigate("/home");
+                navigate("/" + user + "/home");
                 return;
             }
             throw new Error(res.message);

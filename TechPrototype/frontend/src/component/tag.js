@@ -1,18 +1,20 @@
 import React from 'react';
-import { Chip } from '@mui/material';
+import {Chip, Input} from '@mui/material';
 
-const Tag = ({ label/*, index*/ }) => {
+const Tag = ({ label/*, index*/}) => {
     return (
         <Chip
             /*key={index}*/
             label={label}
-            variant="outlined"
+            // variant="outlined"
             size="small"
             style={{
                 marginRight: '4px',
-                backgroundColor: '#007FFF', // Bright blue color similar to GitHub blue
-                color: 'white',
-                borderRadius: '16px'  // Rounded corners
+                backgroundColor: '#bbdefb', // Bright blue color similar to GitHub blue
+                color: "#2196f3",
+                fontSize: 15,
+                // borderRadius: '16px',  // Rounded corners
+                border: 0
             }}
         />
     );

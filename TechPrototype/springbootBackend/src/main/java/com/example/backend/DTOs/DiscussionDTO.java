@@ -1,5 +1,9 @@
 package com.example.backend.DTOs;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
 public class DiscussionDTO {
     private Integer id;
     private String name;

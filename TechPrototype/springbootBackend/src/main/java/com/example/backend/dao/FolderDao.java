@@ -6,6 +6,7 @@ import com.example.backend.repository.FolderRepo;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @Service
 public class FolderDao {
@@ -15,15 +16,24 @@ public class FolderDao {
     public Folder findOrCreateByPath(String path){
         Folder folder = folderRepo.findByPath(path);
         if(folder == null){
-            String[] pathSplit = path.split("/");
-            folder = new Folder(path, pathSplit[pathSplit.length - 1],
-                    new ArrayList<>(), new ArrayList<>(),
-                    findOrCreateByPath(path.split("/")[pathSplit.length - 2]));
-            folderRepo.save(folder);
-            return folder;
+            return createByPath(path);
         }
         else{
             return folder;
         }
+    }
+
+    public Boolean checkByPath(String path){
+        return folderRepo.findByPath(path) != null;
+    }
+
+    public Folder createByPath(String path){
+        String[] pathSplit = path.split("/");
+        String parentPath = path.substring(0, path.lastIndexOf("/"));
+        Folder folder = new Folder(path, pathSplit[pathSplit.length - 1],
+                new ArrayList<>(), new ArrayList<>(),
+                findOrCreateByPath(parentPath));
+        folderRepo.save(folder);
+        return folder;
     }
 }

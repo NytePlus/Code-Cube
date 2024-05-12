@@ -16,6 +16,7 @@ public class LoginServiceImpl implements LoginService{
     public boolean checkAccount(UserDTO user){
         String input = user.getPassword();
         String password = userdao.getPasswordByName(user.getName());
+        if(password == null) return false;
         System.out.println(input + "\n" + password);
         return Objects.equals(input, password);
     }
