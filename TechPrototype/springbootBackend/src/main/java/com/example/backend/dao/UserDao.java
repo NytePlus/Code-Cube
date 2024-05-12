@@ -18,6 +18,7 @@ public class UserDao {
 
     public String getPasswordByName(String name) {
         User user = userRepo.findByName(name);
+        if(user == null) return null;
         UserAuth userAuth = userAuthRepo.findById(Integer.valueOf(user.getId())).orElse(null);
         assert userAuth != null;
         return userAuth.getPassword();
@@ -29,4 +30,8 @@ public class UserDao {
 
     public Optional<User> findById(Integer id) { return userRepo.findById(id); }
 
+    public void addUser(User user, UserAuth userAuth){
+        userRepo.save(user);
+        userAuthRepo.save(userAuth);
+    }
 }

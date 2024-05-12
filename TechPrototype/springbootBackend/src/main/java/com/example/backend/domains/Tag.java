@@ -14,23 +14,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "folders")
-public class Folder {
+@Table(name = "tags")
+public class Tag {
     @Id
-    @Column(name = "path")
-    private String path;
-
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "folder")
-    private List<Folder> folderList;
-
-    @OneToMany(mappedBy = "folder")
-    private List<File> fileList;
-
-    @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "parent_path")
-    private Folder folder;
+    @ManyToMany(mappedBy = "repoTagList")
+    private List<Repo> tagRepoList;
 }

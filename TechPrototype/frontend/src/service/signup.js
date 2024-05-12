@@ -1,7 +1,7 @@
-import { SPRINGBOOTURL, post } from "./common";
+import {post, SPRINGBOOTURL} from '../service/common'
 
-export async function login(username, password) {
-    const url = `${SPRINGBOOTURL}/login`;
+export async function signup(username, password){
+    const url = `${SPRINGBOOTURL}/signup`;
     let result;
     try {
         console.log({name:username, password:password})

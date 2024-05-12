@@ -1,5 +1,6 @@
 package com.example.backend.domains;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,8 +23,8 @@ public class Repo {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "readme")
-    private String readme;
+    @Column(name = "introduction")
+    private String introduction;
 
     @Column(name = "star")
     private Integer star;
@@ -32,6 +33,7 @@ public class Repo {
     private boolean publish;
 
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "folder")
     private Folder folder;
 
@@ -41,4 +43,10 @@ public class Repo {
 
     @ManyToMany(mappedBy = "starRepositoryList")
     private List<User> starUsers;
+
+    @ManyToMany
+    @JoinTable(name = "repo_tags",
+            joinColumns = @JoinColumn(name = "repo"),
+            inverseJoinColumns = @JoinColumn(name = "tag"))
+    private List<Tag> repoTagList;
 }

@@ -1,17 +1,23 @@
 package com.example.backend.controller;
 import com.example.backend.DTOs.UserDTO;
-import com.example.backend.service.LoginService;
+import com.example.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class LoginController {
+public class UserController {
     @Autowired
-    LoginService loginService;
+    UserService userService;
 
     @CrossOrigin(origins = "http://localhost:3000" ,allowCredentials="true")
     @RequestMapping("/login")
     public @ResponseBody boolean checkAccountHandler(@RequestBody UserDTO user){
-        return loginService.checkAccount(user);
+        return userService.checkAccount(user);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000" ,allowCredentials="true")
+    @RequestMapping("/signup")
+    public @ResponseBody boolean signUpHandler(@RequestBody UserDTO user){
+        return userService.signUp(user);
     }
 }

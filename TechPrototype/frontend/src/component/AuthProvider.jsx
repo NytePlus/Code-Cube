@@ -1,6 +1,8 @@
 import { useContext, createContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {login} from "../service/login";
+import async from "async";
+import {signup} from "../service/signup";
 
 const AuthContext = createContext();
 
@@ -11,12 +13,13 @@ const AuthProvider = ({ children }) => {
     const loginAction = async (username, password) => {
         try {
             const res = await login(username, password);
+            console.log({res: res})
             if (res === true) {
                 setUser(username);
                 setToken(password);
                 localStorage.setItem("user", username);
                 localStorage.setItem("site", password);
-                navigate("/home");
+                navigate("/" + user + "/home");
                 return;
             }
             throw new Error(res.message);
@@ -29,6 +32,7 @@ const AuthProvider = ({ children }) => {
         setUser(null);
         setToken("");
         localStorage.removeItem("site");
+        localStorage.removeItem("user");
         navigate("/login");
     };
 

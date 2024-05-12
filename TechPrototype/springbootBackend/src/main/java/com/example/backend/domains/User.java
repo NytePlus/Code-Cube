@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Blob;
 import java.util.List;
 
 @Setter
@@ -25,11 +26,17 @@ public class User {
     @Column(name = "UserID")
     private Integer id;
 
-    @Column(name = "Username")
+    @Column(name = "username")
     private String name;
 
-    @Column(name = "Avatar")
-    private byte[] avatar;
+    @Column(name = "avatar")
+    @Lob()
+    private Blob avatar;
+
+    @OneToOne
+    @JsonIgnore
+    @JoinColumn(name = "user_auth")
+    private UserAuth userAuth;
 
     @JsonIgnore
     @OneToMany(mappedBy = "initUser")

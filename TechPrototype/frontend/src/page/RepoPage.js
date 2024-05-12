@@ -1,5 +1,5 @@
 import update from 'immutability-helper'
-import React, {createContext, useCallback, useContext, useReducer, useState} from 'react'
+import React, {createContext, useCallback, useContext, useEffect, useReducer, useState} from 'react'
 import { DragCard } from '../component/Card.jsx'
 import {transformers_dir} from "../source/transformers_dir";
 import {HTML5Backend} from "react-dnd-html5-backend";
@@ -7,6 +7,9 @@ import {DndProvider} from "react-dnd";
 import {Cube, FileFlat} from "../component/Cube";
 import Header from "../component/header";
 import RightTools from "../component/RightTools";
+import {useParams} from "react-router-dom";
+import {getFolder, getRepo} from "../service/repo";
+import {useAuth} from "../component/AuthProvider";
 
 const CubeContext = createContext(null);
 const CubeDispatchContext = createContext(null);
@@ -95,11 +98,32 @@ function cubeReducer(cube, action)
 }
 
 const RepoPage = () => {
-    const [data, setData] = useState(transformers_dir)
-    const [name, setName] = useState('transformers')
+    const userRepo = useParams()
+    const auth = useAuth()
+    const [repoData, setRepoData] = useState([])
+    const [folder, setFolder] = useState([])
     const [cube, dispatch] = useReducer(cubeReducer, false)
-    const [layers, layerDispatch] = useReducer(layersReducer, ['F:/PycharmProjects/transformers']);
+    const [layers, layerDispatch] = useReducer(layersReducer, ["/" + userRepo.user + '/' + userRepo.repo]);
     const [preview, previewDispatch] = useReducer(previewReducer, '');
+
+    const getRepoData = async () =>{
+        let data = {
+            userDTO: {
+                name: auth.user,
+                password: auth.password
+            },
+            path: "/" + userRepo.user + '/' + userRepo.repo}
+        let repo = await getRepo(data)
+        let folder = await getFolder(data)
+        console.log(repo)
+        console.log(folder)
+        setRepoData(repo)
+        setFolder([folder])
+    }
+
+    useEffect(() => {
+        getRepoData()
+    }, [])
     // eslint-disable-next-line no-lone-blocks
     {
         const [cards, setCards] = useState([
@@ -128,7 +152,7 @@ const RepoPage = () => {
                 row: 3,
                 col: 2,
                 child:<></>
-                    // <FileFlat dir={data.find(item => item.path === layers[layers.length - 1])}/>
+                    // <FileFlat dir={repoData.find(item => item.path === layers[layers.length - 1])}/>
             },
             {
                 id: 4,
@@ -163,7 +187,7 @@ const RepoPage = () => {
 
         return (
             <DndProvider backend={HTML5Backend}>
-                <RepoContext.Provider value={{data, name}}>
+                <RepoContext.Provider value={{repoData, userRepo}}>
                     <CubeContext.Provider value={cube}>
                         <CubeDispatchContext.Provider value={dispatch}>
                             <LayersContext.Provider value={layers}>
@@ -173,7 +197,7 @@ const RepoPage = () => {
                                             <div style={{overflowX: 'hidden'}}>
                                                 <Header/>
                                                 <div style={{height: 500, paddingLeft: '45%', paddingTop: '15%'}}>
-                                                    <Cube prop={data}/>
+                                                    <Cube prop={folder}/>
                                                 </div>
                                                 <div style={{
                                                     margin: 15,
@@ -194,7 +218,6 @@ const RepoPage = () => {
                         </CubeDispatchContext.Provider>
                     </CubeContext.Provider>
                 </RepoContext.Provider>
-
             </DndProvider>
         )
     }

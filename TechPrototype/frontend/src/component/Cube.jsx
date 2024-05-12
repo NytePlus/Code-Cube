@@ -122,7 +122,7 @@ function Folder({name, layer, disChild, setDisChild})
     </div>)
 }
 
-function FrontSide()
+export function FrontSide()
 {
     const [hover, setHover] = useState(false)
     const [transform3d, setTransform3d] = useState('')
@@ -152,7 +152,7 @@ function FrontSide()
 )
 }
 
-function FileSide({dir, Zoffset}) {
+export function FileSide({dir, Zoffset}) {
     const state = useCube()
     const [disChild, setDisChild] = useState(['', ''])
     const [transform3d, setTransform3d] = useState('')
@@ -171,7 +171,8 @@ function FileSide({dir, Zoffset}) {
         setBackground('')
         if(dir.path !== preview) setOverflow('hidden')
     }
-    if(dir && dir.files.length >= 0)
+    console.log({dir:dir});
+    if(dir)
         return (
             <>
                 <div style={{
@@ -191,22 +192,18 @@ function FileSide({dir, Zoffset}) {
                      onMouseEnter={() => onMouseEnterHandler()} onMouseLeave={() => onMouseLeaveHandler()}>
                     <div style={{height: 'min-content', width: 'min-content', background: `${background}`}}>
                         {(dir.path !== preview) ?
-                            <Typography sx={{mb: -0.5, whiteSpace: 'nowrap'}} variant="h6">{dir.path}</Typography> :
-                            <Typography sx={{mb: -0.5, whiteSpace: 'nowrap'}} variant="h6">Preview</Typography>}
-                        {dir.files.map((item) => {
-                            if (item.type === 'file')
-                                return <File item={item}/>
-                            else
-                                return <Folder name={item.name} layer={dir.path}
-                                               disChild={disChild} setDisChild={setDisChild}/>
-                        })}
+                            <Typography sx={{mt:-2, whiteSpace: 'nowrap'}} variant="h6">{dir.path}</Typography> :
+                            <Typography sx={{mt:-2, whiteSpace: 'nowrap'}} variant="h6">Preview</Typography>}
+                        {dir.fileList.map((item) => {return <File item={item}/>})}
+                        {dir.folderList.map((item) => {return <Folder name={item.name} layer={dir.path}
+                                                                                       disChild={disChild} setDisChild={setDisChild}/>})}
                     </div>
                 </div>
             </>
         )
 }
 
-function LeftSide() {
+export function LeftSide() {
     const state = useCube();
     return (
         <div style={{
@@ -216,15 +213,15 @@ function LeftSide() {
             boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
             padding: 10,
             transition: 'transform 0.5s ease-out',
-            transform: state ? 'rotateY(-90deg) translateZ(180px) rotateZ(90deg) translateX(20px) translateY(-15px)' :
-                'rotateY(-90deg) translateZ(100px) rotateZ(90deg) translateX(20px) translateY(-15px)'
+            transform: state ? 'rotateY(-90deg) translateZ(180px) rotateZ(90deg) translateX(10px)' :
+                'rotateY(-90deg) translateZ(110px) rotateZ(90deg) translateX(10px)'
         }}>
             Side
         </div>
     )
 }
 
-function BottomSide() {
+export function BottomSide() {
     const state = useCube();
     return (
         <div style={{
@@ -234,22 +231,22 @@ function BottomSide() {
             boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
             padding: 10,
             transition: 'transform 0.5s ease-out',
-            transform: state ? 'rotateY(180deg) translateZ(250px) translateX(10px)' :
-                'rotateY(180deg) translateZ(125px) translateX(10px)'
+            transform: state ? 'rotateY(180deg) translateZ(250px) translateY(10px)' :
+                'rotateY(180deg) translateZ(110px) translateY(10px)'
         }}>
         </div>
     )
 }
 
-function TopSide() {
+export function TopSide() {
     const state = useCube();
     const dispatch = useCubeDispatch();
     return (
         <>
             <div style={{
                 boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)', padding: 10,
-                transform: state ? 'rotateY(180deg) translateZ(-270px) translateX(10px)' :
-                    'rotateY(180deg) translateZ(-115px) translateX(10px)'
+                transform: state ? 'rotateY(180deg) translateZ(-270px) translateY(10px)' :
+                    'rotateY(180deg) translateZ(-115px) translateY(10px)'
             }} className={'side'}>
                 <IconButton sx={{m: "37%"}} size="large" color="inherit" onClick={() => {
                     dispatch({type: 'switch'})
@@ -268,7 +265,7 @@ function TopSide() {
         </>
     )
 }
-function RightStar() {
+export function RightStar() {
     const state = useCube()
     const [hover, setHover] = useState(false)
     const [transform3d, setTransform3d] = useState('')
@@ -296,7 +293,7 @@ function RightStar() {
         </div>)
 }
 
-function RightUpload(){
+export function RightUpload(){
     const state = useCube()
     const [fileList, setFileList] = useState([]);
     const [hover, setHover] = useState(false)
@@ -319,6 +316,7 @@ function RightUpload(){
         setHover(false)
     }
     return (
+        auth.user === repo.userRepo.user?
         <div className={'side-option'} style={{
             transform: state ? `rotateY(90deg) translateZ(330px) rotateZ(-90deg) translateX(-10px) ${transform3d}` :
                 'rotateY(90deg) translateZ(110px) rotateZ(-90deg) translateX(-10px)',
@@ -336,18 +334,20 @@ function RightUpload(){
                         onChange={onChange}
                         action={SPRINGBOOTURL + '/fileUpload'}
                         data={file => {
-                            return {user: auth.User, repo: repo.name, path: file["webkitRelativePath"]}}}
+                            return {user: auth.User, repo: repo.userRepo.repo, path: file["webkitRelativePath"]}}}
                         directory>
                     <Button><DriveFolderUploadOutlinedIcon/></Button>
                 </Upload>
             </div> : <></>}
-        </div>)
+        </div>:<></>)
 }
 
-function RightSet() {
+export function RightSet() {
     const state = useCube()
     const [hover, setHover] = useState(false)
     const [transform3d, setTransform3d] = useState('')
+    const auth = useAuth()
+    const repo = useRepo()
     function onMouseEnterHandler() {
         setTransform3d('translate3d(-1000px, -1414px, 1000px) rotateY(-45deg)  rotateX(45deg)')
         setHover(true)
@@ -358,6 +358,7 @@ function RightSet() {
         setHover(false)
     }
     return (
+        auth.user === repo.userRepo.user?
         <div className={'side-option'} style={{
             transform: state ? `rotateY(90deg) translateZ(440px) rotateZ(-90deg) translateX(-10px) ${transform3d}` :
                 'rotateY(90deg) translateZ(110px) rotateZ(-90deg) translateX(-10px)',
@@ -368,10 +369,10 @@ function RightSet() {
             <SettingsOutlinedIcon sx={{opacity: hover?1:0.8, fontSize: 150, color: '#424242'}}/>
             {hover?<div><Typography sx={{ whiteSpace: 'nowrap', color: '#424242',
                 boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)'}} variant="h4"> 设置 </Typography></div>:<></>}
-        </div>)
+        </div>:<></>)
 }
 
-function RightSide() {
+export function RightSide() {
     const state = useCube();
     return (
         <>
@@ -441,7 +442,9 @@ export function Cube({prop}){
 function FileCube({prop}) {
     const layers = useLayers()
     const preview = usePreview()
+    console.log({prop: prop})
     return (
+        prop.length?
         <>
             <FrontSide></FrontSide>
             {layers.map((path, index) => {
@@ -450,8 +453,8 @@ function FileCube({prop}) {
             })}
             {
                 preview !== '' ? <FileSide dir={prop.find(item => item.path === preview)} Zoffset={-200}>Preview</FileSide> :
-                    <FileSide dir={{path: '', files: []}} Zoffset={-200}>Preview</FileSide>
+                    <FileSide dir={{name: '', path: '', fileList: [], folderList: []}} Zoffset={-200}>Preview</FileSide>
             }
-        </>
+        </>: <></>
     )
 }

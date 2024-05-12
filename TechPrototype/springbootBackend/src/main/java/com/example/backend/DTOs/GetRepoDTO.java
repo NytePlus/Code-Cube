@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UserDTO {
-    private String name;
-    private String password;
+public class GetRepoDTO {
+    UserDTO userDTO;
+    String path;
 }

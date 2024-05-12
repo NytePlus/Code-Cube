@@ -28,7 +28,6 @@ export default function LoginPage(effect, deps){
 
 
     useEffect(() => {
-        console.log({divState: divState})
         switch(divState){
             case 0:
                 setCursorState(true)
@@ -192,10 +191,11 @@ export default function LoginPage(effect, deps){
             </div>
             <input ref={userInRef} className={userInState ? 'input' : 'zipInput'} type="text" id="usersname"
                     placeholder={userInState ? "username(login)" : "输入r注册，输入l登录"} disabled={!userInState}
-                onChange={(e) => {setUsername(e.target.value)}}/>
+                onChange={(e) => {
+                    setUsername(e.target)}}/>
                 <input ref={passInRef} className={passInState?'input':'zipInput'} type="password" id="password"
                        placeholder={passInState ? "password" : ""} disabled={!passInState}
-                       onChange={(e) => {setPassword(e.target.value)}}/>
+                       onChange={(e) => { setPassword(e.target.value)}}/>
                     <input ref={confInRef} className={confInState?'input':'zipInput'} type="password" id="password2"
                            placeholder={confInState ? "confirm password" : ""} disabled={!confInState}/>
             <div className="stateDiv icon">

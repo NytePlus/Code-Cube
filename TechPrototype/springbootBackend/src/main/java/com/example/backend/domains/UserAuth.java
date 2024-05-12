@@ -18,6 +18,6 @@ public class UserAuth {
     @Column(name = "UserID")
     private Integer id;
 
-    @Column(name = "Password")
+    @Column(name = "password")
     private String password;
 }
