@@ -30,4 +30,8 @@ public class UserDao {
 
     public Optional<User> findById(Integer id) { return userRepo.findById(id); }
 
+    public void addUser(User user, UserAuth userAuth){
+        userRepo.save(user);
+        userAuthRepo.save(userAuth);
+    }
 }

@@ -32,7 +32,7 @@ public class RepoServiceImpl implements RepoService{
     FolderDao folderDao;
 
     @Autowired
-    LoginService loginService;
+    UserService loginService;
 
     @Autowired
     UserDao userDao;
