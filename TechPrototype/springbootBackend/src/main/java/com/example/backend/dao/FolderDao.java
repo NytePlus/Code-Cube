@@ -27,6 +27,10 @@ public class FolderDao {
         return folderRepo.findByPath(path) != null;
     }
 
+    public Folder findByPath(String path){
+        return folderRepo.findByPath(path);
+    }
+
     public Folder createByPath(String path){
         String[] pathSplit = path.split("/");
         String parentPath = path.substring(0, path.lastIndexOf("/"));

@@ -10,9 +10,12 @@ import {useInstruction} from "./InstructionProvider";
 import Card from "@mui/material/Card";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import TelegramIcon from "@mui/icons-material/Telegram";
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import {useNavigate} from "react-router-dom";
 
 function RightTools(){
     const auth = useAuth()
+    const navigate = useNavigate()
     const instr = useInstruction()
     const [input, setInput] = useState('')
     const [agentOpen, setAgentOpen] = useState(false);
@@ -48,6 +51,8 @@ function RightTools(){
                                  tooltipTitle={"Agent"} onClick={handleAgentChange}/>
                 <SpeedDialAction key={"Forum"} icon={<ForumIcon />}
                                  tooltipTitle={"Fourm"}/>
+                <SpeedDialAction key={"Home"} icon={<HomeOutlinedIcon />} onClick={() => navigate(`/${auth.user}`)}
+                                 tooltipTitle={"Home"}/>
             </SpeedDial>
             {agentOpen && <Card sx={{mr: 10}}>
                 <div style={{display: 'flex'}}>

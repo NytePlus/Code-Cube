@@ -1,6 +1,6 @@
 package com.example.backend.dao;
 
-import com.example.backend.DTOs.RepoDTO;
+import com.example.backend.DTOs.CreateRepoDTO;
 import com.example.backend.domains.Folder;
 import com.example.backend.domains.Repo;
 import com.example.backend.domains.Tag;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -36,7 +35,7 @@ public class RepoDao {
         return repoRepo.findByPath(path) != null;
     }
 
-    public Repo createByRepoDTO(RepoDTO repoDTO){
+    public Repo createByRepoDTO(CreateRepoDTO repoDTO){
         Folder folder = folderDao.createByPath(repoDTO.getPath());
         String[] pathSplit = repoDTO.getPath().split("/");
         List<Tag> tagList = new ArrayList<>();

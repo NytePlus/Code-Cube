@@ -51,7 +51,7 @@ const HomePage = () => {
     const [repoCreateName, setRepoCreateName] = useState('')
     const [repoCreateIntro, setRepoCreateIntro] = useState('')
     const [repos, setRepos] = useState([]);
-    const [chips, setChips] = useState(["1"]);
+    const [chips, setChips] = useState([]);
 
     const handleChipChange = (event) => {
         setChips(event)
@@ -101,7 +101,7 @@ const HomePage = () => {
     };
 
     const handleCreateRepo = () => {
-        createRepo({user: {name: "root", password: "123"},//{name: auth.user, password: auth.password},
+        createRepo({user: {name: auth.user, password: auth.password},
             path: '/' + auth.user + '/' + repoCreateName,
             publish: publish, introduction: repoCreateIntro,
             tagNameList: chips})
@@ -156,6 +156,7 @@ const HomePage = () => {
                             {publish ? <Typography sx={{ml:1, whiteSpace:'nowrap'}} variant="subtitle1">公开</Typography>:
                                 <Typography sx={{ml:1, whiteSpace:'nowrap'}} variant="subtitle1">私有</Typography>}
                         </Box>
+                        <Typography sx={{whiteSpace:'nowrap'}} variant="subtitle1">标签</Typography>
                         <MuiChipsInput value={chips} onChange={handleChipChange} />
                     </DialogContent>
                     <DialogActions>

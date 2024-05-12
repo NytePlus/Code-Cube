@@ -1,6 +1,8 @@
 package com.example.backend.controller;
 
-import com.example.backend.DTOs.RepoDTO;
+import com.example.backend.DTOs.CreateRepoDTO;
+import com.example.backend.DTOs.GetRepoDTO;
+import com.example.backend.domains.Folder;
 import com.example.backend.domains.Repo;
 import com.example.backend.service.RepoService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,14 +24,19 @@ public class RepoController {
 
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials="true")
     @RequestMapping("/repoGet")
-    public @ResponseBody Repo getRepoHandler(@RequestBody RepoDTO repoDTO){
-        return repoService.getRepo(repoDTO);
+    public @ResponseBody Repo getRepoHandler(@RequestBody GetRepoDTO getRepoDTO){
+        return repoService.getRepo(getRepoDTO);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials="true")
+    @RequestMapping("/folderGet")
+    public @ResponseBody Folder getFolderHandler(@RequestBody GetRepoDTO getRepoDTO){
+        return repoService.getFolder(getRepoDTO);
     }
 
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials="true")
     @RequestMapping("/repoCreate")
-    public @ResponseBody Boolean createRepoHandler(@RequestBody RepoDTO repoDTO){
-        System.out.println(repoDTO);
+    public @ResponseBody Boolean createRepoHandler(@RequestBody CreateRepoDTO repoDTO){
         return repoService.createRepo(repoDTO);
     }
 

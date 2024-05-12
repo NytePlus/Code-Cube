@@ -35,6 +35,7 @@ public class File {
     private Blob content;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "parent_path")
     private Folder folder;
 }

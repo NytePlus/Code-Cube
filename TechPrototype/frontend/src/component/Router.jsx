@@ -13,9 +13,9 @@ export default function AppRouter() {
         <AuthProvider>
             <InstructionProvider>
                 <Routes>
-                    <Route index element={<HomePage/>} />
-                    <Route path={"/:user/home"} element={<RepoPage/>} />
-                    <Route path={"/:user/:Repo"} element={<LoginPagePlus/>}/>
+                    <Route index element={<LoginPagePlus/>} />
+                    <Route path={"/:user"} element={<HomePage/>} />
+                    <Route path={"/:user/:repo"} element={<RepoPage/>}/>
                 </Routes>
             </InstructionProvider>
         </AuthProvider>

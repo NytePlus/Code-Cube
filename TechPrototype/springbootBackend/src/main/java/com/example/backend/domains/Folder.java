@@ -1,5 +1,6 @@
 package com.example.backend.domains;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,6 +30,7 @@ public class Folder {
     private List<File> fileList;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "parent_path")
     private Folder folder;
 }

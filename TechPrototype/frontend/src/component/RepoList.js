@@ -19,8 +19,9 @@ import {
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import StarOutlineRoundedIcon from '@mui/icons-material/StarOutlineRounded';
 import Tag from './tag';
+import {useNavigate} from "react-router-dom";
 const RepoList = ({ repos, viewMode, onDragEnd, toggleStar }) => {
-    console.log(repos)
+    const navigate = useNavigate()
     if (viewMode === 'list') {
         return (
             <DragDropContext onDragEnd={onDragEnd}>
@@ -41,11 +42,12 @@ const RepoList = ({ repos, viewMode, onDragEnd, toggleStar }) => {
                                                     <Avatar alt={repo.initUser.name} src={repo.initUser.avatar}/>
                                                 </ListItemAvatar>
                                                 <ListItemText
-                                                    primary={<Link to={`/RepoPage`}>
-                                                        <Typography variant="h6" sx={{mt: -1}}>
-                                                            {repo.initUser.name + '/' + repo.name}
-                                                        </Typography>
-                                                    </Link>}
+                                                    primary={
+                                                        <Link>
+                                                            <Typography variant="h6" sx={{mt: -1}} onClick={()=>navigate(`${repo.path}`)}>
+                                                                {repo.initUser.name + '/' + repo.name}
+                                                            </Typography>
+                                                        </Link>}
                                                     secondary={
                                                         <>
                                                             <Typography
@@ -103,7 +105,7 @@ const RepoList = ({ repos, viewMode, onDragEnd, toggleStar }) => {
                                                     </Typography>
                                                 </CardContent>
                                                 <CardActions sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1 }}>
-                                                {/*    {repo.tags.length > 0 && <Tag label={repo.tags[0]} />}*/}
+                                                    {repo.repoTagList.length > 0 && <Tag label={repo.repoTagList[0].name} />}
                                                     <IconButton size="small" edge="end" aria-label="star" onClick={() => toggleStar(repo.id)}>
                                                         {repo.isStarred ? <StarOutlineRoundedIcon/> : <StarRoundedIcon/>}
                                                     </IconButton>

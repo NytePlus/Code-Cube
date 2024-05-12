@@ -12,6 +12,18 @@ export async function getRepo(data) {
     return res
 }
 
+export async function getFolder(data) {
+    const url = SPRINGBOOTURL + "/folderGet"
+    let res
+    try {
+        res = await post(url, data)
+    } catch (e) {
+        console.log(e)
+        res = []
+    }
+    return res
+}
+
 export async function createRepo(data){
     const url = SPRINGBOOTURL + "/repoCreate"
     console.log(data)

@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
-import com.example.backend.DTOs.RepoDTO;
+import com.example.backend.DTOs.CreateRepoDTO;
+import com.example.backend.DTOs.GetRepoDTO;
 import com.example.backend.DTOs.UserDTO;
 import com.example.backend.dao.FileDao;
 import com.example.backend.dao.FolderDao;
@@ -72,12 +73,31 @@ public class RepoServiceImpl implements RepoService{
         return "upload successful";
     }
 
-    public Repo getRepo(RepoDTO repoDTO){
-        if(loginService.checkAccount(repoDTO.getUser())){
+    public Repo getRepo(GetRepoDTO repoDTO){
+        if(loginService.checkAccount(repoDTO.getUserDTO())){
             return repoDao.findByPath(repoDTO.getPath());
         }
         else{
-            return repoDao.findByPath(repoDTO.getPath());
+            Repo repo = repoDao.findByPath(repoDTO.getPath());
+            if(repo.isPublish() == false)
+                return null;
+            else{
+                return repo;
+            }
+        }
+    }
+
+    public Folder getFolder(GetRepoDTO getRepoDTO){
+        if(loginService.checkAccount(getRepoDTO.getUserDTO())){
+                return folderDao.findByPath(getRepoDTO.getPath());
+        }
+        else{
+            Repo repo = repoDao.findByPath(getRepoDTO.getPath());
+            if(repo.isPublish() == false)
+                return null;
+            else{
+                return folderDao.findByPath(getRepoDTO.getPath());
+            }
         }
     }
 
@@ -92,7 +112,7 @@ public class RepoServiceImpl implements RepoService{
         else return null;
     }
 
-    public Boolean createRepo(RepoDTO repoDTO){
+    public Boolean createRepo(CreateRepoDTO repoDTO){
         System.out.println(repoDTO);
         if(loginService.checkAccount(repoDTO.getUser())){
             if(repoDao.checkByPath(repoDTO.getPath()))

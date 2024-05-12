@@ -171,7 +171,8 @@ export function FileSide({dir, Zoffset}) {
         setBackground('')
         if(dir.path !== preview) setOverflow('hidden')
     }
-    if(dir && dir.files.length >= 0)
+    console.log({dir:dir});
+    if(dir)
         return (
             <>
                 <div style={{
@@ -191,15 +192,11 @@ export function FileSide({dir, Zoffset}) {
                      onMouseEnter={() => onMouseEnterHandler()} onMouseLeave={() => onMouseLeaveHandler()}>
                     <div style={{height: 'min-content', width: 'min-content', background: `${background}`}}>
                         {(dir.path !== preview) ?
-                            <Typography sx={{mb: -0.5, whiteSpace: 'nowrap'}} variant="h6">{dir.path}</Typography> :
-                            <Typography sx={{mb: -0.5, whiteSpace: 'nowrap'}} variant="h6">Preview</Typography>}
-                        {dir.files.map((item) => {
-                            if (item.type === 'file')
-                                return <File item={item}/>
-                            else
-                                return <Folder name={item.name} layer={dir.path}
-                                               disChild={disChild} setDisChild={setDisChild}/>
-                        })}
+                            <Typography sx={{mt:-2, whiteSpace: 'nowrap'}} variant="h6">{dir.path}</Typography> :
+                            <Typography sx={{mt:-2, whiteSpace: 'nowrap'}} variant="h6">Preview</Typography>}
+                        {dir.fileList.map((item) => {return <File item={item}/>})}
+                        {dir.folderList.map((item) => {return <Folder name={item.name} layer={dir.path}
+                                                                                       disChild={disChild} setDisChild={setDisChild}/>})}
                     </div>
                 </div>
             </>
@@ -319,6 +316,7 @@ export function RightUpload(){
         setHover(false)
     }
     return (
+        auth.user === repo.userRepo.user?
         <div className={'side-option'} style={{
             transform: state ? `rotateY(90deg) translateZ(330px) rotateZ(-90deg) translateX(-10px) ${transform3d}` :
                 'rotateY(90deg) translateZ(110px) rotateZ(-90deg) translateX(-10px)',
@@ -336,18 +334,20 @@ export function RightUpload(){
                         onChange={onChange}
                         action={SPRINGBOOTURL + '/fileUpload'}
                         data={file => {
-                            return {user: auth.User, repo: repo.name, path: file["webkitRelativePath"]}}}
+                            return {user: auth.User, repo: repo.userRepo.repo, path: file["webkitRelativePath"]}}}
                         directory>
                     <Button><DriveFolderUploadOutlinedIcon/></Button>
                 </Upload>
             </div> : <></>}
-        </div>)
+        </div>:<></>)
 }
 
 export function RightSet() {
     const state = useCube()
     const [hover, setHover] = useState(false)
     const [transform3d, setTransform3d] = useState('')
+    const auth = useAuth()
+    const repo = useRepo()
     function onMouseEnterHandler() {
         setTransform3d('translate3d(-1000px, -1414px, 1000px) rotateY(-45deg)  rotateX(45deg)')
         setHover(true)
@@ -358,6 +358,7 @@ export function RightSet() {
         setHover(false)
     }
     return (
+        auth.user === repo.userRepo.user?
         <div className={'side-option'} style={{
             transform: state ? `rotateY(90deg) translateZ(440px) rotateZ(-90deg) translateX(-10px) ${transform3d}` :
                 'rotateY(90deg) translateZ(110px) rotateZ(-90deg) translateX(-10px)',
@@ -368,7 +369,7 @@ export function RightSet() {
             <SettingsOutlinedIcon sx={{opacity: hover?1:0.8, fontSize: 150, color: '#424242'}}/>
             {hover?<div><Typography sx={{ whiteSpace: 'nowrap', color: '#424242',
                 boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)'}} variant="h4"> 设置 </Typography></div>:<></>}
-        </div>)
+        </div>:<></>)
 }
 
 export function RightSide() {
@@ -441,7 +442,9 @@ export function Cube({prop}){
 function FileCube({prop}) {
     const layers = useLayers()
     const preview = usePreview()
+    console.log({prop: prop})
     return (
+        prop.length?
         <>
             <FrontSide></FrontSide>
             {layers.map((path, index) => {
@@ -450,8 +453,8 @@ function FileCube({prop}) {
             })}
             {
                 preview !== '' ? <FileSide dir={prop.find(item => item.path === preview)} Zoffset={-200}>Preview</FileSide> :
-                    <FileSide dir={{path: '', files: []}} Zoffset={-200}>Preview</FileSide>
+                    <FileSide dir={{name: '', path: '', fileList: [], folderList: []}} Zoffset={-200}>Preview</FileSide>
             }
-        </>
+        </>: <></>
     )
 }
