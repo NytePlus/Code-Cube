@@ -6,6 +6,7 @@ import LoginPage from "../page/LoginPage"
 import React, {useState} from "react";
 import {exampleRepos} from "../source/exampleRepo";
 import RepoPage from "../page/RepoPage";
+import BrowsingHistoryPage from "../page/BrowsingHistoryPage";
 
 export default function AppRouter() {
     const [repos, setRepos] = useState(exampleRepos);
@@ -36,9 +37,10 @@ export default function AppRouter() {
         <AuthProvider>
             <InstructionProvider>
                 <Routes>
-                    <Route index element={<HomePage repos={repos} onDragEnd={onDragEnd} toggleStar={toggleStar}/>} />
+                    <Route index element={<BrowsingHistoryPage/>} />
                     <Route path="/home" element={<LoginPage/>} />
                     <Route path="/repo" element={<RepoPage/>}/>
+                    <Route path="/browsing-history" element={<BrowsingHistoryPage/>} />
                 </Routes>
             </InstructionProvider>
         </AuthProvider>

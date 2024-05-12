@@ -23,6 +23,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import RightTools from '../component/RightTools'
 
+
 const HomePage = ({ repos, onDragEnd, toggleStar }) => {
     const [viewMode, setViewMode] = useState('list'); // 默认视图模式为列表
     // const [toolsOpen, setToolsOpen] = useState(false);
@@ -46,7 +47,7 @@ const HomePage = ({ repos, onDragEnd, toggleStar }) => {
     return (
         <>
             <Header />
-            <Grid container spacing={2} sx={{ height: '100vh', mt: 8 }} style={{ marginTop: '24px' }}>
+                <Grid container spacing={2} sx={{ height: '100vh', mt: 8 }} style={{ marginTop: '24px' }}>
                 <Grid item xs={1} md={0.5} sx={{ position: 'relative' }}>
                     <Box sx={{ position: 'absolute', top: 0, left: 20, height: '100%' }}>
                         <ToggleButtonGroup
