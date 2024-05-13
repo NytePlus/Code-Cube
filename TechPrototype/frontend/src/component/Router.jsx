@@ -17,7 +17,11 @@ export default function AppRouter() {
                     <Route index element={<BrowsingHistoryPage/>} />
                     <Route path={"/:user"} element={<HomePage/>} />
                     <Route path={"/:user/:repo"} element={<RepoPage/>}/>
+<<<<<<< HEAD
                     <Route path={"/History"} element={<LoginPagePlus/>}/>
+=======
+                    <Route path={"/:user/:brows"} element={<BrowsingHistoryPage/>}/>
+>>>>>>> 1827f9bbae511653d4b1e02eb9051c2a08d4c383
                 </Routes>
             </InstructionProvider>
         </AuthProvider>
