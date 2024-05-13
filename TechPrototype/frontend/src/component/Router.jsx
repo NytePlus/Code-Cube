@@ -6,6 +6,7 @@ import LoginPage from "../page/LoginPage"
 import React, {useState} from "react";
 import RepoPage from "../page/RepoPage";
 import LoginPagePlus from "../page/LoginPagePlus";
+import BrowsingHistoryPage from "../page/BrowsingHistoryPage";
 
 export default function AppRouter() {
 
@@ -13,9 +14,10 @@ export default function AppRouter() {
         <AuthProvider>
             <InstructionProvider>
                 <Routes>
-                    <Route index element={<LoginPagePlus/>} />
+                    <Route index element={<BrowsingHistoryPage/>} />
                     <Route path={"/:user"} element={<HomePage/>} />
                     <Route path={"/:user/:repo"} element={<RepoPage/>}/>
+                    <Route path={"/History"} element={<LoginPagePlus/>}/>
                 </Routes>
             </InstructionProvider>
         </AuthProvider>
