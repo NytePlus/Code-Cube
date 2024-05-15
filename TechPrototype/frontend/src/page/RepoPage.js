@@ -18,6 +18,8 @@ const LayersDispatchContext = createContext(null);
 const PreviewContext = createContext(null);
 const PreviewDispatchContext = createContext(null);
 const RepoContext = createContext(null);
+const FileContext = createContext(null);
+const FileDispatchContext = createContext(null);
 
 export function useLayers() {
     return useContext(LayersContext);
@@ -41,6 +43,14 @@ export function useCubeDispatch() {
 
 export function useRepo(){
     return useContext(RepoContext)
+}
+
+export function useFile(){
+    return useContext(FileContext)
+}
+
+export function useFileDispatch(){
+    return useContext(FileDispatchContext)
 }
 
 function previewReducer(preview, action){
@@ -97,12 +107,33 @@ function cubeReducer(cube, action)
     }
 }
 
+function fileReducer(files, action)
+{
+    console.log(action)
+    switch (action.type){
+        case 'add':
+        {
+            return [...files, action.info]
+        }
+        case 'delete':
+        {
+            return files.filter((item) => item.content !== action.info.content)
+        }
+        default:
+        {
+            throw Error('Unknown action: ' + action.type);
+        }
+    }
+}
+
 const RepoPage = () => {
     const userRepo = useParams()
     const auth = useAuth()
     const [repoData, setRepoData] = useState([])
     const [folder, setFolder] = useState([])
     const [cube, dispatch] = useReducer(cubeReducer, false)
+    const [files, fileDispatch] = useReducer(fileReducer, [])
+    const [cards, setCards] = useState([])
     const [layers, layerDispatch] = useReducer(layersReducer, ["/" + userRepo.user + '/' + userRepo.repo]);
     const [preview, previewDispatch] = useReducer(previewReducer, '');
 
@@ -110,13 +141,11 @@ const RepoPage = () => {
         let data = {
             userDTO: {
                 name: auth.user,
-                password: auth.password
+                password: auth.token
             },
             path: "/" + userRepo.user + '/' + userRepo.repo}
         let repo = await getRepo(data)
         let folder = await getFolder(data)
-        console.log(repo)
-        console.log(folder)
         setRepoData(repo)
         setFolder([folder])
     }
@@ -124,103 +153,87 @@ const RepoPage = () => {
     useEffect(() => {
         getRepoData()
     }, [])
-    // eslint-disable-next-line no-lone-blocks
-    {
-        const [cards, setCards] = useState([
-            {
-                id: 1,
-                type: 'file',
-                title: '',
-                text: 'Write a cool JS library',
-                row: 1,
-                col: 2,
-                child: <></>
-            },
-            {
-                id: 2,
-                type: 'file',
-                title: '',
-                text: 'Make it generic enough',
-                row: 1,
-                col: 2,
-                child: <></>
-            },
-            {
-                id: 3,
-                type: 'cube',
-                text: '',
+
+    useEffect(() => {
+        console.log({files: files, cards: cards})
+        setCards(files.map((item, index) => {
+            return {
+                id: index,
+                title: item.name,
+                path: item.path,
+                text: item.content,
+                type: item.type,
                 row: 3,
                 col: 2,
-                child:<></>
-                    // <FileFlat dir={repoData.find(item => item.path === layers[layers.length - 1])}/>
-            },
-            {
-                id: 4,
-                type: 'file',
-                title: '',
-                text: 'Make it generic enough',
-                row: 1,
-                col: 2,
                 child: <></>
-            },
-        ])
-        const moveCard = useCallback((dragIndex, hoverIndex) => {
-            setCards((prevCards) =>
-                update(prevCards, {
-                    $splice: [
-                        [dragIndex, 1],
-                        [hoverIndex, 0, prevCards[dragIndex]],
-                    ],
-                }),
-            )
-        }, [])
-        const renderCard = useCallback((card, index) => {
-            return (
-                    <DragCard
-                        card={card}
-                        index={index}
-                        moveCard={moveCard}
-                        id={card.id}
-                    />
-            )
-        }, [moveCard])
-
-        return (
-            <DndProvider backend={HTML5Backend}>
-                <RepoContext.Provider value={{repoData, userRepo}}>
-                    <CubeContext.Provider value={cube}>
-                        <CubeDispatchContext.Provider value={dispatch}>
-                            <LayersContext.Provider value={layers}>
-                                <LayersDispatchContext.Provider value={layerDispatch}>
-                                    <PreviewContext.Provider value={preview}>
-                                        <PreviewDispatchContext.Provider value={previewDispatch}>
-                                            <div style={{overflowX: 'hidden'}}>
-                                                <Header/>
-                                                <div style={{height: 500, paddingLeft: '45%', paddingTop: '15%'}}>
-                                                    <Cube prop={folder}/>
-                                                </div>
-                                                <div style={{
-                                                    margin: 15,
-                                                    height: 4000,
-                                                    display: 'grid',
-                                                    gap: 15,
-                                                    gridTemplateRows: 'repeat(20, minmax(0, 1fr))',
-                                                    gridTemplateColumns: 'repeat(4, minmax(0, 1fr))'
-                                                }}>
-                                                    {cards.map((card, i) => renderCard(card, i))}
-                                                </div>
-                                                <RightTools/>
-                                            </div>
-                                        </PreviewDispatchContext.Provider>
-                                    </PreviewContext.Provider>
-                                </LayersDispatchContext.Provider>
-                            </LayersContext.Provider>
-                        </CubeDispatchContext.Provider>
-                    </CubeContext.Provider>
-                </RepoContext.Provider>
-            </DndProvider>
+            }
+        }))
+    }, [files])
+    const moveCard = useCallback((dragIndex, hoverIndex) => {
+        setCards((prevCards) =>
+            update(prevCards, {
+                $splice: [
+                    [dragIndex, 1],
+                    [hoverIndex, 0, prevCards[dragIndex]],
+                ],
+            }),
         )
-    }
+    }, [])
+    const renderCard = useCallback((card, index) => {
+        return (
+                <DragCard
+                    card={card}
+                    index={index}
+                    moveCard={moveCard}
+                    id={card.id}
+                />
+        )
+    }, [moveCard])
+
+    return (
+        <DndProvider backend={HTML5Backend}>
+            <RepoContext.Provider value={{repoData, userRepo}}>
+                <CubeContext.Provider value={cube}>
+                    <CubeDispatchContext.Provider value={dispatch}>
+                        <LayersContext.Provider value={layers}>
+                            <LayersDispatchContext.Provider value={layerDispatch}>
+                                <PreviewContext.Provider value={preview}>
+                                    <PreviewDispatchContext.Provider value={previewDispatch}>
+                                        <FileContext.Provider value={files}>
+                                            <FileDispatchContext.Provider value={fileDispatch}>
+                                                <div style={{overflowX: 'hidden'}}>
+                                                    <Header/>
+                                                    <div style={{
+                                                        height: 500,
+                                                        paddingLeft: '45%',
+                                                        paddingTop: '15%'
+                                                    }}>
+                                                        <Cube prop={folder}/>
+                                                    </div>
+                                                    <div style={{
+                                                        marginLeft: 30,
+                                                        marginRight: 30,
+                                                        marginBottom: 40,
+                                                        display: 'grid',
+                                                        gap: 15,
+                                                        // gridTemplateRows: 'repeat(20, minmax(0, 1fr))',
+                                                        gridTemplateColumns: 'repeat(4, minmax(0, 1fr))'
+                                                    }}>
+                                                        {cards.map((card, i) => renderCard(card, i))}
+                                                    </div>
+                                                    <RightTools/>
+                                                </div>
+                                            </FileDispatchContext.Provider>
+                                        </FileContext.Provider>
+                                    </PreviewDispatchContext.Provider>
+                                </PreviewContext.Provider>
+                            </LayersDispatchContext.Provider>
+                        </LayersContext.Provider>
+                    </CubeDispatchContext.Provider>
+                </CubeContext.Provider>
+            </RepoContext.Provider>
+        </DndProvider>
+    )
 };
 
 export default RepoPage;

@@ -12,6 +12,7 @@ import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import {useNavigate} from "react-router-dom";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 function RightTools(){
     const auth = useAuth()
@@ -53,6 +54,9 @@ function RightTools(){
                                  tooltipTitle={"Fourm"}/>
                 <SpeedDialAction key={"Home"} icon={<HomeOutlinedIcon />} onClick={() => navigate(`/${auth.user}`)}
                                  tooltipTitle={"Home"}/>
+                <SpeedDialAction key={"Back to top"} icon={<KeyboardArrowUpIcon />}
+                                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                                 tooltipTitle={"Back to top"}/>
             </SpeedDial>
             {agentOpen && <Card sx={{mr: 10}}>
                 <div style={{display: 'flex'}}>

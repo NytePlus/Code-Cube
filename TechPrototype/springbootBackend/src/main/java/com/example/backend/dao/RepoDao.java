@@ -57,4 +57,14 @@ public class RepoDao {
     public List<Repo> findAllByUser(User user){
         return repoRepo.findAllByInitUser(user);
     }
+
+    public void addStar(Repo repo){
+        repo.setStar(repo.getStar() + 1);
+        repoRepo.save(repo);
+    }
+
+    public void removeStar(Repo repo){
+        repo.setStar(repo.getStar() - 1);
+        repoRepo.save(repo);
+    }
 }

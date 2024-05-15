@@ -41,6 +41,7 @@ public class Repo {
     @JoinColumn(name = "init_user")
     private User initUser;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "starRepositoryList")
     private List<User> starUsers;
 

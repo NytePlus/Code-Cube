@@ -1,4 +1,4 @@
-import {SPRINGBOOTURL, post, getJson} from "./common";
+import {SPRINGBOOTURL, post, getJson, download} from "./common";
 
 export async function getRepo(data) {
     const url = SPRINGBOOTURL + "/repoGet"
@@ -6,7 +6,7 @@ export async function getRepo(data) {
     try {
         res = await post(url, data)
     } catch (e) {
-        console.log(e)
+        console.error(e)
         res = []
     }
     return res
@@ -18,7 +18,7 @@ export async function getFolder(data) {
     try {
         res = await post(url, data)
     } catch (e) {
-        console.log(e)
+        console.error(e)
         res = []
     }
     return res
@@ -26,12 +26,11 @@ export async function getFolder(data) {
 
 export async function createRepo(data){
     const url = SPRINGBOOTURL + "/repoCreate"
-    console.log(data)
     let res
     try{
         res = await post(url, data)
     }catch(e){
-        console.log(e)
+        console.error(e)
         res = []
     }
     return res
@@ -43,8 +42,65 @@ export async function getAllPublicRepo(){
     try{
         res = await getJson(url)
     }catch(e){
-        console.log(e)
+        console.error(e)
         res = []
     }
     return res;
+}
+
+export async function getAllRepoByUser(data){
+    const url = SPRINGBOOTURL + "/repoGetByUser"
+    let res
+    try{
+        res = await post(url, data)
+    }catch(e){
+        console.error(e)
+        res = []
+    }
+    return res;
+}
+
+export async function getFile(data){
+    const url = SPRINGBOOTURL + "/fileGet"
+    let res
+    try {
+        res = await post(url, data)
+    }catch (e){
+        console.error(e)
+        res = []
+    }
+    return res;
+}
+
+export async function downloadFile(data){
+    const url = SPRINGBOOTURL + "/fileDownload"
+    try {
+        await download(url, data)
+    }catch (e){
+        console.error(e)
+    }
+}
+
+export async function changeStar(data){
+    const url = SPRINGBOOTURL + '/repoStar'
+    let res
+    try {
+        res = await post(url, data)
+    }catch (e){
+        console.error(e)
+        res = false
+    }
+    return res
+}
+
+export async function checkStar(data){
+    const url = SPRINGBOOTURL + '/repoStarCheck'
+    let res
+    try {
+        res = await post(url, data)
+    }catch (e){
+        console.error(e)
+        res = false
+    }
+    return res
 }

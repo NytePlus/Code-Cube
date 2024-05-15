@@ -9,6 +9,7 @@ import PublicOutlinedIcon from "@mui/icons-material/PublicOutlined";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
 import {FormControl, FormHelperText, TextField} from "@mui/joy";
+import {useAuth} from "../component/AuthProvider";
 
 function FileHeader({title}){
     return (<div style={{display: 'flex'}}>
@@ -259,6 +260,8 @@ export function AnimRightSide({open}) {
 }
 
 export default function LoginPagePlus() {
+    const auth = useAuth()
+    const [mode, setMode] = useState(false)
     const [rotateZ, setRotateZ] = useState(45)
     const [open, setOpen] = useState(false)
     const commonStyle = {
@@ -274,6 +277,7 @@ export default function LoginPagePlus() {
     }, 5000)
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [confirm, setConfirm] = useState('');
 
     // 处理输入字段变化的函数
     const handleUsernameChange = (event) => {
@@ -284,30 +288,9 @@ export default function LoginPagePlus() {
         setPassword(event.target.value);
     };
 
-    const login = async () => {
-        try {
-            const response = await fetch('http://localhost:8081/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name: username, password: password }),
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                const isLoggedIn = await response.json();
-                console.log('Login status:', isLoggedIn);
-                alert(isLoggedIn ? 'Login successful!' : 'Login failed: Invalid username or password');
-            } else {
-                const errorText = await response.text();
-                throw new Error('Server responded with status ' + response.status + ': ' + errorText);
-            }
-        } catch (error) {
-            console.error('Login error:', error);
-            alert('Login error: ' + error.message);
-        }
-    };
+    const handleConfirmChange = (event) => {
+        setConfirm(event.target.value);
+    }
 
     return (<>
         {/*
@@ -335,6 +318,7 @@ export default function LoginPagePlus() {
                 <AnimRightSide open={open}/>
             </div>
         </div>
+        {mode?
         <Box
             sx={{
                 display: 'flex',
@@ -352,12 +336,13 @@ export default function LoginPagePlus() {
                     flexDirection: 'column',
                     gap: 2,
                     backgroundColor: 'rgba(255, 255, 255, 0.8)' ,
-                    zIndex: 10
+                    zIndex: 10,
+                    width: 340
                 }}
             >
                 <Typography variant="h5" sx={{ fontFamily: 'Courier New', fontSize: '2em', textAlign: 'center' }}>
                     <TypeAnimation
-                        sequence={["Welcome to Code Cube !!!"]}
+                        sequence={["Welcome to \nCode Cube !!!"]}
                         wrapper="span"
                         cursor={true}
                         style={{ display: 'inline-block' }}
@@ -384,9 +369,75 @@ export default function LoginPagePlus() {
                     />
                     <FormHelperText id="password-helper-text">Please enter your password.</FormHelperText>
                 </FormControl>
-                <Button variant="contained" onClick={login} sx={commonStyle}>Login</Button>
-                <Button sx={commonStyle}>Register</Button>
+                <FormControl variant="outlined" fullWidth sx={commonStyle}>
+                    <InputLabel sx={commonStyle} htmlFor="password-input">Confirm Password</InputLabel>
+                    <Input
+                        id="confirm-input"
+                        type="password"
+                        value={confirm}
+                        onChange={handleConfirmChange}
+                        aria-describedby="password-helper-text"
+                    />
+                    <FormHelperText id="password-helper-text">Confirm your password.</FormHelperText>
+                </FormControl>
+                <Button variant="contained" onClick={() => auth.signupAction(username, password, confirm)} sx={commonStyle}>Sign up</Button>
+                <Button sx={commonStyle} onClick={() => setMode(false)}>Login</Button>
             </Paper>
         </Box>
+            :
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100vh',
+            }}
+        >
+            <Paper
+                elevation={10}
+                sx={{
+                    padding: 4,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 2,
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)' ,
+                    zIndex: 10,
+                    width: 310
+                }}
+            >
+                <Typography variant="h5" sx={{ fontFamily: 'Courier New', fontSize: '2em', textAlign: 'center' }}>
+                    <TypeAnimation
+                        sequence={["Welcome to \nCode Cube !!!"]}
+                        wrapper="span"
+                        cursor={true}
+                        style={{ display: 'inline-block' }}
+                    />
+                </Typography>
+                <FormControl variant="outlined" fullWidth sx={commonStyle}>
+                    <InputLabel sx={commonStyle} htmlFor="username-input">Username</InputLabel>
+                    <Input
+                        id="username-input"
+                        aria-describedby="username-helper-text"
+                        value={username}
+                        onChange={handleUsernameChange}
+                    />
+                    <FormHelperText id="username-helper-text">Please enter your username.</FormHelperText>
+                </FormControl>
+                <FormControl variant="outlined" fullWidth sx={commonStyle}>
+                    <InputLabel sx={commonStyle} htmlFor="password-input">Password</InputLabel>
+                    <Input
+                        id="password-input"
+                        type="password"
+                        value={password}
+                        onChange={handlePasswordChange}
+                        aria-describedby="password-helper-text"
+                    />
+                    <FormHelperText id="password-helper-text">Please enter your password.</FormHelperText>
+                </FormControl>
+                <Button variant="contained" onClick={() => auth.loginAction(username, password)} sx={commonStyle}>Login</Button>
+                <Button sx={commonStyle} onClick={() => setMode(true)}>Register</Button>
+            </Paper>
+        </Box>}
     </>)
 }

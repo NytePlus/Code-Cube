@@ -15,6 +15,7 @@ public class FolderDao {
 
     public Folder findOrCreateByPath(String path){
         Folder folder = folderRepo.findByPath(path);
+        System.out.println("folder: " + folder);
         if(folder == null){
             return createByPath(path);
         }
@@ -32,6 +33,13 @@ public class FolderDao {
     }
 
     public Folder createByPath(String path){
+        if(path == ""){
+            Folder folder = new Folder("", "",
+                    new ArrayList<>(), new ArrayList<>(),
+                    null);
+            folderRepo.save(folder);
+            return folder;
+        }
         String[] pathSplit = path.split("/");
         String parentPath = path.substring(0, path.lastIndexOf("/"));
         Folder folder = new Folder(path, pathSplit[pathSplit.length - 1],

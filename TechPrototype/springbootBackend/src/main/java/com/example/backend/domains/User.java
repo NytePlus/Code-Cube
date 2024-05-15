@@ -51,6 +51,7 @@ public class User {
     private List<Message> messageList;
 
     @ManyToMany
+    @JsonIgnore
     @JoinTable(name = "user_repositories",
             joinColumns = @JoinColumn(name = "star_user"),
             inverseJoinColumns = @JoinColumn(name = "star_repo"))

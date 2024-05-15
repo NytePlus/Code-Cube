@@ -1,14 +1,27 @@
 import { SPRINGBOOTURL, post } from "./common";
 
-export async function login(username, password) {
-    const url = `${SPRINGBOOTURL}/login`;
-    let result;
+export const login = async (username, password) => {
     try {
-        console.log({name:username, password:password})
-        result = await post(url, { name: username, password: password });
-    } catch (e) {
-        console.log(e);
-        result = false;
+        const response = await fetch(`${SPRINGBOOTURL}/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: username, password: password }),
+            credentials: 'include'
+        });
+
+        if (response.ok) {
+            const isLoggedIn = await response.json();
+            console.log('Login status:', isLoggedIn);
+            alert(isLoggedIn ? 'Login successful!' : 'Login failed: Invalid username or password');
+            return isLoggedIn
+        } else {
+            const errorText = await response.text();
+            throw new Error('Server responded with status ' + response.status + ': ' + errorText);
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        alert('Login error: ' + error.message);
     }
-    return result;
-}
+};

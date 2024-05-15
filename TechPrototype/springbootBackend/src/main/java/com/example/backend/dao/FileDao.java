@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 public class FileDao {
     @Resource
     FileRepo fileRepo;
-
     public void addFile(File file){
         fileRepo.save(file);
+    }
+    public File findByPath(String path){
+        return fileRepo.findByPath(path);
     }
 }

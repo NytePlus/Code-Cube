@@ -5,7 +5,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {Box, Button, IconButton, Switch, Typography} from "@mui/material";
 import {
     useCube,
-    useCubeDispatch,
+    useCubeDispatch, useFileDispatch,
     useLayers,
     useLayersDispatch,
     usePreview,
@@ -20,14 +20,28 @@ import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import { Upload, GetProp, UploadFile, UploadProps } from 'antd'
+import { Upload} from 'antd'
 import DriveFolderUploadOutlinedIcon from '@mui/icons-material/DriveFolderUploadOutlined';
 import {SPRINGBOOTURL} from "../service/common";
 import {useAuth} from "./AuthProvider";
+import {getFile} from "../service/repo";
+
+function find(prop, path){
+    // 很丑陋的dfs，用来在树状文件结构中查找指定的文件夹
+    if(prop.path === path) return prop
+    let res;
+    for(let i = 0; i < prop.folderList.length; i ++){
+        res = find(prop.folderList[i], path)
+        if(res) return res
+    }
+    return null
+}
 
 function File({item})
 {
+    const auth = useAuth()
     const [hover, setHover] = useState(false)
+    const dispatch = useFileDispatch();
     function onMouseEnterHandler()
     {
         setHover(true)
@@ -48,10 +62,25 @@ function File({item})
         //     }
         // });
     }
+    async function onMouseDownHandler()
+    {
+        let data = {
+            userDTO: {
+                name: auth.user,
+                password: auth.token
+            },
+            path: item.path}
+        let file = await getFile(data);
+        dispatch({
+            type: "add",
+            info: file
+        })
+    }
     return (<div style={{display: 'flex', width:'200px',
         background: hover?'white':'',
         boxShadow: hover?'0 0 10px rgba(0, 0, 0, 0.5)' : ''
-    }} onMouseEnter={() => onMouseEnterHandler()} onMouseLeave={() => onMouseLeaveHandler()}>
+    }} onMouseEnter={() => onMouseEnterHandler()} onMouseLeave={() => onMouseLeaveHandler()}
+    onMouseDown={async () => await onMouseDownHandler()}>
         <InsertDriveFileOutlinedIcon sx={{mt:0.5}}/>
         <Typography sx={{mb:-0.5, whiteSpace:'nowrap'}} variant="subtitle1">{item.name}</Typography>
     </div>)
@@ -171,7 +200,6 @@ export function FileSide({dir, Zoffset}) {
         setBackground('')
         if(dir.path !== preview) setOverflow('hidden')
     }
-    console.log({dir:dir});
     if(dir)
         return (
             <>
@@ -303,7 +331,6 @@ export function RightUpload(){
 
     const onChange = ({ fileList: newFileList }) => {
         setFileList(newFileList);
-        console.log(newFileList)
     };
 
     function onMouseEnterHandler() {
@@ -325,20 +352,21 @@ export function RightUpload(){
         }}
              onMouseEnter={() => onMouseEnterHandler()} onMouseLeave={() => onMouseLeaveHandler()}>
             <FileUploadOutlinedIcon sx={{opacity: hover?1:0.8, fontSize: 150, color: '#424242'}}/>
-            {hover? <div><Typography sx={{
+            <div style={{visibility: hover?'visible':'hidden'}}>
+                <Typography sx={{
                 whiteSpace: 'nowrap', color: '#424242',
                 boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)'
             }} variant="h4">上传</Typography>
                 <Upload
-                        fileList={fileList}
-                        onChange={onChange}
+                        // fileList={fileList}
+                        // onChange={onChange}
                         action={SPRINGBOOTURL + '/fileUpload'}
                         data={file => {
-                            return {user: auth.User, repo: repo.userRepo.repo, path: file["webkitRelativePath"]}}}
+                            return {user: auth.user, repo: repo.userRepo.repo, path: file["webkitRelativePath"]}}}
                         directory>
                     <Button><DriveFolderUploadOutlinedIcon/></Button>
                 </Upload>
-            </div> : <></>}
+            </div>
         </div>:<></>)
 }
 
@@ -442,17 +470,15 @@ export function Cube({prop}){
 function FileCube({prop}) {
     const layers = useLayers()
     const preview = usePreview()
-    console.log({prop: prop})
     return (
         prop.length?
         <>
             <FrontSide></FrontSide>
             {layers.map((path, index) => {
-                return (<FileSide dir={prop.find(item => item.path === path)}
-                                  Zoffset={-400 / layers.length * index + 200}></FileSide>)
+                return (<FileSide dir={find(prop[0], path)} Zoffset={-400 / layers.length * index + 200}></FileSide>)
             })}
             {
-                preview !== '' ? <FileSide dir={prop.find(item => item.path === preview)} Zoffset={-200}>Preview</FileSide> :
+                preview !== '' ? <FileSide dir={find(prop[0], preview)} Zoffset={-200}>Preview</FileSide> :
                     <FileSide dir={{name: '', path: '', fileList: [], folderList: []}} Zoffset={-200}>Preview</FileSide>
             }
         </>: <></>

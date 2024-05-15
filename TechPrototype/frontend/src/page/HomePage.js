@@ -38,9 +38,8 @@ import RightTools from '../component/RightTools'
 import ViewInArIcon from "@mui/icons-material/ViewInAr";
 import PublicOutlinedIcon from "@mui/icons-material/PublicOutlined";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import {createRepo, getAllPublicRepo} from "../service/repo";
+import {changeStar, createRepo, getAllPublicRepo, getAllRepoByUser} from "../service/repo";
 import {useAuth} from "../component/AuthProvider";
-import {exampleRepos} from "../source/exampleRepo";
 import {MuiChipsInput} from "mui-chips-input";
 
 const HomePage = () => {
@@ -56,25 +55,24 @@ const HomePage = () => {
     const handleChipChange = (event) => {
         setChips(event)
     }
-    const getReposData = async() => {
-        let repos = await getAllPublicRepo();
-        setRepos(repos);
+    const displayPublicRepos = async() => {
+        let publicRepos = await getAllPublicRepo();
+        setRepos(publicRepos);
+    }
+
+    const displayMyRepos = async () => {
+        let myRepos = await getAllRepoByUser({name: auth.user, password: auth.token});
+        setRepos(myRepos);
+    }
+
+    const displayStarRepos = async () => {
+        let myRepos = await getAllRepoByUser({name: auth.user, password: auth.token});
+        setRepos(myRepos);
     }
 
     useEffect(() => {
-        getReposData();
+        displayPublicRepos();
     }, [])
-
-    const toggleStar = (id) => {
-        const newRepos = repos.map(repo => {
-            if (repo.id === id) {
-                const newStarCount = repo.isStarred ? repo.star - 1 : repo.star + 1;
-                return {...repo, isStarred: !repo.isStarred, star: newStarCount};
-            }
-            return repo;
-        });
-        setRepos(newRepos);
-    };
 
     const onDragEnd = (result) => {
         const { source, destination } = result;
@@ -101,7 +99,7 @@ const HomePage = () => {
     };
 
     const handleCreateRepo = () => {
-        createRepo({user: {name: auth.user, password: auth.password},
+        createRepo({user: {name: auth.user, password: auth.token},
             path: '/' + auth.user + '/' + repoCreateName,
             publish: publish, introduction: repoCreateIntro,
             tagNameList: chips})
@@ -193,26 +191,21 @@ const HomePage = () => {
                     </Box>
                 </Grid>
                 <Grid item xs={11} md={5.5} sx={{ position: 'relative', marginTop: '-32px', left: -10 }}>
-                    <RepoList repos={repos} viewMode={viewMode} onDragEnd={onDragEnd} toggleStar={toggleStar} />
+                    <RepoList repos={repos} viewMode={viewMode} onDragEnd={onDragEnd} />
                     <Box sx={{ position: 'fixed', bottom: 20, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', zIndex: 1000 }}>
-                        <Tooltip title="Back to top" placement="left">
-                            <Fab color="primary" size="small" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-                                <KeyboardArrowUpIcon />
-                            </Fab>
-                        </Tooltip>
                         <Tooltip title="Filter starred repos" placement="left">
                             <Fab color="secondary" size="small" sx={{ mt: 1 }} onClick={() => {}}>
-                                <StarBorderIcon />
+                                <StarBorderIcon onClick={displayStarRepos}/>
                             </Fab>
                         </Tooltip>
                         <Tooltip title="Filter my repos" placement="left">
                             <Fab color="default" size="small" sx={{ mt: 1 }} onClick={() => {}}>
-                                <FilterListIcon />
+                                <FilterListIcon onClick={displayMyRepos}/>
                             </Fab>
                         </Tooltip>
-                        <Tooltip title="Search in repos" placement="left">
+                        <Tooltip title="Public repos" placement="left">
                             <Fab color="default" size="small" sx={{ mt: 1 }} onClick={() => {}}>
-                                <SearchIcon />
+                                <PublicOutlinedIcon onClick={displayPublicRepos}/>
                             </Fab>
                         </Tooltip>
                         <Tooltip title="Create my repo" placement="left">

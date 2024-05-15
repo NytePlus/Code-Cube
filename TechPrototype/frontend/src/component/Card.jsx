@@ -1,20 +1,30 @@
-import {createContext, useRef} from 'react'
+import {createContext, useEffect, useRef, useState} from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import Card from '@mui/material/Card'
 import {Box, IconButton, Typography} from "@mui/material";
-import Markdown from 'react-markdown'
 import rehypeHighlight from 'rehype-highlight'
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
-import {useCube, useCubeDispatch} from "../page/RepoPage";
-import ViewInArIcon from "@mui/icons-material/ViewInAr";
+import {useFileDispatch} from "../page/RepoPage";
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import {useAuth} from "./AuthProvider";
+import {downloadFile} from "../service/repo";
+import Markdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import rehypeRaw from "rehype-raw";
+import {a11yLight, docco} from "react-syntax-highlighter/src/styles/hljs";
+import SyntaxHighlighter from "react-syntax-highlighter/dist/cjs/light";
+import FilterNoneOutlinedIcon from '@mui/icons-material/FilterNoneOutlined';
 
 const style = {
     padding: '0.5rem 1rem',
     backgroundColor: 'white',
 }
 export const DragCard = ({ index, moveCard, card, id}) => {
-    const dispatch=useCubeDispatch();
+    const fileDispatch = useFileDispatch();
+    const type = card.title.split('.')[card.title.split('.').length - 1]
+    const [shrink, setShrink] = useState(false)
+    const auth = useAuth();
     const ref = useRef(null)
     const [{ handlerId }, drop] = useDrop({
         accept: 'card',
@@ -71,43 +81,56 @@ export const DragCard = ({ index, moveCard, card, id}) => {
             isDragging: monitor.isDragging(),
         }),
     })
+    const clearClickHandler = () => {
+        fileDispatch({
+            type: 'delete',
+            info: {
+                content: card.text
+            }
+        })
+    }
+
+    const downloadHandler = async () => {
+        let data = {
+            userDTO: {
+                name: auth.user,
+                password: auth.token
+            },
+            path: card.path
+        }
+        await downloadFile(data);
+    }
+
     const opacity = isDragging ? 0 : 1
     drag(drop(ref))
-    if(card.type === 'cube')
-        return (
-            <Card sx={{gridColumn: `span 1`, gridRow: `span 2`}} ref={preview} style={{...style, opacity}} data-handler-id={handlerId}>
-                <div ref={preview} style={{display: 'flex'}}>
-                    <Typography sx={{mt: 1}} variant="h5">{card.title}</Typography>
-                    <Box sx={{flexGrow: 1}}/>
-                    <div ref={ref}>
-                        <IconButton size="large" color="inherit">
-                            <DragHandleIcon sx={{cursor: 'move'}}/>
-                        </IconButton>
-                    </div>
+    return (
+        <Card sx={{height: shrink?300:'min-content', gridColumn: `span ${card.col}`, gridRow: `span ${card.row}`}} ref={preview} style={{...style, opacity}} data-handler-id={handlerId}>
+            <div ref={preview} style={{display: 'flex'}}>
+                <Typography sx={{mt: 1}} variant="h5">{card.title}</Typography>
+                <Box sx={{flexGrow: 1}}/>
+                <IconButton size="large" color="inherit">
+                    <FilterNoneOutlinedIcon onClick={() => {setShrink(!shrink)}}/>
+                </IconButton>
+                <IconButton size="large" color="inherit">
+                    <FileDownloadOutlinedIcon onClick={downloadHandler}/>
+                </IconButton>
+                <div ref={ref}>
                     <IconButton size="large" color="inherit">
-                        <ClearOutlinedIcon/>
+                        <DragHandleIcon sx={{cursor: 'move'}}/>
                     </IconButton>
                 </div>
-                <Markdown rehypePlugins={[rehypeHighlight]}>{card.text}</Markdown>
-                {card.child}
-            </Card>
-    )
-    else
-        return (
-            <Card sx={{gridColumn: `span ${card.col}`, gridRow: `span ${card.row}`}} ref={preview} style={{...style, opacity}} data-handler-id={handlerId}>
-                <div ref={preview} style={{display: 'flex'}}>
-                    <Typography sx={{mt: 1}} variant="h5">{card.title}</Typography>
-                    <Box sx={{flexGrow: 1}}/>
-                    <div ref={ref}>
-                        <IconButton size="large" color="inherit">
-                            <DragHandleIcon sx={{cursor: 'move'}}/>
-                        </IconButton>
-                    </div>
-                    <IconButton size="large" color="inherit">
-                        <ClearOutlinedIcon/>
-                    </IconButton>
-                </div>
-                <Markdown rehypePlugins={[rehypeHighlight]}>{card.text}</Markdown>
-                {card.child}
-            </Card>)
+                <IconButton size="large" color="inherit">
+                    <ClearOutlinedIcon onClick={clearClickHandler}/>
+                </IconButton>
+            </div>
+            {type === "txt"?
+                <Typography sx={{whiteSpace: "pre-wrap", mt: 1}} variant="p">{card.text}</Typography>:
+                type === "md"?
+                    <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw, rehypeHighlight]}>{card.text}</Markdown>:
+                type === "py"?
+                    <SyntaxHighlighter language="python" style={a11yLight}>{card.text}</SyntaxHighlighter>:
+                    <div><Typography sx={{whiteSpace: "pre-wrap", mt: 1, color:"red"}} variant="h6">暂不支持的预览类型</Typography>{card.text}</div>
+            }
+            {card.child}
+        </Card>)
 }

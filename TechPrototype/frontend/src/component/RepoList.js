@@ -20,8 +20,11 @@ import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import StarOutlineRoundedIcon from '@mui/icons-material/StarOutlineRounded';
 import Tag from './tag';
 import {useNavigate} from "react-router-dom";
-const RepoList = ({ repos, viewMode, onDragEnd, toggleStar }) => {
+import StarButton from "./StarButton"
+
+const RepoList = ({ repos, viewMode, onDragEnd }) => {
     const navigate = useNavigate()
+
     if (viewMode === 'list') {
         return (
             <DragDropContext onDragEnd={onDragEnd}>
@@ -66,11 +69,7 @@ const RepoList = ({ repos, viewMode, onDragEnd, toggleStar }) => {
                                                         </>
                                                     }
                                                 />
-                                                <IconButton edge="end" aria-label="star"
-                                                            onClick={() => toggleStar(repo.id)}>
-                                                    {repo.isStarred ? <StarOutlineRoundedIcon/> : <StarRoundedIcon/>}
-                                                </IconButton>
-                                                <Typography variant="h6" sx={{mt:0.5, ml:1}}>{repo.star}</Typography>
+                                                <StarButton path={repo.path} initStar={repo.star}/>
                                             </ListItem>
                                         </Box>
                                     )}
@@ -106,10 +105,7 @@ const RepoList = ({ repos, viewMode, onDragEnd, toggleStar }) => {
                                                 </CardContent>
                                                 <CardActions sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1 }}>
                                                     {repo.repoTagList.length > 0 && <Tag label={repo.repoTagList[0].name} />}
-                                                    <IconButton size="small" edge="end" aria-label="star" onClick={() => toggleStar(repo.id)}>
-                                                        {repo.isStarred ? <StarOutlineRoundedIcon/> : <StarRoundedIcon/>}
-                                                    </IconButton>
-                                                    <Typography variant="h6" sx={{mt:0.5, ml:1}}>{repo.star}</Typography>
+                                                    <StarButton path={repo.path} initStar={repo.star}/>
                                                 </CardActions>
                                             </Card>
                                         </Grid>

@@ -19,7 +19,7 @@ const AuthProvider = ({ children }) => {
                 setToken(password);
                 localStorage.setItem("user", username);
                 localStorage.setItem("site", password);
-                navigate("/" + user + "/home");
+                navigate("/" + username);
                 return;
             }
             throw new Error(res.message);
@@ -27,6 +27,20 @@ const AuthProvider = ({ children }) => {
             console.error(err);
         }
     };
+
+    const signupAction = async (username, passsword, confirm) => {
+        try{
+            if(passsword !== confirm){
+                alert("Signup failed: Confirm password differ")
+            }
+            else{
+                const res = await signup(username, passsword);
+                console.log({res: res})
+            }
+        }catch(err) {
+            console.log(err);
+        }
+    }
 
     const logout = () => {
         setUser(null);
@@ -37,7 +51,7 @@ const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ token, user, loginAction, logout }}>
+        <AuthContext.Provider value={{ token, user, loginAction, signupAction, logout }}>
             {children}
         </AuthContext.Provider>
     );
