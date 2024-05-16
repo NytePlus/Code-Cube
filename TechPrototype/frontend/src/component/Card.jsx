@@ -108,19 +108,19 @@ export const DragCard = ({ index, moveCard, card, id}) => {
             <div ref={preview} style={{display: 'flex'}}>
                 <Typography sx={{mt: 1}} variant="h5">{card.title}</Typography>
                 <Box sx={{flexGrow: 1}}/>
-                <IconButton size="large" color="inherit">
-                    <FilterNoneOutlinedIcon onClick={() => {setShrink(!shrink)}}/>
+                <IconButton size="large" color="inherit" onClick={() => {setShrink(!shrink)}}>
+                    <FilterNoneOutlinedIcon/>
                 </IconButton>
-                <IconButton size="large" color="inherit">
-                    <FileDownloadOutlinedIcon onClick={downloadHandler}/>
+                <IconButton size="large" color="inherit" onClick={downloadHandler}>
+                    <FileDownloadOutlinedIcon/>
                 </IconButton>
                 <div ref={ref}>
                     <IconButton size="large" color="inherit">
                         <DragHandleIcon sx={{cursor: 'move'}}/>
                     </IconButton>
                 </div>
-                <IconButton size="large" color="inherit">
-                    <ClearOutlinedIcon onClick={clearClickHandler}/>
+                <IconButton size="large" color="inherit" onClick={clearClickHandler}>
+                    <ClearOutlinedIcon/>
                 </IconButton>
             </div>
             {type === "txt"?

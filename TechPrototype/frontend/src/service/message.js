@@ -1,6 +1,6 @@
 import {FLASKURL, post} from "./common";
 
-export async function postMessage(message){
+export async function postAgentMessage(message){
     const url = `${FLASKURL}/conversation/agent`
     let res
     try{

@@ -4,7 +4,7 @@ import AndroidIcon from "@mui/icons-material/Android";
 import ForumIcon from "@mui/icons-material/Forum";
 import React, {useState} from "react";
 import moment from "moment/moment";
-import {postMessage} from "../service/message";
+import {postAgentMessage} from "../service/message";
 import {useAuth} from "./AuthProvider";
 import {useInstruction} from "./InstructionProvider";
 import Card from "@mui/material/Card";
@@ -32,7 +32,7 @@ function RightTools(){
             date: moment().format('YYYY-MM-DD HH:mm:ss'),
             user: auth.user
         }
-        const res = await postMessage(message)
+        const res = await postAgentMessage(message)
         instr.excute(['cd /repo'])
         console.log(res)
     }
