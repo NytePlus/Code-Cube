@@ -1,4 +1,4 @@
-import {Box, IconButton, Input, SpeedDial, SpeedDialAction, SpeedDialIcon, Typography} from "@mui/material";
+import {Avatar, Box, IconButton, Input, SpeedDial, SpeedDialAction, SpeedDialIcon, Typography} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AndroidIcon from "@mui/icons-material/Android";
 import ForumIcon from "@mui/icons-material/Forum";
@@ -13,6 +13,8 @@ import TelegramIcon from "@mui/icons-material/Telegram";
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import {useNavigate} from "react-router-dom";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import {ChatBox, ReceiverMessage, SenderMessage} from "mui-chat-box";
+import {Textarea, TextField} from "@mui/joy";
 
 function RightTools(){
     const auth = useAuth()
@@ -20,19 +22,23 @@ function RightTools(){
     const instr = useInstruction()
     const [input, setInput] = useState('')
     const [agentOpen, setAgentOpen] = useState(false);
+    const [history, setHistory] = useState([]);
 
     const handleInputChange = (event) => {
         setInput(event.target.value)
     }
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setHistory((preHistory) => [...preHistory, {user: 'user', text: input}])
         const message = {
             path: '/conversation/agent',
             content: input,
             date: moment().format('YYYY-MM-DD HH:mm:ss'),
             user: auth.user
         }
+        setInput('')
         const res = await postAgentMessage(message)
+        setHistory((preHistory) => [...preHistory, {user: 'agent', text: res.reply}])
         instr.excute(['cd /repo'])
         console.log(res)
     }
@@ -58,18 +64,30 @@ function RightTools(){
                                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                                  tooltipTitle={"Back to top"}/>
             </SpeedDial>
-            {agentOpen && <Card sx={{mr: 10}}>
+            {agentOpen && <Card sx={{mr: 10, width: 400}}>
                 <div style={{display: 'flex'}}>
                     <Typography sx={{mt: 1}} variant="h5"></Typography>
                     <Box sx={{flexGrow: 1}}/>
-                    <IconButton size="large" color="inherit">
+                    <IconButton size="large" color="inherit" onClick={() => setAgentOpen(false)}>
                         <ClearOutlinedIcon/>
                     </IconButton>
                 </div>
+                <Box sx={{height:400, overflowY: "scroll"}}>
+                    <ChatBox>
+                        {history.map((item) => {
+                            return (item.user === 'user' ?
+                                <SenderMessage sx={{wordBreak: "break-all"}} avatar={<Avatar></Avatar>}>
+                                    {item.text}
+                                </SenderMessage>:
+                                <ReceiverMessage sx={{wordBreak: "break-all"}} avatar={<Avatar>:D</Avatar>}>
+                                    {item.text}
+                                </ReceiverMessage>)
+                        })}
+                    </ChatBox>
+                </Box>
                 <div style={{display: 'flex'}}>
-                    <Input onChange={handleInputChange}/>
-                    <Box sx={{flexGrow: 1}}/>
-                    <IconButton type="submit" onMouseDown={handleSubmit} sx={{p: '10px'}}>
+                    <Textarea value={input} sx={{maxHeight: 180, ml: 2, mb: 0.5, mt: 0.5, width:"100%"}} onChange={handleInputChange}/>
+                    <IconButton type="submit" onMouseDown={handleSubmit} sx={{height: 45, p: '10px'}}>
                         <TelegramIcon/>
                     </IconButton>
                 </div>

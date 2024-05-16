@@ -1,6 +1,6 @@
 import config
 from datetime import datetime
-from sqlalchemy import BLOB, and_
+from sqlalchemy import and_
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from peft import AutoPeftModelForCausalLM, PeftModelForCausalLM

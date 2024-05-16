@@ -58,12 +58,14 @@ public class User {
     private List<Repo> starRepositoryList;
 
     @ManyToMany
+    @JsonIgnore
     @JoinTable(name = "user_discussions",
             joinColumns = @JoinColumn(name = "part_user"),
             inverseJoinColumns = @JoinColumn(name = "part_diss"))
     private List<Discussion> partDiscussionList;
 
     @ManyToMany
+    @JsonIgnore
     @JoinTable(name = "user_conversations",
             joinColumns = @JoinColumn(name = "part_user"),
             inverseJoinColumns = @JoinColumn(name = "part_conv"))
