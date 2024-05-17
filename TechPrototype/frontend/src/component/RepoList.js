@@ -25,6 +25,7 @@ import StarButton from "./StarButton"
 const RepoList = ({ repos, viewMode, onDragEnd }) => {
     const navigate = useNavigate()
 
+    console.log(repos)
     if (viewMode === 'list') {
         return (
             <DragDropContext onDragEnd={onDragEnd}>

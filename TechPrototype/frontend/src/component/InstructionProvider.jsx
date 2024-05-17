@@ -1,6 +1,7 @@
 import {createContext, useContext} from "react";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "./AuthProvider";
+import {createRepo} from "../service/repo";
 const InstructionContext = createContext();
 
 const InstructionProvider = ({ children }) => {
@@ -13,6 +14,12 @@ const InstructionProvider = ({ children }) => {
             switch (instr[0]) {
                 case 'cd':
                     navigate(instr[1])
+                    break;
+                case 'mkdir':
+                    createRepo({user: {name: auth.user, password: auth.token},
+                        path: instr[1],
+                        publish: false, introduction: '',
+                        tagNameList: []})
                     break;
                 default:
                     throw Error('Unknown instruction: ' + instr[0]);

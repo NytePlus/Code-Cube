@@ -39,7 +39,26 @@ function RightTools(){
         setInput('')
         const res = await postAgentMessage(message)
         setHistory((preHistory) => [...preHistory, {user: 'agent', text: res.reply}])
-        instr.excute(['cd /repo'])
+
+        let instrs = []
+        let instrbegin = false
+        for(let i = 0; i < res.reply.length; i ++)
+        {
+            if(!instrbegin && (res.reply.substring(i, 2) === 'cd' || res.reply.substring(i, 5) === 'mkdir'))
+            {
+                instrbegin = true;
+                instrs.push(res.reply[i])
+            }
+            else if(instrbegin && res.reply[i] === '\n')
+            {
+                instrbegin = false;
+            }
+            else if(instrbegin)
+            {
+                instrs[instrs.length - 1] += res.reply[i]
+            }
+        }
+        instr.excute(instrs)
         console.log(res)
     }
 
