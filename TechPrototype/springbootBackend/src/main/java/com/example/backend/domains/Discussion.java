@@ -32,6 +32,7 @@ public class Discussion {
     @JoinColumn(name = "init_user")
     private User initUser;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "discussion")
     private List<Comment> commentList;
 

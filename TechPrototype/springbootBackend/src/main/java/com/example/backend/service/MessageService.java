@@ -39,4 +39,13 @@ public class MessageService {
 
         return messageRepo.save(message);
     }
+
+    public List<Conversation> getConversationsByUserId(Integer userId) {
+        return conversationRepo.findByUserId(userId);
+    }
+
+
+    public List<Conversation> getConversationsByUserName(String name) {
+        return conversationRepo.findByName(name);
+    }
 }

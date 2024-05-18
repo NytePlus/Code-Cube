@@ -21,8 +21,19 @@ public class ForumService {
     @Autowired
     private UserDao userDao;
 
+
     public List<Comment> getCommentByDiscussion(Integer discussionId) {
         return commentDao.findByDiscussionId(discussionId);
+    }
+
+    public List<Discussion> getDiscussionsByUserId(Integer userId) {
+        User user = userDao.findById(userId).orElse(null);
+        return discussionDao.findByInitUser(user);
+    }
+
+    public List<Discussion> getDiscussionsByUserName(String name) {
+        User user = userDao.getByName(name);
+        return discussionDao.findByInitUser(user);
     }
 
     public Comment addComment(Integer userId, Integer discussionId, String content) {

@@ -81,7 +81,7 @@ function PrimarySearchAppBar() {
                         <SearchIcon/>
                     </SearchIconWrapper>
                     <StyledInputBase
-                        placeholder="搜索…"
+                        placeholder="Search…"
                         inputProps={{'aria-label': 'search'}}
                     />
                 </Search>

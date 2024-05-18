@@ -34,7 +34,7 @@ public class Comment {
     @Column(name = "date")
     private Date date;
 
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "comment")
     private List<Comment> commentList;
 
@@ -43,11 +43,12 @@ public class Comment {
     @JoinColumn(name = "user")
     private User user;
 
-
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "parent_comment")
     private Comment comment;
 
+    @JsonBackReference
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "parent_discussion")

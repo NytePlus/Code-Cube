@@ -81,5 +81,5 @@ export async function download(url, data){
     return res;
 }
 
-export const SPRINGBOOTURL = 'http://localhost:8080';
+export const SPRINGBOOTURL = 'http://localhost:8081';
 export const FLASKURL = "http://localhost:8890";
