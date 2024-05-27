@@ -41,9 +41,11 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import {changeStar, createRepo, getAllPublicRepo, getAllRepoByUser} from "../service/repo";
 import {useAuth} from "../component/AuthProvider";
 import {MuiChipsInput} from "mui-chips-input";
+import {useNavigate} from "react-router-dom";
 
 const HomePage = () => {
     const auth = useAuth()
+    const navigate = useNavigate()
     const [viewMode, setViewMode] = useState('list'); // 默认视图模式为列表
     const [repoCreateOpen, setRepoCreateOpen] = useState(false)
     const [publish, setPublish] = useState(false)
@@ -218,10 +220,10 @@ const HomePage = () => {
                 <Grid item xs={12} md={6}>
                     {/* 右半部分 */}
                     <Box sx={{ justifyContent: 'center', alignItems: 'center', display: 'flex', gap: '32px' }}>
-                        <IconButton color="primary" sx={{ width: 100, height: 100, borderRadius: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <IconButton onClick={() => navigate("/history")} color="primary" sx={{ width: 100, height: 100, borderRadius: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <EmailIcon fontSize="large" />
                         </IconButton>
-                        <IconButton color="primary" sx={{ width: 100, height: 100, borderRadius: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <IconButton onClick={() => navigate("/history")} color="primary" sx={{ width: 100, height: 100, borderRadius: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <ReplyIcon fontSize="large" />
                         </IconButton>
                         <IconButton color="primary" sx={{ width: 100, height: 100, borderRadius: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

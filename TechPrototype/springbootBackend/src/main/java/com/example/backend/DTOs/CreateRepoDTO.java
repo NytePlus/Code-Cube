@@ -13,4 +13,8 @@ public class CreateRepoDTO {
     Boolean publish;
     String introduction;
     List<String> tagNameList;
+
+    public CreateRepoDTO() {
+
+    }
 }

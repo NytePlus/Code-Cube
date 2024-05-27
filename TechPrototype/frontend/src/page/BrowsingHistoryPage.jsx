@@ -47,6 +47,7 @@ import DiscussionList from '../component/DiscussionList';
 import {useState} from "react";
 import {useAuth} from "../component/AuthProvider";
 import ConversationsList from "../component/ConversationList";
+import RightTools from "../component/RightTools";
 
 export default function BrowsingHistoryPage() {
     const [viewMode, setViewMode] = useState('list');
@@ -99,26 +100,7 @@ export default function BrowsingHistoryPage() {
                 </Grid>
                 <Grid item xs={11} sx={{ position: 'relative', marginTop: '-32px', left: -10 }}>
                     <Box sx={{ position: 'fixed', bottom: 20, left: '90%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', zIndex: 1000 }}>
-                        <Tooltip title="Back to top" placement="left">
-                            <Fab color="primary" size="small" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-                                <KeyboardArrowUpIcon />
-                            </Fab>
-                        </Tooltip>
-                        <Tooltip title="Filter starred repos" placement="left">
-                            <Fab color="secondary" size="small" sx={{ mt: 1 }} onClick={() => { }}>
-                                <StarBorderIcon />
-                            </Fab>
-                        </Tooltip>
-                        <Tooltip title="Filter my repos" placement="left">
-                            <Fab color="default" size="small" sx={{ mt: 1 }} onClick={() => { }}>
-                                <FilterListIcon />
-                            </Fab>
-                        </Tooltip>
-                        <Tooltip title="Search in repos" placement="left">
-                            <Fab color="default" size="small" sx={{ mt: 1 }} onClick={() => { }}>
-                                <SearchIcon />
-                            </Fab>
-                        </Tooltip>
+                        <RightTools/>
                     </Box>
                 </Grid>
             </Grid>

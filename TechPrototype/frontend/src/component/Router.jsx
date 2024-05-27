@@ -16,7 +16,7 @@ export default function AppRouter() {
                     <Routes>
                         <Route index element={<LoginPagePlus />} />
                         <Route path="/:user" element={<HomePage />} />
-                        <Route path="/:user/repos/:repo" element={<RepoPage />} />
+                        <Route path="/:user/:repo" element={<RepoPage />} />
                         <Route path="/history" element={<BrowsingHistoryPage />} />
                         <Route path="/:user/brows" element={<BrowsingHistoryPage />} />
                         <Route path="/discussions/:discussionId" element={<DiscussionDetail />} />

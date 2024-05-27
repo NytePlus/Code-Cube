@@ -8,4 +8,8 @@ import lombok.Data;
 public class GetRepoDTO {
     UserDTO userDTO;
     String path;
+
+    public GetRepoDTO() {
+
+    }
 }

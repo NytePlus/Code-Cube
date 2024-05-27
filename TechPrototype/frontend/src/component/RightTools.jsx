@@ -76,7 +76,7 @@ function RightTools(){
                 <SpeedDialAction key={"Agent"} icon={<AndroidIcon />}
                                  tooltipTitle={"Agent"} onClick={handleAgentChange}/>
                 <SpeedDialAction key={"Forum"} icon={<ForumIcon />}
-                                 tooltipTitle={"Fourm"}/>
+                                 tooltipTitle={"Fourm"} onClick={() => navigate("/history")}/>
                 <SpeedDialAction key={"Home"} icon={<HomeOutlinedIcon />} onClick={() => navigate(`/${auth.user}`)}
                                  tooltipTitle={"Home"}/>
                 <SpeedDialAction key={"Back to top"} icon={<KeyboardArrowUpIcon />}

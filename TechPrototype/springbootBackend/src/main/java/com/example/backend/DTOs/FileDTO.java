@@ -10,4 +10,8 @@ public class FileDTO {
     private String name;
     private String path;
     private String content;
+
+    public FileDTO() {
+
+    }
 }
