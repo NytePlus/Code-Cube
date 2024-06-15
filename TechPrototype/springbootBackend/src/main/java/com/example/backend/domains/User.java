@@ -30,8 +30,10 @@ public class User {
     private String name;
 
     @Column(name = "avatar")
-    @Lob()
-    private Blob avatar;
+    private String avatar;
+
+    @Column(name = "introduction")
+    private String introduction;
 
     @OneToOne
     @JsonIgnore

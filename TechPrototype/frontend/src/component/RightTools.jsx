@@ -14,7 +14,7 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import {useNavigate} from "react-router-dom";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import {ChatBox, ReceiverMessage, SenderMessage} from "mui-chat-box";
-import {Textarea, TextField} from "@mui/joy";
+import {Textarea} from "@mui/joy";
 
 function RightTools(){
     const auth = useAuth()

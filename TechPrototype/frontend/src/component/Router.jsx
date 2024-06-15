@@ -7,20 +7,25 @@ import BrowsingHistoryPage from '../page/BrowsingHistoryPage';
 import RepoPage from '../page/RepoPage';
 import DiscussionDetail from '../page/DiscussionDetail';
 import React from 'react';
+import FilterProvider from "./FilterProvider";
+import UserPage from "../page/UserPage";
 
 export default function AppRouter() {
     return (
         <BrowserRouter>
             <AuthProvider>
                 <InstructionProvider>
-                    <Routes>
-                        <Route index element={<LoginPagePlus />} />
-                        <Route path="/:user" element={<HomePage />} />
-                        <Route path="/:user/repos/:repo" element={<RepoPage />} />
-                        <Route path="/history" element={<BrowsingHistoryPage />} />
-                        <Route path="/:user/brows" element={<BrowsingHistoryPage />} />
-                        <Route path="/discussions/:discussionId" element={<DiscussionDetail />} />
-                    </Routes>
+                    <FilterProvider>
+                        <Routes>
+                            <Route index element={<LoginPagePlus />} />
+                            <Route path="/:user" element={<HomePage />} />
+                            <Route path="/:user/profile" element={<UserPage />} />
+                            <Route path="/:user/:repo" element={<RepoPage />} />
+                            <Route path="/history" element={<BrowsingHistoryPage />} />
+                            <Route path="/:user/brows" element={<BrowsingHistoryPage />} />
+                            <Route path="/discussions/:discussionId" element={<DiscussionDetail />} />
+                        </Routes>
+                    </FilterProvider>
                 </InstructionProvider>
             </AuthProvider>
         </BrowserRouter>

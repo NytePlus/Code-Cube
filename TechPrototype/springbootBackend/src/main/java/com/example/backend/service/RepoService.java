@@ -1,9 +1,6 @@
 package com.example.backend.service;
 
-import com.example.backend.DTOs.CreateRepoDTO;
-import com.example.backend.DTOs.FileDTO;
-import com.example.backend.DTOs.GetRepoDTO;
-import com.example.backend.DTOs.UserDTO;
+import com.example.backend.DTOs.*;
 import com.example.backend.domains.File;
 import com.example.backend.domains.Folder;
 import com.example.backend.domains.Repo;
@@ -18,9 +15,10 @@ public interface RepoService {
     public Repo getRepo(GetRepoDTO repoDTO);
     public Boolean createRepo(CreateRepoDTO repoDTO);
     public List<Repo> getAllPublicRepos();
-    public List<Repo> getAllByUser(UserDTO userDTO);
+    public List<Repo> getAllByUser(String name);
     public Folder getFolder(GetRepoDTO getRepoDTO);
     public FileDTO getFile(GetRepoDTO getRepoDTO);
     public void downloadFile(GetRepoDTO getRepoDTO, HttpServletResponse response);
     public Boolean changeStar(GetRepoDTO getRepoDTO);
+    public List<Repo> getRepoByNameDateLabelUser(NameDateLabelUserDTO nameDateLabelUserDTO);
 }

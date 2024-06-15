@@ -48,6 +48,18 @@ export async function getAllPublicRepo(){
     return res;
 }
 
+export async function getRepoByFilter(data){
+    const url = SPRINGBOOTURL + "/repoFilter"
+    let res
+    try{
+        res = await post(url, data)
+    }catch(e){
+        console.error(e)
+        res = []
+    }
+    return res;
+}
+
 export async function getAllRepoByUser(data){
     const url = SPRINGBOOTURL + "/repoGetByUser"
     let res

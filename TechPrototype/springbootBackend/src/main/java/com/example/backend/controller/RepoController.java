@@ -1,19 +1,19 @@
 package com.example.backend.controller;
 
-import com.example.backend.DTOs.CreateRepoDTO;
-import com.example.backend.DTOs.FileDTO;
-import com.example.backend.DTOs.GetRepoDTO;
-import com.example.backend.DTOs.UserDTO;
+import com.example.backend.DTOs.*;
 import com.example.backend.domains.Folder;
 import com.example.backend.domains.Repo;
 import com.example.backend.service.RepoService;
+import com.example.backend.utils.SessionUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -65,13 +65,30 @@ public class RepoController {
 
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials="true")
     @RequestMapping("/repoGetByUser")
-    public @ResponseBody List<Repo> getAllRepoByUserHandler(@RequestBody UserDTO userDTO){
-        return repoService.getAllByUser(userDTO);
+    public @ResponseBody List<Repo> getAllRepoByUserHandler(){
+        HttpSession session = SessionUtils.getSession();
+        if (session != null) {
+            String name = (String) session.getAttribute("userId");
+            return repoService.getAllByUser(name);
+        }
+        return new ArrayList<>();
     }
 
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials="true")
+    @RequestMapping("/repoFilter")
+    public @ResponseBody List<Repo> getRepoByNameDateLabelUserHandler(@RequestBody NameDateLabelUserDTO nameDateLabelUserDTO){
+        HttpSession session = SessionUtils.getSession();
+        if (session != null) {
+            return repoService.getRepoByNameDateLabelUser(nameDateLabelUserDTO);
+        }
+        return new ArrayList<>();
+    }
+
+    @CrossOrigin(origins = "http://localhoHst:3000", allowCredentials="true")
     @RequestMapping("/repoStar")
-    public @ResponseBody Boolean getAllRepoByUserHandler(@RequestBody GetRepoDTO getRepoDTO){
+    public @ResponseBody Boolean changeStarHandler(@RequestBody GetRepoDTO getRepoDTO){
         return repoService.changeStar(getRepoDTO);
     }
+
+
 }

@@ -44,7 +44,7 @@ public class RepoDao {
         }
         Repo repo = new Repo(repoDTO.getPath(), pathSplit[pathSplit.length - 1],
                 repoDTO.getIntroduction(), 0,
-                repoDTO.getPublish(), folder, userDao.getByName(repoDTO.getUser().getName()),
+                repoDTO.getPublish(), "", folder, userDao.getByName(repoDTO.getUser().getName()),
                 new ArrayList<>(), tagList);
         repoRepo.save(repo);
         return repo;
@@ -66,5 +66,24 @@ public class RepoDao {
     public void removeStar(Repo repo){
         repo.setStar(repo.getStar() - 1);
         repoRepo.save(repo);
+    }
+
+    public List<Repo> getRepoByNameDateLabelUser(String name, String begin, String end, List<String> tags, String user){
+        List<Repo> repoList = repoRepo.findByUserNameDate(user, name, begin, end);
+        List<Repo> repoHasTagList = new ArrayList<>();
+        System.out.println(repoList);
+        for(int i = 0; i < repoList.size(); i ++){
+            List<Tag> tagList = repoList.get(i).getRepoTagList();
+            if(tags.isEmpty() && tagList.isEmpty()){
+                repoHasTagList.add(repoList.get(i));
+            }
+            for(int j = 0; j < tagList.size(); j ++){
+                if(tags.isEmpty() || tags.contains(tagList.get(j).getName())){
+                    repoHasTagList.add(repoList.get(i));
+                    break;
+                }
+            }
+        }
+        return repoHasTagList;
     }
 }

@@ -1,9 +1,8 @@
 package com.example.backend.controller;
 
 import com.example.backend.domains.Conversation;
-import com.example.backend.domains.Discussion;
 import com.example.backend.domains.Message;
-import com.example.backend.service.MessageService;
+import com.example.backend.serviceImpl.MessageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +14,13 @@ import java.util.Map;
 @RequestMapping("/api/conversations")
 public class MessageController {
     @Autowired
-    private MessageService messageService;
+    private MessageServiceImpl messageServiceImpl;
 
     // 获取特定对话中的所有消息
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @GetMapping("/{conversationId}/messages")
     public ResponseEntity<List<Message>> getMessages(@PathVariable Integer conversationId) {
-        List<Message> messages = messageService.getMessagesByConversationId(conversationId);
+        List<Message> messages = messageServiceImpl.getMessagesByConversationId(conversationId);
         return ResponseEntity.ok(messages);
     }
 
@@ -32,7 +31,7 @@ public class MessageController {
                                                @RequestParam Integer userId,
                                                @RequestBody Map<String, String> requestBody) {
         String content = requestBody.get("content");
-        Message message = messageService.postMessage(userId, conversationId, content);
+        Message message = messageServiceImpl.postMessage(userId, conversationId, content);
         return ResponseEntity.ok(message);
     }
 
@@ -40,14 +39,14 @@ public class MessageController {
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @GetMapping("/userid/{userId}")
     public ResponseEntity<List<Conversation>> getConversationsByUserId(@PathVariable Integer userId) {
-        List<Conversation> conversations = messageService.getConversationsByUserId(userId);
+        List<Conversation> conversations = messageServiceImpl.getConversationsByUserId(userId);
         return ResponseEntity.ok(conversations);
     }
 
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @GetMapping("/user/{name}")
     public ResponseEntity<List<Conversation>> getConversationsByUserName(@PathVariable String name) {
-        List<Conversation> conversations = messageService.getConversationsByUserName(name);
+        List<Conversation> conversations = messageServiceImpl.getConversationsByUserName(name);
         return ResponseEntity.ok(conversations);
     }
 

@@ -32,6 +32,9 @@ public class Repo {
     @Column(name = "publish")
     private boolean publish;
 
+    @Column(name = "date")
+    private String date;
+
     @OneToOne
     @JsonIgnore
     @JoinColumn(name = "folder")

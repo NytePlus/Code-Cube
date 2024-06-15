@@ -47,6 +47,19 @@ export async function post(url, data){
     return res.json();
 }
 
+export async function upload(url, file){
+    const form = new FormData()
+    form.append('file', file)
+    fetch(url, {
+        method: 'POST',
+        body: form,
+        headers: {
+
+        },
+        credentials: "include"
+    })
+}
+
 export async function download(url, data){
     let res = await fetch(url, {
         method: "POST",
@@ -81,5 +94,5 @@ export async function download(url, data){
     return res;
 }
 
-export const SPRINGBOOTURL = 'http://localhost:8081';
+export const SPRINGBOOTURL = 'http://localhost:8080';
 export const FLASKURL = "http://localhost:8890";
