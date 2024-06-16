@@ -42,7 +42,7 @@ public class RepoServiceImpl implements RepoService {
     FolderDao folderDao;
 
     @Autowired
-    UserService loginService;
+    UserService userService;
 
     @Autowired
     UserDao userDao;
@@ -85,7 +85,7 @@ public class RepoServiceImpl implements RepoService {
 
     @Override
     public Repo getRepo(GetRepoDTO repoDTO){
-        if(loginService.checkAccount(repoDTO.getUserDTO())){
+        if(userService.checkAccount(repoDTO.getUserDTO())){
             return repoDao.findByPath(repoDTO.getPath());
         }
         else{
@@ -100,7 +100,7 @@ public class RepoServiceImpl implements RepoService {
 
     @Override
     public Folder getFolder(GetRepoDTO getRepoDTO){
-        if(loginService.checkAccount(getRepoDTO.getUserDTO())){
+        if(userService.checkAccount(getRepoDTO.getUserDTO())){
                 return folderDao.findByPath(getRepoDTO.getPath());
         }
         else{
@@ -115,7 +115,7 @@ public class RepoServiceImpl implements RepoService {
 
     @Override
     public FileDTO getFile(GetRepoDTO getRepoDTO) {
-        if(loginService.checkAccount(getRepoDTO.getUserDTO()) || repoDao.findByPath(getRepoDTO.getPath()).isPublish()){
+        if(userService.checkAccount(getRepoDTO.getUserDTO()) || repoDao.findByPath(getRepoDTO.getPath()).isPublish()){
             File file = fileDao.findByPath(getRepoDTO.getPath());
             Blob blob = file.getContent();
             try {
@@ -137,7 +137,7 @@ public class RepoServiceImpl implements RepoService {
 
     @Override
     public void downloadFile(GetRepoDTO getRepoDTO, HttpServletResponse response) {
-        if(loginService.checkAccount(getRepoDTO.getUserDTO()) || repoDao.findByPath(getRepoDTO.getPath()).isPublish()){
+        if(userService.checkAccount(getRepoDTO.getUserDTO()) || repoDao.findByPath(getRepoDTO.getPath()).isPublish()){
             File file = fileDao.findByPath(getRepoDTO.getPath());
             Blob blob = file.getContent();
             response.setCharacterEncoding("utf-8");
@@ -169,7 +169,7 @@ public class RepoServiceImpl implements RepoService {
 
     @Override
     public Boolean createRepo(CreateRepoDTO repoDTO){
-        if(loginService.checkAccount(repoDTO.getUser())){
+        if(userService.checkAccount(repoDTO.getUser())){
             if(repoDao.checkByPath(repoDTO.getPath()))
                 return false;
             else{
@@ -182,7 +182,7 @@ public class RepoServiceImpl implements RepoService {
 
     @Override
     public Boolean changeStar(GetRepoDTO getRepoDTO){
-        if(loginService.checkAccount(getRepoDTO.getUserDTO())){
+        if(userService.checkAccount(getRepoDTO.getUserDTO())){
             if(repoDao.checkByPath(getRepoDTO.getPath())){
                 Repo repo = repoDao.findByPath(getRepoDTO.getPath());
                 User user = userDao.getByName(getRepoDTO.getUserDTO().getName());

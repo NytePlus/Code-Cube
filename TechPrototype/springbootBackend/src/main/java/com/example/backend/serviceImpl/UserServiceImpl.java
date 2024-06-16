@@ -24,14 +24,18 @@ import java.util.Objects;
 
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
-    UserDao userDao;
+    private final UserDao userDao;
 
     @Autowired
     FolderDao folderDao;
 
     @Autowired
     RepoDao repoDao;
+
+    @Autowired
+    public UserServiceImpl(UserDao userDao){
+        this.userDao = userDao;
+    }
 
     @Override
     public boolean checkAccount(UserDTO user){

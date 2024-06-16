@@ -6,6 +6,7 @@ import com.example.backend.dao.UserDao;
 import com.example.backend.domains.Comment;
 import com.example.backend.domains.Discussion;
 import com.example.backend.domains.User;
+import com.example.backend.service.ForumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class ForumServiceImpl {
+public class ForumServiceImpl implements ForumService {
     @Autowired
     private DiscussionDao discussionDao;
     @Autowired
@@ -46,6 +47,4 @@ public class ForumServiceImpl {
         comment.setDiscussion(discussion);
         return commentDao.save(comment);
     }
-
-
 }

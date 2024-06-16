@@ -120,14 +120,14 @@ public class RepoControllerTest {
 
     @Test
     void testGetAllRepoByUserHandler() {
-        UserDTO userDTO = new UserDTO();
+        String name = null;
         List<Repo> repos = new ArrayList<>();
-        when(repoService.getAllByUser(any(UserDTO.class))).thenReturn(repos);
+        when(repoService.getAllByUser(anyString())).thenReturn(repos);
 
-        List<Repo> response = repoController.getAllRepoByUserHandler(userDTO);
+        List<Repo> response = repoController.getAllRepoByUserHandler();
 
         assertEquals(repos, response);
-        verify(repoService, times(1)).getAllByUser(userDTO);
+        verify(repoService, times(1)).getAllByUser(name);
     }
 
     @Test
@@ -135,7 +135,7 @@ public class RepoControllerTest {
         GetRepoDTO getRepoDTO = new GetRepoDTO();
         when(repoService.changeStar(any(GetRepoDTO.class))).thenReturn(true);
 
-        Boolean response = repoController.getAllRepoByUserHandler(getRepoDTO);
+        Boolean response = repoController.changeStarHandler(getRepoDTO);
 
         assertEquals(true, response);
         verify(repoService, times(1)).changeStar(getRepoDTO);
