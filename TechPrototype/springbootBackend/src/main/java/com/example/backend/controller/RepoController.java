@@ -65,11 +65,14 @@ public class RepoController {
 
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials="true")
     @RequestMapping("/repoGetByUser")
-    public @ResponseBody List<Repo> getAllRepoByUserHandler(){
+    public @ResponseBody List<Repo> getAllRepoByUserHandler(@RequestParam String target){
         HttpSession session = SessionUtils.getSession();
         if (session != null) {
             String name = (String) session.getAttribute("userId");
-            return repoService.getAllByUser(name);
+            if(target == name)
+                return repoService.getAllByUser(name);
+            else return repoService.getRepoByNameDateLabelUser(
+                    new NameDateLabelUserDTO("", "2000-01-01", "2030-01-01", target, new ArrayList<>()));
         }
         return new ArrayList<>();
     }

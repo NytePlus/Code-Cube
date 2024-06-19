@@ -7,9 +7,23 @@ import {DndProvider} from "react-dnd";
 import {Cube, FileFlat} from "../component/Cube";
 import Header from "../component/header";
 import RightTools from "../component/RightTools";
-import {useParams} from "react-router-dom";
-import {getFolder, getRepo} from "../service/repo";
+import {useNavigate, useParams} from "react-router-dom";
+import {getFile, getFolder, getRepo} from "../service/repo";
 import {useAuth} from "../component/AuthProvider";
+import {Avatar, Box, Button, IconButton, Typography} from "@mui/material";
+import {SPRINGBOOTURL} from "../service/common";
+import TimelineItem from "@mui/lab/TimelineItem";
+import TimelineOppositeContent from "@mui/lab/TimelineOppositeContent";
+import TimelineSeparator from "@mui/lab/TimelineSeparator";
+import TimelineDot from "@mui/lab/TimelineDot";
+import TimelineConnector from "@mui/lab/TimelineConnector";
+import TimelineContent from "@mui/lab/TimelineContent";
+import Timeline from "@mui/lab/Timeline";
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import Divider from "@mui/material/Divider";
+import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
+import {Upload} from "antd";
+import {FileMarkdown} from "../component/FileMarkdown";
 
 const CubeContext = createContext(null);
 const CubeDispatchContext = createContext(null);
@@ -69,6 +83,24 @@ function previewReducer(preview, action){
         }
     }
 }
+
+function filePreviewReducer(filePreview, action){
+    switch(action.type){
+        case 'preview':
+        {
+            return action.file
+        }
+        case 'endpreview':
+        {
+            return null
+        }
+        default:
+        {
+            throw Error('Unknown action: ' + action.type);
+        }
+    }
+}
+
 function layersReducer(layers, action) {
     switch (action.type) {
         case 'changed':
@@ -100,6 +132,14 @@ function cubeReducer(cube, action)
         {
             return !cube
         }
+        case 'open':
+        {
+            return true
+        }
+        case 'close':
+        {
+            return false
+        }
         default:
         {
             throw Error('Unknown action: ' + action.type);
@@ -129,6 +169,7 @@ function fileReducer(files, action)
 const RepoPage = () => {
     const userRepo = useParams()
     const auth = useAuth()
+    const navigate = useNavigate()
     const [repoData, setRepoData] = useState([])
     const [folder, setFolder] = useState([])
     const [cube, dispatch] = useReducer(cubeReducer, false)
@@ -136,8 +177,10 @@ const RepoPage = () => {
     const [cards, setCards] = useState([])
     const [layers, layerDispatch] = useReducer(layersReducer, ["/" + userRepo.user + '/' + userRepo.repo]);
     const [preview, previewDispatch] = useReducer(previewReducer, '');
+    const [filePreview, filePreviewDispatch] = useReducer(filePreviewReducer, '');
 
     const getRepoData = async () =>{
+        dispatch({type: 'close'})
         let data = {
             userDTO: {
                 name: auth.user,
@@ -149,6 +192,7 @@ const RepoPage = () => {
         let folder = await getFolder(data)
         setRepoData(repo)
         setFolder([folder])
+        dispatch({type: 'open'})
     }
 
     useEffect(() => {
@@ -156,7 +200,6 @@ const RepoPage = () => {
     }, [])
 
     useEffect(() => {
-        console.log({files: files, cards: cards})
         setCards(files.map((item, index) => {
             return {
                 id: index,
@@ -199,18 +242,75 @@ const RepoPage = () => {
                         <LayersContext.Provider value={layers}>
                             <LayersDispatchContext.Provider value={layerDispatch}>
                                 <PreviewContext.Provider value={preview}>
-                                    <PreviewDispatchContext.Provider value={previewDispatch}>
+                                    <PreviewDispatchContext.Provider value={{filePreviewDispatch, previewDispatch}}>
                                         <FileContext.Provider value={files}>
                                             <FileDispatchContext.Provider value={fileDispatch}>
                                                 <div style={{overflowX: 'hidden'}}>
                                                     <Header/>
-                                                    <div style={{
-                                                        height: 500,
-                                                        paddingLeft: '45%',
-                                                        paddingTop: '15%'
-                                                    }}>
-                                                        <Cube prop={folder}/>
-                                                    </div>
+                                                    <Box sx={{display: 'flex'}}>
+                                                        <Box sx={{m:2, maxWidth: 300, position: 'absolute'}}>
+                                                            {filePreview &&<FileMarkdown
+                                                                text={filePreview.content}
+                                                                type={filePreview.name.split('.')[filePreview.name.split('.').length - 1]}/>}
+                                                        </Box>
+                                                        <div style={{
+                                                            flexGrow: 1,
+                                                            height: 500,
+                                                            paddingLeft: '45%',
+                                                            paddingTop: '15%'
+                                                        }}>
+                                                            <Cube prop={folder}/>
+                                                        </div>
+                                                        {repoData && repoData.initUser && <Box sx={{w: 100, m: 3}}>
+                                                            <Box sx={{display: 'flex'}}>
+                                                                <Typography color="gray" variant="h4" sx={{mt: 2, mr: 2}}>
+                                                                    {repoData.initUser.name + '/' + repoData.name}
+                                                                </Typography>
+                                                                <Box sx={{flexGrow: 1}}></Box>
+                                                                <Avatar sx={{
+                                                                    width: 150,
+                                                                    height: 150,
+                                                                    border: '1px solid #bdbdbd'
+                                                                }}
+                                                                        onClick={() => {navigate('/' + repoData.initUser.name + '/profile')}}
+                                                                         alt={repoData.initUser.name}
+                                                                         src={SPRINGBOOTURL + repoData.initUser.avatar}/>
+                                                            </Box>
+                                                            <Typography variant="h4" sx={{mt: 1}}>
+                                                                About
+                                                            </Typography>
+                                                            <About repoData={repoData} folder={folder}/>
+                                                            <Typography variant="p" sx={{ml: 2, mb: 2}}>
+                                                                {repoData.introduction}
+                                                            </Typography>
+                                                            <Divider/>
+                                                            <Typography variant="h4" sx={{mt: 1}}>
+                                                                Settings
+                                                            </Typography>
+                                                            <Box sx={{display: 'flex'}}>
+                                                                <Upload
+                                                                    multiple={true}
+                                                                    action={SPRINGBOOTURL + '/fileUpload'}
+                                                                    withCredentials="true"
+                                                                    data={file => {
+                                                                        return {user: auth.user, repo: repoData.name, path: file["webkitRelativePath"]}}}
+                                                                    directory>
+                                                                    <Button><DriveFolderUploadOutlinedIcon/></Button>
+                                                                </Upload>
+                                                                <Typography variant="p" sx={{mt: 1}}>
+                                                                    上传文件目录
+                                                                </Typography>
+                                                            </Box>
+                                                            <Box sx={{display: 'flex'}}>
+                                                                <IconButton sx={{ml: 1}}>
+                                                                    <FileDownloadOutlinedIcon/>
+                                                                </IconButton>
+                                                                <Typography variant="p" sx={{ml:2, mt: 1}}>
+                                                                    下载项目文件压缩包
+                                                                </Typography>
+                                                            </Box>
+                                                        </Box>}
+                                                    </Box>
                                                     <div style={{
                                                         marginLeft: 30,
                                                         marginRight: 30,
@@ -236,5 +336,61 @@ const RepoPage = () => {
         </DndProvider>
     )
 };
+
+const About = ({repoData, folder}) => {
+    return (<Timeline position="alternate">
+        <TimelineItem>
+            <TimelineOppositeContent color="text.secondary">
+                {repoData.star}
+            </TimelineOppositeContent>
+            <TimelineSeparator>
+                <TimelineDot />
+                <TimelineConnector />
+            </TimelineSeparator>
+            <TimelineContent>star</TimelineContent>
+        </TimelineItem>
+        <TimelineItem>
+            <TimelineOppositeContent color="text.secondary">
+                {repoData.date}
+            </TimelineOppositeContent>
+            <TimelineSeparator>
+                <TimelineDot />
+                <TimelineConnector />
+            </TimelineSeparator>
+            <TimelineContent>创建时间</TimelineContent>
+        </TimelineItem>
+        <TimelineItem>
+            <TimelineOppositeContent color="text.secondary">
+                {repoData.publish?"公开":"私有"}
+            </TimelineOppositeContent>
+            <TimelineSeparator>
+                <TimelineDot />
+                <TimelineConnector />
+            </TimelineSeparator>
+            <TimelineContent>仓库状态</TimelineContent>
+        </TimelineItem>
+        <TimelineItem>
+            <TimelineOppositeContent color="text.secondary">
+                {size(folder[0])} bytes
+            </TimelineOppositeContent>
+            <TimelineSeparator>
+                <TimelineDot />
+                <TimelineConnector />
+            </TimelineSeparator>
+            <TimelineContent>文件大小</TimelineContent>
+        </TimelineItem>
+    </Timeline>)
+}
+
+function size(prop){
+    let res = 0;
+    for(let i = 0; i < prop.folderList.length; i ++){
+        res += size(prop.folderList[i])
+    }
+    for(let i = 0; i < prop.fileList.length; i ++){
+        res += prop.fileList[i].size
+    }
+    return res
+}
 
 export default RepoPage;

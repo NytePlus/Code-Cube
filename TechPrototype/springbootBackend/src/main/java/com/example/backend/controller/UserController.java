@@ -55,10 +55,9 @@ public class UserController {
 
     @CrossOrigin(origins = "http://localhost:3000" ,allowCredentials="true")
     @RequestMapping("/user")
-    public @ResponseBody User getProfileHandler(){
+    public @ResponseBody User getProfileHandler(@RequestParam String name){
         HttpSession session = SessionUtils.getSession();
         if (session != null) {
-            String name = (String) session.getAttribute("userId");
             return userService.getProfile(name);
         }
         return null;

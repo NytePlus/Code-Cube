@@ -85,12 +85,12 @@ const HomePage = () => {
     }
 
     const displayMyRepos = async () => {
-        let myRepos = await getAllRepoByUser({name: auth.user, password: auth.token});
+        let myRepos = await getAllRepoByUser(auth.user);
         setRepos(myRepos);
     }
 
     const displayStarRepos = async () => {
-        let starRepos = await getAllRepoByUser({name: auth.user, password: auth.token});
+        let starRepos = await getAllRepoByUser(auth.user);
         setRepos(starRepos);
     }
 

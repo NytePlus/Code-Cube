@@ -7,7 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import Card from "@mui/material/Card";
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
-import {useNavigate } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import Box from "@mui/material/Box";
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
@@ -21,6 +21,10 @@ import RightTools from "../component/RightTools";
 import {styled} from "@mui/material/styles";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import {Textarea} from "@mui/joy";
+import {getAllRepoByUser} from "../service/repo";
+import {useAuth} from "../component/AuthProvider";
+import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
+import {Link} from "@mui/material";
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -36,20 +40,27 @@ const VisuallyHiddenInput = styled('input')({
 
 export default function UserPage()
 {
+    const auth = useAuth()
+    const {user} = useParams()
     const navigate = useNavigate()
     const [profile, setProfile] = useState()
     const [intro, setIntro] = useState("")
-
+    const [repos, setRepos] = useState([])
     const [introEdit, setIntroEdit] = useState(false)
 
     const getProfileData = async () =>{
-        let profile = await getProfile()
+        let profile = await getProfile(user)
         if(profile === 401)
             navigate('/')
         else {
             setProfile(profile)
             setIntro(profile.introduction)
         }
+    }
+
+    const getRepoData = async () => {
+        let myRepos = await getAllRepoByUser(user);
+        setRepos(myRepos);
     }
 
     const handleIntroSubmit = () => {
@@ -60,6 +71,7 @@ export default function UserPage()
 
     useEffect(() =>{
         getProfileData()
+        getRepoData()
     }, [])
 
     return (
@@ -122,25 +134,28 @@ export default function UserPage()
                                 display: {xs: 'none', sm: 'block'}
                             }}
                         >
-                            Receiving Informations
+                            我的仓库
                         </Typography>
                     </Divider>
                     <div style={{display: 'grid', gap: 15, gridTemplateColumns: 'repeat(2, minmax(0, 1fr))'}}>
-                        {profile.userAddressList && profile.userAddressList.map((item) => {
-                            return (<Card sx={{pl: 3, height: 'min-content'}}>
+                        {repos && repos.map((item) => {
+                            return (<Card sx={{pl: 3, minHeight: 150, height: 'min-content'}}>
                                     <div style={{display: 'flex'}}>
-                                        <Typography sx={{mt: 1}} variant="h5">{item.name}</Typography>
+                                        <Typography sx={{mt: 1}} variant="h5">{auth.user}/{item.name}</Typography>
                                         <Box sx={{flexGrow: 1}}/>
-                                        <IconButton size="large" color="inherit">
+                                        <IconButton size="large" color="inherit" onClick={()=>navigate(`${item.path}`)}>
                                             <CreateOutlinedIcon/>
                                         </IconButton>
                                     </div>
-                                    <p style={{color: "gray"}}>{item.address}</p>
-                                    <p style={{color: "gray"}}>{item.phone}</p>
+                                    <Box sx={{display: 'flex'}}>
+                                        <StarOutlineRoundedIcon/>
+                                        <Box style={{marginLeft: 1, color: "gray"}}>{item.star}</Box>
+                                    </Box>
+                                    <p style={{color: "gray"}}>{item.introduction}</p>
                                 </Card>
                             )
                         })}
-                        <Card sx={{pl: 3, height: 'min-content'}}>
+                        <Card sx={{pl: 3, minHeight: 150, height: 'min-content'}}>
                             <div style={{display: 'flex'}}>
                                 <Typography sx={{mt: 1}} variant="h5">New Reciever</Typography>
                                 <Box sx={{flexGrow: 1}}/>

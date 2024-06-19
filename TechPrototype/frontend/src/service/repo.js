@@ -73,10 +73,10 @@ export async function getRepoByFilter(data){
 }
 
 export async function getAllRepoByUser(data){
-    const url = SPRINGBOOTURL + "/repoGetByUser"
+    const url = SPRINGBOOTURL + `/repoGetByUser?target=${data}`
     let res
     try{
-        res = await post(url, data)
+        res = await getJson(url)
     }catch(e){
         console.error(e)
         res = []
