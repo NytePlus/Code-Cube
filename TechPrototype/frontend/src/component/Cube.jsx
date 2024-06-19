@@ -361,6 +361,7 @@ export function RightUpload(){
                         // fileList={fileList}
                         // onChange={onChange}
                         action={SPRINGBOOTURL + '/fileUpload'}
+                        withCredentials="true"
                         data={file => {
                             return {user: auth.user, repo: repo.userRepo.repo, path: file["webkitRelativePath"]}}}
                         directory>
