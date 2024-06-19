@@ -4,6 +4,8 @@ import com.example.backend.domains.File;
 import com.example.backend.domains.Folder;
 import com.example.backend.repository.FolderRepo;
 import jakarta.annotation.Resource;
+import jakarta.persistence.LockModeType;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,14 +15,17 @@ public class FolderDao {
     @Resource
     FolderRepo folderRepo;
 
+    private final Object lock = new Object();
+
     public Folder findOrCreateByPath(String path){
-        Folder folder = folderRepo.findByPath(path);
-        System.out.println("folder: " + folder);
-        if(folder == null){
-            return createByPath(path);
-        }
-        else{
-            return folder;
+        synchronized (lock){
+            Folder folder = folderRepo.findByPath(path);
+            if(folder == null){
+                return createByPath(path);
+            }
+            else{
+                return folder;
+            }
         }
     }
 

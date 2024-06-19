@@ -360,6 +360,7 @@ export function RightUpload(){
                 <Upload
                         // fileList={fileList}
                         // onChange={onChange}
+                        multiple={true}
                         action={SPRINGBOOTURL + '/fileUpload'}
                         withCredentials="true"
                         data={file => {

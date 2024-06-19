@@ -61,7 +61,7 @@ public class RepoServiceImpl implements RepoService {
                 try {
                     String basePath = '/' + users[i] + '/' + repos[i];
                     String parentPath = basePath + "/" + paths[i].substring(0, paths[i].lastIndexOf("/"));
-                    System.out.println(basePath + "+" + parentPath);
+                    System.out.println(basePath + "+" + parentPath + '+' + paths[i]);
                     File fileClass = new File(basePath + '/' + paths[i],
                             file.getOriginalFilename(),
                             file.getContentType(),
