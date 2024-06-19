@@ -105,6 +105,15 @@ export async function downloadFile(data){
     }
 }
 
+export async function downloadRepo(data){
+    const url = SPRINGBOOTURL + "/repoDomwload"
+    try {
+        await download(url, data)
+    }catch (e){
+        console.error(e)
+    }
+}
+
 export async function changeStar(data){
     const url = SPRINGBOOTURL + '/repoStar'
     let res

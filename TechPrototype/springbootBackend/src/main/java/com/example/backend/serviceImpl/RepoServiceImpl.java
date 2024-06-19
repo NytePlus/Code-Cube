@@ -218,16 +218,17 @@ public class RepoServiceImpl implements RepoService {
                 .getPath("")
                 .toAbsolutePath()
                 .toString();
-        String targetDirectory = userDirectory + '/' + repo;
+        String targetDirectory = userDirectory;
 
         for (File file : files) {
             Path targetPath = Paths.get(targetDirectory, file.getPath());
             Blob blob = file.getContent();
             InputStream stream = blob.getBinaryStream();
+            Files.createDirectories(targetPath.getParent());
             Files.copy(stream, targetPath, StandardCopyOption.REPLACE_EXISTING);
         }
-        String zipFilePath = targetDirectory + ".zip";
-        Path sourcePath = Paths.get(targetDirectory);
+        String zipFilePath = targetDirectory + "/" + Paths.get(repo).getFileName().toString() + ".zip";
+        Path sourcePath = Paths.get(targetDirectory + "/" + repo);
 
         try (FileOutputStream fos = new FileOutputStream(zipFilePath);
              ZipOutputStream zos = new ZipOutputStream(fos)) {

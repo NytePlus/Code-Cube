@@ -8,7 +8,7 @@ import {Cube, FileFlat} from "../component/Cube";
 import Header from "../component/header";
 import RightTools from "../component/RightTools";
 import {useNavigate, useParams} from "react-router-dom";
-import {getFile, getFolder, getRepo} from "../service/repo";
+import {downloadFile, downloadRepo, getFile, getFolder, getRepo} from "../service/repo";
 import {useAuth} from "../component/AuthProvider";
 import {Avatar, Box, Button, IconButton, Typography} from "@mui/material";
 import {SPRINGBOOTURL} from "../service/common";
@@ -234,6 +234,17 @@ const RepoPage = () => {
         )
     }, [moveCard])
 
+    const downloadHandler = async () => {
+        let data = {
+            userDTO: {
+                name: auth.user,
+                password: auth.token
+            },
+            path: repoData.path
+        }
+        await downloadRepo(data);
+    }
+
     return (
         <DndProvider backend={HTML5Backend}>
             <RepoContext.Provider value={{repoData, userRepo}}>
@@ -302,7 +313,7 @@ const RepoPage = () => {
                                                                 </Typography>
                                                             </Box>
                                                             <Box sx={{display: 'flex'}}>
-                                                                <IconButton sx={{ml: 1}}>
+                                                                <IconButton sx={{ml: 1}} onClick={downloadHandler}>
                                                                     <FileDownloadOutlinedIcon/>
                                                                 </IconButton>
                                                                 <Typography variant="p" sx={{ml:2, mt: 1}}>

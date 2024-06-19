@@ -97,10 +97,10 @@ public class RepoController {
 
     @CrossOrigin(origins = "http://localhoHst:3000", allowCredentials="true")
     @RequestMapping("/repoDomwload")
-    public ResponseEntity<byte[]> changeStarHandler(@RequestParam String repo) throws SQLException, IOException {
+    public ResponseEntity<byte[]> downloadRepoHandler(@RequestBody GetRepoDTO getRepoDTO) throws SQLException, IOException {
         HttpSession session = SessionUtils.getSession();
         if (session != null) {
-            return repoService.downloadZip(repo);
+            return repoService.downloadZip(getRepoDTO.getPath());
         }
         return null;
     }
