@@ -15,20 +15,24 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.sql.rowset.serial.SerialBlob;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 public class RepoServiceImpl implements RepoService {
@@ -205,5 +209,53 @@ public class RepoServiceImpl implements RepoService {
     public List<Repo> getRepoByNameDateLabelUser(NameDateLabelUserDTO nameDateLabelUserDTO){
         return repoDao.getRepoByNameDateLabelUser(nameDateLabelUserDTO.getName(), nameDateLabelUserDTO.getBegin(),
                 nameDateLabelUserDTO.getEnd(), nameDateLabelUserDTO.getLabels(), nameDateLabelUserDTO.getUser());
+    }
+
+    @Override
+    public ResponseEntity<byte[]> downloadZip(String repo) throws SQLException, IOException {
+        List<File> files = fileDao.findByPref(repo);
+        String userDirectory = FileSystems.getDefault()
+                .getPath("")
+                .toAbsolutePath()
+                .toString();
+        String targetDirectory = userDirectory + '/' + repo;
+
+        for (File file : files) {
+            Path targetPath = Paths.get(targetDirectory, file.getPath());
+            Blob blob = file.getContent();
+            InputStream stream = blob.getBinaryStream();
+            Files.copy(stream, targetPath, StandardCopyOption.REPLACE_EXISTING);
+        }
+        String zipFilePath = targetDirectory + ".zip";
+        Path sourcePath = Paths.get(targetDirectory);
+
+        try (FileOutputStream fos = new FileOutputStream(zipFilePath);
+             ZipOutputStream zos = new ZipOutputStream(fos)) {
+
+            Files.walk(sourcePath)
+                    .filter(path -> !Files.isDirectory(path))
+                    .forEach(path -> {
+                        ZipEntry zipEntry = new ZipEntry(sourcePath.relativize(path).toString());
+                        try {
+                            zos.putNextEntry(zipEntry);
+                            Files.copy(path, zos);
+                            zos.closeEntry();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+        }
+
+        Path path = Paths.get(zipFilePath);
+        byte[] zipBytes = Files.readAllBytes(path);
+
+        // 4. 删除临时zip文件
+        Files.deleteIfExists(path);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", "files.zip");
+
+        return new ResponseEntity<>(zipBytes, headers, HttpStatus.OK);
     }
 }

@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,5 +95,13 @@ public class RepoController {
         return repoService.changeStar(getRepoDTO);
     }
 
-
+    @CrossOrigin(origins = "http://localhoHst:3000", allowCredentials="true")
+    @RequestMapping("/repoDomwload")
+    public ResponseEntity<byte[]> changeStarHandler(@RequestParam String repo) throws SQLException, IOException {
+        HttpSession session = SessionUtils.getSession();
+        if (session != null) {
+            return repoService.downloadZip(repo);
+        }
+        return null;
+    }
 }

@@ -5,7 +5,9 @@ import rehypeHighlight from "rehype-highlight";
 import {Typography} from "@mui/material";
 
 export function FileMarkdown({text, type}){
-    return (type === "json"?
+    return (type === "html"?
+        <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw, rehypeHighlight]}>{`\`\`\`html${text}\`\`\``}</Markdown>:
+        type === "json"?
         <Markdown>{`\`\`\`${text}\`\`\``}</Markdown>:
         ["cc", "cpp", "hpp", "h"].includes(type)?
             <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw, rehypeHighlight]}>{`\`\`\`c${text}\`\`\``}</Markdown>:

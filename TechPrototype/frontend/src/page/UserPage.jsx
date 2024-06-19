@@ -25,6 +25,10 @@ import {getAllRepoByUser} from "../service/repo";
 import {useAuth} from "../component/AuthProvider";
 import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
 import {Link} from "@mui/material";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
+import rehypeHighlight from "rehype-highlight";
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -120,7 +124,7 @@ export default function UserPage()
                         {introEdit ?
                             <Textarea sx={{mr: 2, mb: 1}} onChange={(e) => setIntro(e.target.value)}/>
                             :
-                            <p style={{whiteSpace: 'pre-line'}}>{profile.introduction}</p>}
+                            <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw, rehypeHighlight]}>{`\`\`\`${profile.introduction}`}</Markdown>}
                     </Card>
                     <Divider>
                         <Typography
