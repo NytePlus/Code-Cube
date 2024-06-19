@@ -14,7 +14,7 @@ class User(database.Model):
     introduction = database.Column(database.String)
 
     # One-to-Many relationships
-    init_repository_list = database.relationship('Repo', backref = 'init_user', lazy = True)
+    init_repository_list = database.relationship('Repo', lazy = True)
     message_list = database.relationship('Message', lazy = True)
     part_conversation_list = database.relationship('Conversation', secondary = 'user_conversations', backref = 'part_users')
 
@@ -65,15 +65,15 @@ class Folder(database.Model):
     folderList = database.relationship('Folder')
 
     # One-to-Many relationship with File model
-    fileList = database.relationship('File', backref='folder')
+    fileList = database.relationship('File')
 
     # Many-to-One relationship with itself (parent folder)
     parent_path = database.Column(database.String, database.ForeignKey('folders.path'))
-    parent_folder = database.relationship('Folder')
 
-    def __init__(self, path, name):
+    def __init__(self, path, name, parent_path):
         self.path = path
         self.name = name
+        self.parent_path = parent_path
 
 class File(database.Model):
     __tablename__ = 'files'
@@ -114,19 +114,21 @@ class Repo(database.Model):
     date = database.Column(database.Date)
 
     # One-to-One relationship with Folder model
-    folder_path = database.Column(database.String, database.ForeignKey('folders.path'))
-    folder = database.relationship('Folder', backref='repo', uselist=False)
+    folder = database.Column(database.String, database.ForeignKey('folders.path'))
 
     # Many-to-One relationship with User model
-    init_user_id = database.Column(database.Integer, database.ForeignKey('user.userid'))
+    init_user = database.Column(database.Integer, database.ForeignKey('user.userid'))
 
     # Many-to-Many relationship with Tag model (repoTagList)
     repo_tag_list = database.relationship('Tag', secondary = 'repo_tags')
 
-    def __init__(self, path, name, introduction, star, publish, date):
+    def __init__(self, path, name, introduction, star, publish, date, folder, init_user, repo_tag_list):
         self.path = path
         self.name = name
         self.introduction = introduction
         self.star = star
         self.publish = publish
         self.date = date
+        self.folder = folder
+        self.init_user = init_user
+        self.repo_tag_list = repo_tag_list

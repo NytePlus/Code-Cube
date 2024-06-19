@@ -17,7 +17,7 @@ import {
     DialogActions,
     Button,
     Input,
-    Switch,
+    Switch, Alert, Snackbar,
 } from '@mui/material';
 import { Fab, Tooltip } from '@mui/material';
 import ViewListIcon from '@mui/icons-material/ViewList';
@@ -55,6 +55,7 @@ const HomePage = () => {
     const auth = useAuth()
     const filter = useFilter()
     const navigate = useNavigate()
+    const [snack, setSnack] = useState(false)
     const [viewMode, setViewMode] = useState('list'); // 默认视图模式为列表
     const [repoCreateOpen, setRepoCreateOpen] = useState(false)
     const [publish, setPublish] = useState(false)
@@ -66,6 +67,13 @@ const HomePage = () => {
 
     const handleChipChange = (event) => {
         setChips(event)
+    }
+
+    const handleSnackClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnack(false);
     }
     const displayRepos = async() => {
         let repos
@@ -122,6 +130,7 @@ const HomePage = () => {
                 publish: publish, introduction: repoCreateIntro,
                 tagNameList: chips})
         }
+        setSnack(true)
     }
 
     const handleCreateRepoClose = () => {
@@ -145,6 +154,16 @@ const HomePage = () => {
     return (
         <>
             <Header />
+            <Snackbar open={snack} autoHideDuration={4000} onClose={handleSnackClose}>
+                <Alert
+                    onClose={handleSnackClose}
+                    severity="success"
+                    variant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    项目创建成功！
+                </Alert>
+            </Snackbar>
             <Dialog
                 open={repoCreateOpen}
                 onClose={handleCreateRepoClose}

@@ -40,34 +40,43 @@ def agentHandler():
     database.session.commit()
     return jsonify({"reply": response}), 200
 
+def findOrCreateFolder(path):
+    folder = Folder.query.filter_by(path=path).first()
+    if folder == None:
+        parent_path = os.path.dirname(path)
+        folder = Folder(path, os.path.basename(path), findOrCreateFolder(parent_path).path)
+        database.session.add(folder)
+    return folder
+
 def createRepo(dir, user):
     sub_dirs = os.listdir(dir)
     for sub_dir in sub_dirs:
         real_path = os.path.join(dir, sub_dir)
-        if os.path.isdir(sub_dir):
-            createRepo(real_path)
+        if os.path.isdir(real_path):
+            createRepo(real_path, user)
         else:
-            path = os.path.join(user, os.path.relpath(file, metagpt_workspace))
-            parent_path = os.path.join(user, os.path.relpath(dir, metagpt_workspace))
-            if Folder.query.filter(path = parent_path) == None:
-                folder = Folder(parent_path, os.path.basename(parent_path))
-                database.session.add(folder)
-                database.session.commit()
+            path = '/' + os.path.join(user, os.path.relpath(real_path, metagpt_workspace))
+            parent_path = '/' + os.path.join(user, os.path.relpath(dir, metagpt_workspace))
+            findOrCreateFolder(parent_path)
             type, _ = mimetypes.guess_type(sub_dir)
             size = os.path.getsize(real_path)
             with open(real_path, 'rb') as f:
                 content = f.read()
             file = File(path, sub_dir, type, size, content, parent_path)
             database.session.add(file)
-            database.session.commit()
 
 @app.route('/repoCreate/agent', methods = ['POST'])
 def generateCodeHandler():
     username, path, publish, introduction, tagNameList = request.json["user"]["name"], request.json["path"], request.json["publish"], request.json["introduction"], request.json["tagNameList"]
-    repo: ProjectRepo = generate_repo(introduction)
-    dir = repo._git_repo.workdir
-    createRepo(os.path.join(username, os.path.relpath(dir, metagpt_workspace)), os.path.basename(dir), introduction, 0, publish, datetime.now())
-    return jsonify({"reply": str(repo)}), 200
+    report: ProjectRepo = generate_repo(introduction)
+    dir = report._git_repo.workdir
+    user = User.query.filter_by(username = username).first()
+    path = '/' + os.path.join(username, os.path.relpath(dir, metagpt_workspace))
+    createRepo(dir, username)
+    repo = Repo(path, os.path.basename(dir), introduction, 0, publish, datetime.now(), path, user.userid, tagNameList)
+    database.session.add(repo)
+    database.session.commit()
+    return jsonify({"reply": str(report)}), 200
 
 if __name__ == '__main__':
     app.run()

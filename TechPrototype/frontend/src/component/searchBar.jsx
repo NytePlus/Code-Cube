@@ -46,7 +46,7 @@ export function HeaderSearchBar() {
     const filter = useFilter()
     const [text, setText] = useState('')
     const [activate, setActivate] = useState(false)
-    const [date, setDate] = useState([dayjs("2020-01-01"), dayjs("2030-01-01")])
+    const [date, setDate] = useState([dayjs("2020-01-01"), dayjs(moment().format('YYYY-MM-DD'))])
     const [tags, setTags] = useState([]);
     const [owner, setOwner] = useState("");
 
