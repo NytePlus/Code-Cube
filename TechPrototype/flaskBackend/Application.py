@@ -1,11 +1,12 @@
-import config
+import mimetypes
+import os
+from flask_cors import cross_origin
+from app import chatModel, chatTokenizer, app, metagpt_workspace
+from domains.domains import *
 from datetime import datetime
 from sqlalchemy import and_
-from flask import Flask, jsonify, request
-from flask_cors import CORS
-from peft import AutoPeftModelForCausalLM, PeftModelForCausalLM
-from transformers import AutoTokenizer, AutoModel
-from flask_sqlalchemy import SQLAlchemy
+from flask import jsonify, request
+from metagpt.software_company import generate_repo, ProjectRepo
 
 def filter_utf8mb3(s):
     filtered_string = ''
@@ -14,60 +15,6 @@ def filter_utf8mb3(s):
         if codepoint <= 0xFFFF:  # utf8mb3能表示的Unicode码点范围是U+0000到U+FFFF
             filtered_string += char
     return filtered_string
-def codeModel_init():
-    codeModel_dir = '/home/wcc/HuggingFace-Download-Accelerator/hf_hub/models--THUDM--codegeex2-6b'
-    codeTokenizer = AutoTokenizer.from_pretrained(codeModel_dir, trust_remote_code = True)
-    codeModel = AutoModel.from_pretrained(codeModel_dir, trust_remote_code = True, device = 'cpu').half()
-    codeModel = codeModel.eval()
-    return codeModel, codeTokenizer
-
-def chatModel_init():
-    chatModel_dir = '/home/wcc/ChatGLM3/finetune_demo/output/checkpoint-500'
-    chatModel = AutoPeftModelForCausalLM.from_pretrained(chatModel_dir, trust_remote_code=True, device ='cuda:1')
-    chatTokenizer_dir = chatModel.peft_config['default'].base_model_name_or_path
-    chatTokenizer = AutoTokenizer.from_pretrained(chatTokenizer_dir, trust_remote_code=True)
-    return chatModel, chatTokenizer
-
-app = Flask(__name__)
-app.config.from_object(config)
-CORS(app, resources=r'/*', supports_credentials=True)
-database = SQLAlchemy(app)
-chatModel, chatTokenizer = chatModel_init()
-
-class Message(database.Model):
-    __tablename__ = 'messages'
-    MessageID = database.Column(database.Integer, primary_key = True, autoincrement = True)
-    Content = database.Column(database.String(2000), nullable=False)
-    Date = database.Column(database.DateTime, default = datetime.now)  # 入库时间字段
-    Conversation = database.Column(database.Integer, database.ForeignKey('conversations.id'), nullable = False)
-    User = database.Column(database.Integer, database.ForeignKey('user.userid'), nullable = False)
-
-    def __init__(self, content, date = None, user = None, conversation = None):
-        self.Content = content
-        self.Date = date
-        self.User = user
-        self.Conversation = conversation
-
-
-class User(database.Model):
-    __tablename__ = 'user'
-    userid = database.Column(database.Integer, primary_key=True, autoincrement=True)
-    username = database.Column(database.String(80), unique=True, nullable=False)
-    messages = database.relationship("Message", backref="user", lazy='dynamic')
-    part_conversations = database.relationship("Conversation", secondary="user_conversations",
-                                         lazy='dynamic', backref="part_users")
-
-
-class Conversation(database.Model):
-    __tablename__ = 'conversations'
-    id = database.Column(database.Integer, primary_key=True)
-    messages = database.relationship("Message", backref="conversation", lazy='dynamic')
-    def __init__(self, part_users):
-        self.part_users = part_users
-
-user_conversations = database.Table("user_conversations",
-                                    database.Column('part_user', database.Integer, database.ForeignKey('user.userid')),
-                                    database.Column('part_conv', database.Integer, database.ForeignKey('conversations.id')))
 
 @app.route('/conversation/agent', methods = ['POST'])
 def agentHandler():
@@ -93,4 +40,34 @@ def agentHandler():
     database.session.commit()
     return jsonify({"reply": response}), 200
 
-app.run()
+def createRepo(dir, user):
+    sub_dirs = os.listdir(dir)
+    for sub_dir in sub_dirs:
+        real_path = os.path.join(dir, sub_dir)
+        if os.path.isdir(sub_dir):
+            createRepo(real_path)
+        else:
+            path = os.path.join(user, os.path.relpath(file, metagpt_workspace))
+            parent_path = os.path.join(user, os.path.relpath(dir, metagpt_workspace))
+            if Folder.query.filter(path = parent_path) == None:
+                folder = Folder(parent_path, os.path.basename(parent_path))
+                database.session.add(folder)
+                database.session.commit()
+            type, _ = mimetypes.guess_type(sub_dir)
+            size = os.path.getsize(real_path)
+            with open(real_path, 'rb') as f:
+                content = f.read()
+            file = File(path, sub_dir, type, size, content, parent_path)
+            database.session.add(file)
+            database.session.commit()
+
+@app.route('/repoCreate/agent', methods = ['POST'])
+def generateCodeHandler():
+    username, path, publish, introduction, tagNameList = request.json["user"]["name"], request.json["path"], request.json["publish"], request.json["introduction"], request.json["tagNameList"]
+    repo: ProjectRepo = generate_repo(introduction)
+    dir = repo._git_repo.workdir
+    createRepo(os.path.join(username, os.path.relpath(dir, metagpt_workspace)), os.path.basename(dir), introduction, 0, publish, datetime.now())
+    return jsonify({"reply": str(repo)}), 200
+
+if __name__ == '__main__':
+    app.run()

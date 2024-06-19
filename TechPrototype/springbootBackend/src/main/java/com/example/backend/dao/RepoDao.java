@@ -10,7 +10,10 @@ import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -42,9 +45,12 @@ public class RepoDao {
         for(String tagName : repoDTO.getTagNameList()){
             tagList.add(tagDao.findOrCreateByName(tagName));
         }
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // 自定义日期格式
+        String date = currentDate.format(formatter);
         Repo repo = new Repo(repoDTO.getPath(), pathSplit[pathSplit.length - 1],
                 repoDTO.getIntroduction(), 0,
-                repoDTO.getPublish(), "", folder, userDao.getByName(repoDTO.getUser().getName()),
+                repoDTO.getPublish(), date, folder, userDao.getByName(repoDTO.getUser().getName()),
                 new ArrayList<>(), tagList);
         repoRepo.save(repo);
         return repo;

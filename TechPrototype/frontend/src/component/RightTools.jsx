@@ -42,7 +42,7 @@ function RightTools(){
 
         let instrs = []
         let instrbegin = false
-        for(let i = 0; i < res.reply.length; i ++)
+        for(let i = 0; res.reply && i < res.reply.length; i ++)
         {
             if(!instrbegin && (res.reply.substring(i, 2) === 'cd' || res.reply.substring(i, 5) === 'mkdir'))
             {

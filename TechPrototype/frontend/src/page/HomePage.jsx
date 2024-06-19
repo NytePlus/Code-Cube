@@ -26,6 +26,8 @@ import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import EmailIcon from '@mui/icons-material/Email';
+import DeliveryDiningOutlinedIcon from '@mui/icons-material/DeliveryDiningOutlined';
+import ChildFriendlyOutlinedIcon from '@mui/icons-material/ChildFriendlyOutlined';
 import ReplyIcon from '@mui/icons-material/Reply';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -35,17 +37,28 @@ import RightTools from '../component/RightTools'
 import ViewInArIcon from "@mui/icons-material/ViewInAr";
 import PublicOutlinedIcon from "@mui/icons-material/PublicOutlined";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import {changeStar, createRepo, getAllPublicRepo, getAllRepoByUser, getRepoByFilter} from "../service/repo";
+import {
+    changeStar,
+    createGenerateRepo,
+    createRepo,
+    getAllPublicRepo,
+    getAllRepoByUser,
+    getRepoByFilter
+} from "../service/repo";
 import {useAuth} from "../component/AuthProvider";
 import {MuiChipsInput} from "mui-chips-input";
 import {useFilter} from "../component/FilterProvider";
+import {useNavigate} from "react-router-dom";
+import {Textarea} from "@mui/joy";
 
 const HomePage = () => {
     const auth = useAuth()
     const filter = useFilter()
+    const navigate = useNavigate()
     const [viewMode, setViewMode] = useState('list'); // 默认视图模式为列表
     const [repoCreateOpen, setRepoCreateOpen] = useState(false)
     const [publish, setPublish] = useState(false)
+    const [generate, setGenerate] = useState(false)
     const [repoCreateName, setRepoCreateName] = useState('')
     const [repoCreateIntro, setRepoCreateIntro] = useState('')
     const [repos, setRepos] = useState([]);
@@ -56,7 +69,6 @@ const HomePage = () => {
     }
     const displayRepos = async() => {
         let repos
-        console.log(filter.filter)
         if(filter.filter === null)
             repos = await getAllPublicRepo();
         else
@@ -95,18 +107,27 @@ const HomePage = () => {
         }
     };
 
-    const handleCreateRepo = () => {
-        createRepo({user: {name: auth.user, password: auth.token},
-            path: '/' + auth.user + '/' + repoCreateName,
-            publish: publish, introduction: repoCreateIntro,
-            tagNameList: chips})
+    const handleCreateRepo = async () => {
         setRepoCreateOpen(false)
         setChips([])
+        if(generate) {
+            let res = await createGenerateRepo({user: {name: auth.user, password: auth.token},
+                path: '/' + auth.user + '/' + repoCreateName,
+                publish: publish, introduction: repoCreateIntro,
+                tagNameList: chips})
+            console.log(res)
+        } else{
+            createRepo({user: {name: auth.user, password: auth.token},
+                path: '/' + auth.user + '/' + repoCreateName,
+                publish: publish, introduction: repoCreateIntro,
+                tagNameList: chips})
+        }
     }
 
     const handleCreateRepoClose = () => {
         setRepoCreateOpen(! repoCreateOpen)
         setPublish(false)
+        setGenerate(false)
     }
 
     const handlePublish = () => {
@@ -143,13 +164,19 @@ const HomePage = () => {
                         </Box>
                         <Box sx={{display: 'flex'}}>
                             <Typography sx={{mt: 2,whiteSpace:'nowrap'}} variant="subtitle1">简介</Typography>
-                            <Input sx={{pt: 2}} onChange={handleCreateRepoIntro}></Input>
+                            <Textarea sx={{ml: 1, mt: 2}} onChange={handleCreateRepoIntro}></Textarea>
                         </Box>
                         <Box sx={{display: 'flex', mt: 2}}>
                             <Switch onClick={handlePublish} color={'success'}/>
                             {publish ? <PublicOutlinedIcon sx={{color:"green", fontSize:30}}/>:<AdminPanelSettingsIcon sx={{fontSize:30}}/>}
                             {publish ? <Typography sx={{ml:1, whiteSpace:'nowrap'}} variant="subtitle1">公开</Typography>:
                                 <Typography sx={{ml:1, whiteSpace:'nowrap'}} variant="subtitle1">私有</Typography>}
+                        </Box>
+                        <Box sx={{display: 'flex'}}>
+                            <Switch onClick={() => setGenerate(!generate)} color={'success'}/>
+                            {generate ? <DeliveryDiningOutlinedIcon sx={{color:"green", fontSize:30}}/>:<ChildFriendlyOutlinedIcon sx={{fontSize:30}}/>}
+                            {generate ? <Typography sx={{ml:1, whiteSpace:'nowrap'}} variant="subtitle1">使用metagpt生成</Typography>:
+                                <Typography sx={{ml:1, whiteSpace:'nowrap'}} variant="subtitle1">从零开始</Typography>}
                         </Box>
                         <Typography sx={{whiteSpace:'nowrap'}} variant="subtitle1">标签</Typography>
                         <MuiChipsInput value={chips} onChange={handleChipChange} />

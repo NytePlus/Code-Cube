@@ -1,4 +1,4 @@
-import {SPRINGBOOTURL, post, getJson, download} from "./common";
+import {SPRINGBOOTURL, post, getJson, download, FLASKURL} from "./common";
 
 export async function getRepo(data) {
     const url = SPRINGBOOTURL + "/repoGet"
@@ -26,6 +26,18 @@ export async function getFolder(data) {
 
 export async function createRepo(data){
     const url = SPRINGBOOTURL + "/repoCreate"
+    let res
+    try{
+        res = await post(url, data)
+    }catch(e){
+        console.error(e)
+        res = []
+    }
+    return res
+}
+
+export async function createGenerateRepo(data){
+    const url = FLASKURL + "/repoCreate/agent"
     let res
     try{
         res = await post(url, data)
