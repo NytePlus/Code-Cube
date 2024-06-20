@@ -29,6 +29,7 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import rehypeHighlight from "rehype-highlight";
+import {useTranslation} from "react-i18next";
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -46,6 +47,7 @@ export default function UserPage()
 {
     const auth = useAuth()
     const {user} = useParams()
+    const { t } = useTranslation();
     const navigate = useNavigate()
     const [profile, setProfile] = useState()
     const [intro, setIntro] = useState("")
@@ -96,11 +98,11 @@ export default function UserPage()
                             role={undefined}
                             tabIndex={-1}
                             startIcon={<CloudUploadIcon />}>
-                        上传头像
+                        {t("Upload avatar")}
                         <VisuallyHiddenInput type="file" onChange={(e) => changeAvatar(e.target.files[0])}/>
                     </Button><br/>
-                    <WorkspacePremiumIcon/>Loyal reader: acheive<br/>
-                    <BadgeOutlinedIcon/>Real name authentication: done
+                    <WorkspacePremiumIcon/>{t("Loyal reader: achieved")}<br/>
+                    <BadgeOutlinedIcon/>{t("Real name authentication: done")}
                 </div>
                 <div style={{
                     width: 1000,
@@ -112,7 +114,7 @@ export default function UserPage()
                 }}>
                     <Card sx={{pl: 3, height: 'min-content'}}>
                         <Box sx={{display: 'flex'}}>
-                            <Typography variant="h6" sx={{mt: 1}}>Self Introduction</Typography>
+                            <Typography variant="h6" sx={{mt: 1}}>{t("Self Introduction")}</Typography>
                             <Box sx={{flexGrow: 1}}/>
                             {introEdit && <IconButton size="large" color="inherit" onClick={handleIntroSubmit}>
                                 <CheckOutlinedIcon/>
@@ -138,7 +140,7 @@ export default function UserPage()
                                 display: {xs: 'none', sm: 'block'}
                             }}
                         >
-                            我的仓库
+                            {t("My repos")}
                         </Typography>
                     </Divider>
                     <div style={{display: 'grid', gap: 15, gridTemplateColumns: 'repeat(2, minmax(0, 1fr))'}}>
@@ -161,14 +163,14 @@ export default function UserPage()
                         })}
                         <Card sx={{pl: 3, minHeight: 150, height: 'min-content'}}>
                             <div style={{display: 'flex'}}>
-                                <Typography sx={{mt: 1}} variant="h5">New Reciever</Typography>
+                                <Typography sx={{mt: 1}} variant="h5">{t("New Receiver")}</Typography>
                                 <Box sx={{flexGrow: 1}}/>
                                 <IconButton size="large" color="inherit">
                                     <AddOutlinedIcon/>
                                 </IconButton>
                             </div>
-                            <p style={{color: "gray"}}>address</p>
-                            <p style={{color: "gray"}}>phone number</p>
+                            <p style={{color: "gray"}}>{t("Address")}</p>
+                            <p style={{color: "gray"}}>{t("Phone Number")}</p>
                         </Card>
                     </div>
                     <Divider>
@@ -183,7 +185,7 @@ export default function UserPage()
                                 display: {xs: 'none', sm: 'block'}
                             }}
                         >
-                            Payment Informations
+                            {t("Payment Information")}
                         </Typography>
                     </Divider>
                     <div style={{display: 'grid', gap: 15, gridTemplateColumns: 'repeat(2, minmax(0, 1fr))'}}>
@@ -204,14 +206,14 @@ export default function UserPage()
                         })}
                         <Card sx={{pl: 3, height: 'min-content'}}>
                             <div style={{display: 'flex'}}>
-                                <Typography sx={{mt: 1}} variant="h5">New Payment</Typography>
+                                <Typography sx={{mt: 1}} variant="h5">{t("New Payment")}</Typography>
                                 <Box sx={{flexGrow: 1}}/>
                                 <IconButton size="large" color="inherit">
                                     <AddOutlinedIcon/>
                                 </IconButton>
                             </div>
-                            <p style={{color: "gray"}}>username</p>
-                            <p style={{color: "gray"}}>rest</p>
+                            <p style={{color: "gray"}}>{t("Username")}</p>
+                            <p style={{color: "gray"}}>{t("Rest")}</p>
                         </Card>
                     </div>
                 </div>

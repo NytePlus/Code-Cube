@@ -1,6 +1,24 @@
 {
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/lab": "^5.0.0-alpha.170",
+    "@mui/material": "^5.15.18",
     "editor.md": "^1.5.0",
-    "jquery": "^3.7.1"
+    "jquery": "^3.7.1",
+    "mui-chat-box": "^0.0.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-syntax-highlighter": "^15.5.0",
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.0"
+  },
+  "resolutions": {
+    "@types/react": "^17.0.38"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@types/react": "^17.0.38",
+    "@types/react-dom": "^17.0.11"
   }
 }

@@ -15,11 +15,13 @@ import {useNavigate} from "react-router-dom";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import {ChatBox, ReceiverMessage, SenderMessage} from "mui-chat-box";
 import {Textarea} from "@mui/joy";
+import {useTranslation} from "react-i18next";
 
 function RightTools(){
     const auth = useAuth()
     const navigate = useNavigate()
     const instr = useInstruction()
+    const { t } = useTranslation();
     const [input, setInput] = useState('')
     const [agentOpen, setAgentOpen] = useState(false);
     const [history, setHistory] = useState([]);
@@ -74,14 +76,14 @@ function RightTools(){
                 icon={<SpeedDialIcon openIcon={<ExpandMoreIcon />} />}
             >
                 <SpeedDialAction key={"Agent"} icon={<AndroidIcon />}
-                                 tooltipTitle={"Agent"} onClick={handleAgentChange}/>
+                                 tooltipTitle={t("Agent")} onClick={handleAgentChange}/>
                 <SpeedDialAction key={"Forum"} icon={<ForumIcon />}
-                                 tooltipTitle={"Fourm"} onClick={() => navigate("/history")}/>
+                                 tooltipTitle={t("Forum")} onClick={() => navigate("/history")}/>
                 <SpeedDialAction key={"Home"} icon={<HomeOutlinedIcon />} onClick={() => navigate(`/${auth.user}`)}
-                                 tooltipTitle={"Home"}/>
+                                 tooltipTitle={t("Home")}/>
                 <SpeedDialAction key={"Back to top"} icon={<KeyboardArrowUpIcon />}
                                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                                 tooltipTitle={"Back to top"}/>
+                                 tooltipTitle={t("Back to top")}/>
             </SpeedDial>
             {agentOpen && <Card sx={{mr: 10, width: 400}}>
                 <div style={{display: 'flex'}}>
