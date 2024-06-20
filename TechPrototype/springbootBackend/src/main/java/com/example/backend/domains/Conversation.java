@@ -27,4 +27,8 @@ public class Conversation {
 
     @ManyToMany(mappedBy = "partConversationList")
     private List<User> partUserList;
+
+    public Conversation(List<User> partUserList) {
+        this.partUserList = partUserList;
+    }
 }

@@ -12,4 +12,6 @@ public interface MessageService {
     public Message postMessage(Integer userId, Integer conversationId, String content);
     public List<Conversation> getConversationsByUserId(Integer userId);
     public List<Conversation> getConversationsByUserName(String name);
+
+    public Conversation createConversation(String currentUser, String otherUser);
 }

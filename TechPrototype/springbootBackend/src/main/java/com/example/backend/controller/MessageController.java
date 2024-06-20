@@ -50,4 +50,12 @@ public class MessageController {
         return ResponseEntity.ok(conversations);
     }
 
+    // 创建新的对话
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    @PostMapping("/create")
+    public ResponseEntity<Conversation> createConversation(@RequestParam String currentUser,
+                                                           @RequestParam String otherUser) {
+        Conversation conversation = messageServiceImpl.createConversation(currentUser, otherUser);
+        return ResponseEntity.ok(conversation);
+    }
 }

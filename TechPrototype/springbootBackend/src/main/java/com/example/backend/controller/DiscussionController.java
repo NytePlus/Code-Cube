@@ -7,6 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -43,5 +48,41 @@ public class DiscussionController {
     public ResponseEntity<List<Discussion>> getDiscussionsByUserName(@PathVariable String name) {
         List<Discussion> discussions = forumServiceImpl.getDiscussionsByUserName(name);
         return ResponseEntity.ok(discussions);
+    }
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    @PostMapping("/create")
+    public ResponseEntity<Discussion> createDiscussion(@RequestParam String name,
+                                                       @RequestParam String title) {
+        Discussion discussion = forumServiceImpl.createDiscussion(name, title);
+        return ResponseEntity.ok(discussion);
+    }
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    @GetMapping("/{discussionId}/comments/date")
+    public ResponseEntity<List<Comment>> getCommentsByDate(@PathVariable Integer discussionId,
+                                                           @RequestParam String date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date parsedDate = formatter.parse(date);
+            List<Comment> comments = forumServiceImpl.getCommentsByDate(discussionId, parsedDate);
+            return ResponseEntity.ok(comments);
+        } catch (ParseException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    @GetMapping("/{discussionId}/comments/date-range")
+    public ResponseEntity<List<Comment>> getCommentsByDateRange(@PathVariable Integer discussionId,
+                                                                @RequestParam String startDate,
+                                                                @RequestParam String endDate) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date start = formatter.parse(startDate);
+            Date end = formatter.parse(endDate);
+            List<Comment> comments = forumServiceImpl.getCommentsByDateRange(discussionId, start, end);
+            return ResponseEntity.ok(comments);
+        } catch (ParseException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 }

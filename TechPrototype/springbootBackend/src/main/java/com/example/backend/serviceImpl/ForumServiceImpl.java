@@ -10,6 +10,7 @@ import com.example.backend.service.ForumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -46,5 +47,24 @@ public class ForumServiceImpl implements ForumService {
         comment.setUser(user);
         comment.setDiscussion(discussion);
         return commentDao.save(comment);
+    }
+
+    public Discussion createDiscussion(String name, String title) {
+        User user = userDao.getByName(name);
+
+        Discussion discussion = new Discussion();
+        discussion.setName(title);
+        discussion.setInitUser(user);
+
+        return discussionDao.save(discussion);
+    }
+
+    public List<Comment> getCommentsByDate(Integer discussionId, Date date) {
+        return commentDao.findByDiscussionIdAndDate(discussionId, date);
+    }
+
+    public List<Comment> getCommentsByDateRange(Integer discussionId, Date startDate, Date endDate) {
+        return commentDao.findByDiscussionIdAndDateBetween(discussionId, startDate, endDate);
+
     }
 }
