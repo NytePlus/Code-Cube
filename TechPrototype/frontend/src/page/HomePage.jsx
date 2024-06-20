@@ -239,23 +239,23 @@ const HomePage = () => {
                 <Grid item xs={11} md={5.5} sx={{ position: 'relative', marginTop: '-32px', left: -10 }}>
                     <RepoList repos={repos} viewMode={viewMode} onDragEnd={onDragEnd} />
                     <Box sx={{ position: 'fixed', bottom: 20, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', zIndex: 1000 }}>
-                        <Tooltip title={t("Filter starred repos")} placement="left">
-                            <Fab color="secondary" size="small" sx={{ mt: 1 }} onClick={() => {}}>
-                                <StarBorderIcon onClick={displayStarRepos}/>
-                            </Fab>
-                        </Tooltip>
-                        <Tooltip title={t("Filter my repos")} placement="left">
-                            <Fab color="default" size="small" sx={{ mt: 1 }} onClick={() => {}}>
+                        {/*<Tooltip title="Filter starred repos" placement="left">*/}
+                        {/*    <Fab color="secondary" size="small" sx={{ mt: 1 }} onClick={() => {}}>*/}
+                        {/*        <StarBorderIcon onClick={displayStarRepos}/>*/}
+                        {/*    </Fab>*/}
+                        {/*</Tooltip>*/}
+                        <Tooltip title="Filter my repos" placement="left">
+                            <Fab color="default" size="middle" sx={{ mt: 1 }} onClick={() => {}}>
                                 <FilterListIcon onClick={displayMyRepos}/>
                             </Fab>
                         </Tooltip>
-                        <Tooltip title={t("Public repos")} placement="left">
-                            <Fab color="default" size="small" sx={{ mt: 1 }} onClick={() => {}}>
+                        <Tooltip title="Public repos" placement="left">
+                            <Fab color="default" size="middle" sx={{ mt: 1 }} onClick={() => {}}>
                                 <PublicOutlinedIcon onClick={displayRepos}/>
                             </Fab>
                         </Tooltip>
-                        <Tooltip title={t("Create my repo")} placement="left">
-                            <Fab color="success" size="small" sx={{ mt: 1 }} onClick={() => handleCreateRepoClose()}>
+                        <Tooltip title="Create my repo" placement="left">
+                            <Fab color="success" size="middle" sx={{ mt: 1 }} onClick={() => handleCreateRepoClose()}>
                                 <ViewInArIcon/>
                             </Fab>
                         </Tooltip>

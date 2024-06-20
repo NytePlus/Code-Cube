@@ -1,7 +1,18 @@
 import {TypeAnimation} from "react-type-animation";
 import React, {useState} from "react";
 import ViewInArIcon from "@mui/icons-material/ViewInAr";
-import {Box, Button, IconButton, Input, InputLabel, Paper, Typography} from "@mui/material";
+import {
+    Avatar,
+    Box,
+    Button,
+    IconButton,
+    Input,
+    InputLabel, Link, ListItem,
+    ListItemAvatar,
+    ListItemText,
+    Paper,
+    Typography
+} from "@mui/material";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
@@ -10,6 +21,10 @@ import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutl
 import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
 import {FormControl, FormHelperText, TextField} from "@mui/joy";
 import {useAuth} from "../component/AuthProvider";
+import {ChatBox, ReceiverMessage, SenderMessage} from "mui-chat-box";
+import {SPRINGBOOTURL} from "../service/common";
+import Tag from "../component/tag";
+import StarButton from "../component/StarButton";
 
 function FileHeader({title}){
     return (<div style={{display: 'flex'}}>
@@ -27,7 +42,7 @@ export function CodeSide({open, Zoffset}) {
         <>
             <div style={{
                 background: 'white', boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
-                transition: "transform 1s ease-out",
+                transition: "transform 0.5s ease-out",
                 transitionDelay: open ? "0s" : "0.5s",
                 transform: open ? `rotateX(-90deg) translateZ(${Zoffset * 1.3}px)`
                     : `rotateX(-90deg) translateZ(${Zoffset * 0.3}px)`
@@ -36,7 +51,7 @@ export function CodeSide({open, Zoffset}) {
             </div>
             <div style={{
                 background: 'transparent', overflow: "hidden",
-                transition: "transform 1s ease-out",
+                transition: "transform 0.5s ease-out",
                 transitionDelay: open ? "0s" : "0.5s",
                 transform: open ? `rotateX(-90deg) translateZ(${Zoffset * 1.3 + 10}px)` :
                     `rotateX(-90deg) translateZ(${Zoffset * 0.3 + 10}px)`,
@@ -120,19 +135,9 @@ export function DiscussionExample({open, Zoffset}) {
     return (<ExampleSide open={open} Zoffset={Zoffset} transform3d={transform3d} content={
         <>
             <FileHeader title={"Chat"}/>
-            {exampleLines0.map((line) => {
-                return (<Typography style={{fontFamily: "Courier New", fontSize: 15}}>
-                    {line}
-                </Typography>)
-            })}
-            <TypeAnimation
-                sequence={[exampleLien1]} wrapper="span" cursor={true}
-                style={{fontFamily: "Courier New", fontSize: '10'}}/>
-            {exampleLines2.map((line) => {
-                return (<Typography style={{fontFamily: "Courier New", fontSize: 15}}>
-                    {line}
-                </Typography>)
-            })}
+
+            
+
         </>}/>)
 }
 
@@ -142,19 +147,21 @@ export function AgentExample({open, Zoffset}) {
     return (<ExampleSide open={open} Zoffset={Zoffset} transform3d={transform3d} content={
         <>
             <FileHeader title={"Helped By LLM Agent"}/>
-            {exampleLines0.map((line) => {
-                return (<Typography style={{fontFamily: "Courier New", fontSize: 15}}>
-                    {line}
-                </Typography>)
-            })}
-            <TypeAnimation
-                sequence={[exampleLien1]} wrapper="span" cursor={true}
-                style={{fontFamily: "Courier New", fontSize: '10'}}/>
-            {exampleLines2.map((line) => {
-                return (<Typography style={{fontFamily: "Courier New", fontSize: 15}}>
-                    {line}
-                </Typography>)
-            })}
+            <ChatBox>
+                <SenderMessage sx={{wordBreak: "break-all"}} avatar={<Avatar></Avatar>}>
+                    你好！
+                </SenderMessage>:
+                <ReceiverMessage sx={{wordBreak: "break-all"}} avatar={<Avatar>:D</Avatar>}>
+                    你好👋!我是人工智能助手 ChatGLM-6B,很高兴见到你,欢迎问我任何问题。
+                </ReceiverMessage>
+                <SenderMessage sx={{wordBreak: "break-all"}} avatar={<Avatar></Avatar>}>
+                    帮我打开我的Code_Cube仓库好吗？
+                </SenderMessage>:
+                <ReceiverMessage sx={{wordBreak: "break-all"}} avatar={<Avatar>:D</Avatar>}><TypeAnimation
+                    sequence={["/cd /~/Code_Cube"]} wrapper="span" cursor={true}
+                    style={{fontFamily: "Courier New", fontSize: '10'}}/>
+                </ReceiverMessage>
+            </ChatBox>
         </>}/>)
 }
 
@@ -164,19 +171,9 @@ export function OnlineRepoExample({open, Zoffset}) {
     return (<ExampleSide open={open} Zoffset={Zoffset} transform3d={transform3d} content={
         <>
             <FileHeader title={"Online Repository"}/>
-            {exampleLines0.map((line) => {
-                return (<Typography style={{fontFamily: "Courier New", fontSize: 15}}>
-                    {line}
-                </Typography>)
-            })}
-            <TypeAnimation
-                sequence={[exampleLien1]} wrapper="span" cursor={true}
-                style={{fontFamily: "Courier New", fontSize: '10'}}/>
-            {exampleLines2.map((line) => {
-                return (<Typography style={{fontFamily: "Courier New", fontSize: 15}}>
-                    {line}
-                </Typography>)
-            })}
+
+            {/*//repos*/}
+
         </>}/>)
 }
 
@@ -274,7 +271,7 @@ export default function LoginPagePlus() {
         setOpen(!open)
         clearInterval(rotateTimer)
         console.log(rotateZ)
-    }, 5000)
+    }, 3000)
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirm, setConfirm] = useState('');
@@ -304,7 +301,7 @@ export default function LoginPagePlus() {
         */}
         <div style={{paddingLeft: "45%", paddingTop:"15%", position: "fixed"}}>
             <div className={'cube-animation'} style={{
-                transition: open ? "transform 5s linear" : "transform 5s ease-out",
+                transition: open ? "transform 5s linear" : "transform 3s ease-out",
                 transform: "rotateX(45deg) rotateZ(" + rotateZ + "deg)"}}>
                 <AnimLeftSide open={open}/>
                 <AnimTopSide open={open}/>

@@ -41,41 +41,41 @@ const RepoList = ({ repos, viewMode, onDragEnd }) => {
                                             sx={{ minHeight: 100, border: 1, borderColor: 'grey.300', my: 1, borderRadius: 2 }}
                                         >
                                             <ListItem alignItems="flex-start" sx={{h: 50}}>
-                                                <ListItemAvatar>
+                                                    <ListItemAvatar>
                                                     <Avatar alt={repo.initUser.name} src={SPRINGBOOTURL + repo.initUser.avatar}/>
-                                                </ListItemAvatar>
-                                                <ListItemText
+                                                    </ListItemAvatar>
+                                                    <ListItemText
                                                     primary={
-                                                        <Link>
-                                                            <Typography variant="h6" sx={{mt: -1}} onClick={()=>navigate(`${repo.path}`)}>
-                                                                {repo.initUser.name + '/' + repo.name}
-                                                            </Typography>
-                                                        </Link>}
-                                                    secondary={
-                                                        <>
-                                                            <Typography
-                                                                sx={{display: 'block'}}
-                                                                component="span"
-                                                                variant="body2"
-                                                                color="text.primary"
-                                                            >
-                                                                {repo.introduction}
-                                                            </Typography>
-                                                            <div style={{ display: 'flex', marginTop: '8px' }}>
-                                                                {repo.repoTagList.map((tag) => (
-                                                                    <Tag key={tag.name} label={tag.name} />
-                                                                ))}
-                                                            </div>
-                                                            <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                                                                <Box sx={{flexGrow: 1}}></Box>
-                                                                <Typography variant="p" sx={{mt: 1}}>
-                                                                    {repo.date}
-                                                                </Typography>
-                                                            </Box>
-                                                        </>
-                                                    }
-                                                />
-                                                <StarButton path={repo.path} initStar={repo.star}/>
+                                                    <Link>
+                                                    <Typography variant="h6" sx={{mt: -1}} onClick={()=>navigate(`${repo.path}`)}>
+                                                    {repo.initUser.name + '/' + repo.name}
+                                                </Typography>
+                                            </Link>}
+                                            secondary={
+                                                <>
+                                                    <Typography
+                                                        sx={{display: 'block'}}
+                                                        component="span"
+                                                        variant="body2"
+                                                        color="text.primary"
+                                                    >
+                                                        {repo.introduction}
+                                                    </Typography>
+                                                    <div style={{ display: 'flex', marginTop: '8px' }}>
+                                                        {repo.repoTagList.map((tag) => (
+                                                            <Tag key={tag.name} label={tag.name} />
+                                                        ))}
+                                                    </div>
+                                                    <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                                                        <Box sx={{flexGrow: 1}}></Box>
+                                                        <Typography variant="p" sx={{mt: 1}}>
+                                                            {repo.date}
+                                                        </Typography>
+                                                    </Box>
+                                                </>
+                                            }
+                                        />
+                                        <StarButton path={repo.path} initStar={repo.star}/>
                                             </ListItem>
                                         </Box>
                                     )}

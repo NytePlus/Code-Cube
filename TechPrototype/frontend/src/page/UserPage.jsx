@@ -196,60 +196,17 @@ export default function UserPage()
                                 </Card>
                             )
                         })}
-                        <Card sx={{pl: 3, minHeight: 150, height: 'min-content'}}>
-                            <div style={{display: 'flex'}}>
-                                <Typography sx={{mt: 1}} variant="h5">New Receiver</Typography>
-                                <Box sx={{flexGrow: 1}}/>
-                                <IconButton size="large" color="inherit">
-                                    <AddOutlinedIcon />
-                                </IconButton>
-                            </div>
-                            <p style={{color: "gray"}}>{t("Address")}</p>
-                            <p style={{color: "gray"}}>{t("Phone Number")}</p>
-                        </Card>
-                    </div>
-                    <Divider>
-                        <Typography
-                            variant="h5"
-                            noWrap
-                            component="div"
-                            sx={{
-                                flexGrow: 1,
-                                padding: 1,
-                                border: '1px solid #bdbdbd',
-                                display: {xs: 'none', sm: 'block'}
-                            }}
-                        >
-                            {t("Payment Information")}
-                        </Typography>
-                    </Divider>
-                    <div style={{display: 'grid', gap: 15, gridTemplateColumns: 'repeat(2, minmax(0, 1fr))'}}>
-                        {profile.userPaymentList && profile.userPaymentList.map((item) => {
-                            return (<Card sx={{pl: 3, height: 'min-content'}}>
-                                    <div style={{display: 'flex'}}>
-                                        {item.icon}
-                                        <Typography sx={{mt: 1}} variant="h5">{item.method}</Typography>
-                                        <Box sx={{flexGrow: 1}}/>
-                                        <IconButton size="large" color="inherit">
-                                            <CreateOutlinedIcon />
-                                        </IconButton>
-                                    </div>
-                                    <p style={{color: "gray"}}>{item.name}</p>
-                                    <p style={{color: "gray"}}>¥{item.rest}</p>
-                                </Card>
-                            )
-                        })}
-                        <Card sx={{pl: 3, height: 'min-content'}}>
-                            <div style={{display: 'flex'}}>
-                                <Typography sx={{mt: 1}} variant="h5">{t("New Payment")}</Typography>
-                                <Box sx={{flexGrow: 1}}/>
-                                <IconButton size="large" color="inherit">
-                                    <AddOutlinedIcon />
-                                </IconButton>
-                            </div>
-                            <p style={{color: "gray"}}>{t("Username")}</p>
-                            <p style={{color: "gray"}}>{t("Rest")}</p>
-                        </Card>
+                        {/*<Card sx={{pl: 3, minHeight: 150, height: 'min-content'}}>*/}
+                        {/*    <div style={{display: 'flex'}}>*/}
+                        {/*        <Typography sx={{mt: 1}} variant="h5">New Reciever</Typography>*/}
+                        {/*        <Box sx={{flexGrow: 1}}/>*/}
+                        {/*        <IconButton size="large" color="inherit">*/}
+                        {/*            <AddOutlinedIcon/>*/}
+                        {/*        </IconButton>*/}
+                        {/*    </div>*/}
+                        {/*    <p style={{color: "gray"}}>address</p>*/}
+                        {/*    <p style={{color: "gray"}}>phone number</p>*/}
+                        {/*</Card>*/}
                     </div>
                 </div>
             </div>
