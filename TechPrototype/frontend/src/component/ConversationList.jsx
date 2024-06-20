@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { List, ListItem, ListItemText, Divider, Avatar, ListItemAvatar, Typography, Box } from '@mui/material';
 import ConversationDetail from './ConversationDetail';
-import {SPRINGBOOTURL} from "../service/common"; // 确保路径正确
+import { SPRINGBOOTURL } from "../service/common"; // 确保路径正确
 
-const ConversationsList = ({ userName, dateRange }) => {
+const ConversationsList = ({ userName }) => {
     const [conversations, setConversations] = useState([]);
     const [selectedConversationId, setSelectedConversationId] = useState(null);
 
@@ -40,17 +40,11 @@ const ConversationsList = ({ userName, dateRange }) => {
                         }
                     }));
 
-                    // Filter conversations by date range
-                    const filteredConversations = conversationsWithDates.filter(conversation => {
-                        const lastMessageDate = conversation.lastMessageDate;
-                        return !lastMessageDate || (lastMessageDate >= dateRange[0].toDate() && lastMessageDate <= dateRange[1].toDate());
-                    });
-
-                    setConversations(filteredConversations);
+                    setConversations(conversationsWithDates);
                 })
                 .catch(error => console.error('Error fetching conversations:', error));
         }
-    }, [userName, dateRange]);
+    }, [userName]);
 
     const handleConversationClick = (conversationId) => {
         setSelectedConversationId(conversationId);

@@ -21,8 +21,8 @@ public interface ConversationRepo extends JpaRepository<Conversation, Integer> {
     @Query("SELECT c FROM Conversation c JOIN c.partUserList u WHERE u.name = :userName")
     List<Conversation> findByName(@Param("userName") String userName);
 
-    @Query("SELECT c FROM Conversation c JOIN c.partUserList u1 JOIN c.partUserList u2 " +
-            "WHERE u1 = :user1 AND u2 = :user2")
+    @Query("SELECT c FROM Conversation c JOIN c.partUserList u WHERE u = :user1 AND :user2 MEMBER OF u.partConversationList")
     Optional<Conversation> findByUsers(@Param("user1") User user1, @Param("user2") User user2);
+
 
 }

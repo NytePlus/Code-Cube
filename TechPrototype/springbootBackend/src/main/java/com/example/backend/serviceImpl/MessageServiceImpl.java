@@ -58,24 +58,19 @@ public class MessageServiceImpl implements MessageService {
     }
 
     public Conversation createConversation(String currentUserName, String otherUserName) {
-        User currentUser = userRepo.findByName(currentUserName);
-        User otherUser = userRepo.findByName(otherUserName);
+        User user1 = userRepo.findByName(currentUserName);
+        User user2 = userRepo.findByName(otherUserName);
 
-        Optional<Conversation> existingConversation = conversationRepo.findByUsers(currentUser, otherUser);
 
-        if (existingConversation.isPresent())
-            return existingConversation.get();
+
         Conversation conversation = new Conversation();
-        conversationRepo.save(conversation);
-        UserConversation userConversation1 = new UserConversation();
-        userConversation1.setUser(currentUser);
-        userConversation1.setConversation(conversation);
-        userConversationRepo.save(userConversation1);
+        conversation.setPartUserList(Arrays.asList(user1, user2));
+        conversation = conversationRepo.save(conversation);
 
-        UserConversation userConversation2 = new UserConversation();
-        userConversation2.setUser(otherUser);
-        userConversation2.setConversation(conversation);
-        userConversationRepo.save(userConversation2);
+        user1.getPartConversationList().add(conversation);
+        user2.getPartConversationList().add(conversation);
+        userRepo.save(user1);
+        userRepo.save(user2);
 
         return conversation;
 
