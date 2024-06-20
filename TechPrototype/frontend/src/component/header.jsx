@@ -1,6 +1,6 @@
 import React from 'react';
 import {styled, alpha} from '@mui/material/styles';
-import {AppBar, Toolbar, IconButton, Typography, InputBase, Badge} from '@mui/material';
+import {AppBar, Toolbar, IconButton, Typography, InputBase, Badge, MenuItem, Menu} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -9,6 +9,9 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import {HeaderSearchBar, InputBaseWithoutCanlendar} from "./searchBar";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "./AuthProvider";
+import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined';
+import {useTranslation} from "react-i18next";
+import Divider from "@mui/material/Divider";
 
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 
@@ -55,6 +58,16 @@ export const StyledInputBase = styled(InputBase)(({theme}) => ({
 function PrimarySearchAppBar() {
     const navigate = useNavigate()
     const auth = useAuth()
+    const { t, i18n } = useTranslation();
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleTransClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleTransClose = (lang) => {
+        setAnchorEl(null);
+        if(lang)i18n.changeLanguage(lang)
+    };
 
     return (
         <AppBar position="static">
@@ -94,7 +107,21 @@ function PrimarySearchAppBar() {
                 <HeaderSearchBar/>
                 <div style={{flexGrow: 1}}/>
                 <div style={{display: 'flex', alignItems: 'center'}}>
-                    <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                    <IconButton size="large" color="inherit" onClick={handleTransClick}>
+                        <TranslateOutlinedIcon/>
+                    </IconButton>
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={() => handleTransClose(null)}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+                        <MenuItem onClick={() => handleTransClose('en')}>English</MenuItem>
+                        <MenuItem onClick={() => handleTransClose('zh')}>中文</MenuItem>
+                    </Menu>
+                    <IconButton size="large" color="inherit">
                         <Badge badgeContent={4} color="error">
                             <MailIcon/>
                         </Badge>
@@ -111,7 +138,6 @@ function PrimarySearchAppBar() {
                     <IconButton
                         size="large"
                         edge="end"
-                        aria-label="account of current user"
                         aria-controls="primary-search-account-menu"
                         aria-haspopup="true"
                         color="inherit"

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { List, ListItem, ListItemText, Divider } from '@mui/material';
+import {SPRINGBOOTURL} from "../service/common";
 
 const DiscussionDetail = () => {
     const { discussionId } = useParams();
     const [comments, setComments] = useState([]);
 
     useEffect(() => {
-        fetch(`/api/discussions/${discussionId}/comments`)
+        fetch( SPRINGBOOTURL + `/api/discussions/${discussionId}/comments`, {credentials: "include"})
             .then(response => response.json())
             .then(data => setComments(data))
             .catch(error => console.error('Error fetching comments:', error));

@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { List, ListItem, ListItemText, Divider, ListItemAvatar, Avatar } from '@mui/material';
-import DiscussionDetail from './DiscussionDetail'; // 确保路径正确
+import DiscussionDetail from './DiscussionDetail';
+import {SPRINGBOOTURL} from "../service/common"; // 确保路径正确
 
 const DiscussionList = ({ name }) => {
     const [discussions, setDiscussions] = useState([]);
     const [selectedDiscussionId, setSelectedDiscussionId] = useState(null);
 
     useEffect(() => {
-        fetch(`http://localhost:8081/api/discussions/${name}`)
+        fetch(SPRINGBOOTURL + `/api/discussions/${name}`, {credentials: "include"})
             .then(response => {
                 console.log('Response status:', response.status);
+
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
