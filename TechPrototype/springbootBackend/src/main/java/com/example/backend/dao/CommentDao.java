@@ -35,4 +35,8 @@ public class CommentDao {
     public List<Comment> findByDiscussionIdAndDateBetween(Integer discussionId, Date startDate, Date endDate) {
         return commentRepo.findByDiscussionIdAndDateBetween(discussionId, startDate, endDate);
     }
+
+    public Comment findTopByDiscussionIdOrderByDateDesc(Integer discussionId) {
+        return commentRepo.findTopByDiscussionIdOrderByDateDesc(discussionId);
+    }
 }

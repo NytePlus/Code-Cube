@@ -67,4 +67,14 @@ public class ForumServiceImpl implements ForumService {
         return commentDao.findByDiscussionIdAndDateBetween(discussionId, startDate, endDate);
 
     }
+
+    public Comment getLastCommentByDiscussion(Integer discussionId) {
+        return commentDao.findTopByDiscussionIdOrderByDateDesc(discussionId);
+
+    }
+
+
+    public List<Discussion> getAllDiscussions() {
+        return discussionDao.findAll();
+    }
 }

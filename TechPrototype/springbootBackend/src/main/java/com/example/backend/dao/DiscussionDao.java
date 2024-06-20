@@ -25,4 +25,8 @@ public class DiscussionDao {
     public Discussion save(Discussion discussion) {
         return discussionRepo.save(discussion);
     }
+
+    public List<Discussion> findAll() {
+        return discussionRepo.findAll();
+    }
 }

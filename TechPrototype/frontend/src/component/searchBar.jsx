@@ -23,6 +23,7 @@ import {useNavigate} from "react-router-dom";
 import {useAuth} from "./AuthProvider";
 import {displayFilterRepos} from "../page/HomePage";
 import {useFilter} from "./FilterProvider";
+import {useTranslation} from "react-i18next";
 
 const Search = styled('div')(({theme}) => ({
     position: 'relative',
@@ -44,6 +45,7 @@ export function HeaderSearchBar() {
     const navigate = useNavigate()
     const auth = useAuth()
     const filter = useFilter()
+    const { t } = useTranslation();
     const [text, setText] = useState('')
     const [activate, setActivate] = useState(false)
     const [date, setDate] = useState([dayjs("2020-01-01"), dayjs(moment().format('YYYY-MM-DD'))])
@@ -75,7 +77,7 @@ export function HeaderSearchBar() {
                         <IconButton sx={{p: '10px'}} aria-label="search" onClick={() => {}}>
                             <SearchIcon/>
                         </IconButton>
-                        <InputBase sx={{flex: 1}} placeholder="输入关键字"/>
+                        <InputBase sx={{flex: 1}} placeholder={t("Type in key words")}/>
                     </Search>
                 </Button>}
             <Dialog
@@ -84,30 +86,30 @@ export function HeaderSearchBar() {
                 PaperProps={{ sx: { position: "fixed", width: 1400, top: 10, left: 200, m: 0 } }}
             >
                 <Box sx={{display: 'flex'}}>
-                    <Tooltip title="按创建日期过滤" placement="bottom">
+                    <Tooltip title={t("Filter by created date")} placement="bottom">
                         <IconButton onClick={() => setFilterDate(!filterDate)}>
                             <CalendarMonthOutlinedIcon />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="按标签过滤" placement="bottom">
+                    <Tooltip title={t("Filter by label")} placement="bottom">
                         <IconButton sx={{ ml: -1 }} onClick={() => setFilterLabel(!filterLabel)}>
                             <LocalOfferOutlinedIcon/>
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="按拥有者过滤" placement="bottom">
+                    <Tooltip title={t("Filter by owner")} placement="bottom">
                         <IconButton sx={{ ml: -1 }} onClick={() => setFilterOwner(!filterOwner)}>
                             <PersonSearchOutlinedIcon/>
                         </IconButton>
                     </Tooltip>
                     <Divider sx={{ height: 28, mt: 1 }} orientation="vertical" />
-                    <Tooltip title="搜索仓库" placement="bottom">
+                    <Tooltip title={t("Search repos")} placement="bottom">
                         <IconButton>
                             <ViewInArOutlinedIcon/>
                         </IconButton>
                     </Tooltip>
                     <InputBase
                         sx={{ flex: 1 }}
-                        placeholder="输入仓库名" value={text}
+                        placeholder={t("Type in repos name")} value={text}
                         onChange={(event) => {setText(event.target.value)}}
                     />
                     {text.length > 0 && <IconButton sx={{p: '10px'}} onClick={() => {setText("")}}>
@@ -120,7 +122,7 @@ export function HeaderSearchBar() {
                 </Box>
                 {filterOwner &&
                     <Box sx={{display: 'flex', ml: 5, mt: 1, mb: 1}}>
-                        <Input placeholder="输入仓库所有者" onChange={(e) => setOwner(e.target.value)}/>
+                        <Input placeholder={t("Type in repos owner")} onChange={(e) => setOwner(e.target.value)}/>
                     </Box>}
                 {filterDate && <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer sx={{ml: 5, mr: 5, mt: 1, mb: 1}} components={['DateRangePicker']}>

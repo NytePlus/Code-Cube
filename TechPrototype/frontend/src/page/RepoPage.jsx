@@ -25,6 +25,7 @@ import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUpload
 import {Upload} from "antd";
 import {FileMarkdown} from "../component/FileMarkdown";
 import StarButton from "../component/StarButton";
+import {useTranslation} from "react-i18next";
 
 const CubeContext = createContext(null);
 const CubeDispatchContext = createContext(null);
@@ -171,6 +172,7 @@ const RepoPage = () => {
     const userRepo = useParams()
     const auth = useAuth()
     const navigate = useNavigate()
+    const { t } = useTranslation();
     const [repoData, setRepoData] = useState([])
     const [folder, setFolder] = useState([])
     const [cube, dispatch] = useReducer(cubeReducer, false)
@@ -297,15 +299,15 @@ const RepoPage = () => {
                                                             </Typography>
                                                             <Divider/>
                                                             <Typography variant="h4" sx={{mt: 1}}>
-                                                                Settings
+                                                                {t("Settings")}
                                                             </Typography>
-                                                            <StarButton path={repoData.path} initStar={repoData.star} text={"stars"}/>
+                                                            <StarButton path={repoData.path} initStar={repoData.star} text={t("stars")}/>
                                                             <Box sx={{display: 'flex'}}>
                                                                 <IconButton sx={{ml: 1}} onClick={downloadHandler}>
                                                                     <FileDownloadOutlinedIcon/>
                                                                 </IconButton>
                                                                 <Typography variant="p" sx={{ml:2, mt: 1}}>
-                                                                    下载项目文件压缩包
+                                                                    {t("Download Project File archive")}
                                                                 </Typography>
                                                             </Box>
                                                             <Box sx={{display: 'flex'}}>
@@ -319,7 +321,7 @@ const RepoPage = () => {
                                                                     <Button><DriveFolderUploadOutlinedIcon/></Button>
                                                                 </Upload>
                                                                 <Typography variant="p" sx={{mt: 1}}>
-                                                                    上传文件目录
+                                                                    {t("Upload file directory")}
                                                                 </Typography>
                                                             </Box>
                                                         </Box>}
@@ -351,6 +353,7 @@ const RepoPage = () => {
 };
 
 const About = ({repoData, folder}) => {
+    const { t } = useTranslation();
     return (<Timeline position="alternate">
         <TimelineItem>
             <TimelineOppositeContent color="text.secondary">
@@ -360,7 +363,7 @@ const About = ({repoData, folder}) => {
                 <TimelineDot />
                 <TimelineConnector />
             </TimelineSeparator>
-            <TimelineContent>star</TimelineContent>
+            <TimelineContent>{t("stars")}</TimelineContent>
         </TimelineItem>
         <TimelineItem>
             <TimelineOppositeContent color="text.secondary">
@@ -370,7 +373,7 @@ const About = ({repoData, folder}) => {
                 <TimelineDot />
                 <TimelineConnector />
             </TimelineSeparator>
-            <TimelineContent>创建时间</TimelineContent>
+            <TimelineContent>{t("created date")}</TimelineContent>
         </TimelineItem>
         <TimelineItem>
             <TimelineOppositeContent color="text.secondary">
@@ -380,7 +383,7 @@ const About = ({repoData, folder}) => {
                 <TimelineDot />
                 <TimelineConnector />
             </TimelineSeparator>
-            <TimelineContent>仓库状态</TimelineContent>
+            <TimelineContent>{t("repos status")}</TimelineContent>
         </TimelineItem>
         <TimelineItem>
             <TimelineOppositeContent color="text.secondary">
@@ -390,7 +393,7 @@ const About = ({repoData, folder}) => {
                 <TimelineDot />
                 <TimelineConnector />
             </TimelineSeparator>
-            <TimelineContent>文件大小</TimelineContent>
+            <TimelineContent>{t("File size")}</TimelineContent>
         </TimelineItem>
     </Timeline>)
 }

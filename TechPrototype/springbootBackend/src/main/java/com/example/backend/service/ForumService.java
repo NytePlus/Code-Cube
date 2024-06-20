@@ -18,4 +18,8 @@ public interface ForumService {
 
     public List<Comment> getCommentsByDate(Integer discussionId, Date date);
     public List<Comment> getCommentsByDateRange(Integer discussionId, Date startDate, Date endDate);
+
+    public Comment getLastCommentByDiscussion(Integer discussionId);
+
+    public List<Discussion> getAllDiscussions();
 }
