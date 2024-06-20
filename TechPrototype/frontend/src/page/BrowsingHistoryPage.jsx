@@ -29,7 +29,7 @@ import Header from "../component/header";
 import FilterListIcon from "@mui/icons-material/FilterList";
 
 export default function BrowsingHistoryPage() {
-    const [viewMode, setViewMode] = useState('list');
+    const [viewMode, setViewMode] = useState('chat');
     const { user } = useAuth();
     const [dateRange, setDateRange] = useState([dayjs('2024-04-17'), dayjs('2024-06-21')]);
     const [showDateFilter, setShowDateFilter] = useState(false);
