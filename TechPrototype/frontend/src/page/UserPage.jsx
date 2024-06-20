@@ -43,14 +43,6 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-export default function UserPage() {
-    const auth = useAuth();
-    const {user} = useParams();
-    const navigate = useNavigate();
-    const [profile, setProfile] = useState();
-    const [intro, setIntro] = useState("");
-    const [repos, setRepos] = useState([]);
-    const [introEdit, setIntroEdit] = useState(false);
 export default function UserPage()
 {
     const auth = useAuth()
