@@ -136,7 +136,7 @@ export function DiscussionExample({open, Zoffset}) {
         <>
             <FileHeader title={"Chat"}/>
 
-            
+
 
         </>}/>)
 }

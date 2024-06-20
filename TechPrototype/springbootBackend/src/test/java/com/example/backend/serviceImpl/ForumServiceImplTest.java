@@ -64,10 +64,10 @@ class ForumServiceImplTest {
     @Test
     void addComment() {
         Comment expectedComment = new Comment(1, "hhh", 1, null, null, null, null, null);
-        when(forumService.addComment(userId, discussionId, content)).thenReturn(expectedComment);
+        when(forumService.addComment("wcc", discussionId, content)).thenReturn(expectedComment);
 
-        Comment actualComment = forumService.addComment(userId, discussionId, content);
+        Comment actualComment = forumService.addComment("wcc", discussionId, content);
         assertNotNull(actualComment);
-        verify(forumService, times(1)).addComment(userId, discussionId, content);
+        verify(forumService, times(1)).addComment("wcc", discussionId, content);
     }
 }

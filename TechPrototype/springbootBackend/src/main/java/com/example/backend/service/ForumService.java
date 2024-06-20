@@ -12,7 +12,7 @@ public interface ForumService {
     public List<Comment> getCommentByDiscussion(Integer discussionId);
     public List<Discussion> getDiscussionsByUserId(Integer userId);
     public List<Discussion> getDiscussionsByUserName(String name);
-    public Comment addComment(Integer userId, Integer discussionId, String content);
+    public Comment addComment(String name, Integer discussionId, String content);
 
     public Discussion createDiscussion(String name, String title);
 

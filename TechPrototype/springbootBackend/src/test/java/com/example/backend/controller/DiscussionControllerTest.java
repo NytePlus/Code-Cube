@@ -47,12 +47,12 @@ public class DiscussionControllerTest {
     @Test
     void testAddComment() {
         Comment comment = new Comment();
-        when(forumService.addComment(anyInt(), anyInt(), anyString())).thenReturn(comment);
+        when(forumService.addComment(anyString(), anyInt(), anyString())).thenReturn(comment);
 
         ResponseEntity<Comment> response = discussionController.addComment(1, 1, Map.of("content", "Test content"));
 
         assertEquals(comment, response.getBody());
-        verify(forumService, times(1)).addComment(1, 1, "Test content");
+        verify(forumService, times(1)).addComment("wcc", 1, "Test content");
     }
 
     @Test

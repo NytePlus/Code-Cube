@@ -38,8 +38,8 @@ public class ForumServiceImpl implements ForumService {
         return discussionDao.findByInitUser(user);
     }
 
-    public Comment addComment(Integer userId, Integer discussionId, String content) {
-        User user = userDao.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+    public Comment addComment(String name, Integer discussionId, String content) {
+        User user = userDao.findByName(name);
         Discussion discussion = discussionDao.findById(discussionId).orElseThrow(() -> new RuntimeException("Discussion not found"));
         Comment comment = new Comment();
         comment.setContent(content);

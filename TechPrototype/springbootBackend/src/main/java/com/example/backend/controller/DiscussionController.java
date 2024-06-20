@@ -3,6 +3,8 @@ package com.example.backend.controller;
 import com.example.backend.domains.Comment;
 import com.example.backend.domains.Discussion;
 import com.example.backend.serviceImpl.ForumServiceImpl;
+import com.example.backend.utils.SessionUtils;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +34,14 @@ public class DiscussionController {
     public ResponseEntity<Comment> addComment(@PathVariable Integer discussionId,
                                               @RequestParam Integer userId,
                                               @RequestBody Map<String, String> requestBody) {
-        String content = requestBody.get("content");
-        Comment comment = forumServiceImpl.addComment(userId, discussionId, content);
-        return ResponseEntity.ok(comment);
+        HttpSession session = SessionUtils.getSession();
+        if (session != null) {
+            String name = (String) session.getAttribute("userId");
+            String content = requestBody.get("content");
+            Comment comment = forumServiceImpl.addComment(name, discussionId, content);
+            return ResponseEntity.ok(comment);
+        }
+        return null;
     }
 
     @CrossOrigin(origins = "http://localhost:3000" ,allowCredentials="true")
