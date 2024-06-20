@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { List, ListItem, ListItemText, Divider, ListItemAvatar, Avatar, Typography } from '@mui/material';
+import { List, ListItem, ListItemText, Divider, ListItemAvatar, Avatar, Typography, Button, Modal, Box, TextField } from '@mui/material';
 import DiscussionDetail from './DiscussionDetail';
-import {SPRINGBOOTURL} from "../service/common"; // 确保路径正确
+import { SPRINGBOOTURL } from "../service/common"; // 确保路径正确
+import { useAuth } from "../component/AuthProvider"; // 确保路径正确
 
 const DiscussionList = ({ name, dateRange }) => {
     const [discussions, setDiscussions] = useState([]);
     const [selectedDiscussionId, setSelectedDiscussionId] = useState(null);
     const [error, setError] = useState(null);
+    const [open, setOpen] = useState(false);
+    const [newDiscussionTitle, setNewDiscussionTitle] = useState('');
+    const auth = useAuth();
 
     useEffect(() => {
         const fetchDiscussions = async () => {
@@ -70,19 +74,50 @@ const DiscussionList = ({ name, dateRange }) => {
         setSelectedDiscussionId(null);
     };
 
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    const handleCreateDiscussion = async () => {
+        try {
+            const params = new URLSearchParams({
+                name: auth.user,
+                title: newDiscussionTitle
+            });
+
+            const response = await fetch(`${SPRINGBOOTURL}/api/discussions/create?${params.toString()}`, {
+                method: 'POST',
+                credentials: "include"
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const newDiscussion = await response.json();
+            setDiscussions([...discussions, newDiscussion]);
+            handleClose();
+        } catch (error) {
+            console.error('Error creating discussion:', error);
+        }
+    };
+
     return (
         <>
             {selectedDiscussionId ? (
                 <DiscussionDetail
                     discussionId={selectedDiscussionId}
-                    userId={3} // 你需要根据实际情况传递userId
+                    userId={4} // 你需要根据实际情况传递userId
                     onBack={handleBack}
                 />
             ) : (
                 <>
-                    <Typography variant="h4" gutterBottom>
-                        Discussions
-                    </Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                        <Typography variant="h4" gutterBottom>
+                            Discussions
+                        </Typography>
+                        <Button variant="contained" onClick={handleOpen}>
+                            Create New Discussion
+                        </Button>
+                    </Box>
                     <List>
                         {discussions.map((discussion) => (
                             <React.Fragment key={discussion.id}>
@@ -108,6 +143,42 @@ const DiscussionList = ({ name, dateRange }) => {
                             </React.Fragment>
                         ))}
                     </List>
+                    <Modal
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="modal-title"
+                        aria-describedby="modal-description"
+                    >
+                        <Box sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: 400,
+                            bgcolor: 'background.paper',
+                            border: '2px solid #000',
+                            boxShadow: 24,
+                            p: 4,
+                        }}>
+                            <Typography id="modal-title" variant="h6" component="h2">
+                                Create New Discussion
+                            </Typography>
+                            <TextField
+                                fullWidth
+                                label="Discussion Title"
+                                value={newDiscussionTitle}
+                                onChange={(e) => setNewDiscussionTitle(e.target.value)}
+                                sx={{ mt: 2 }}
+                            />
+                            <Button
+                                variant="contained"
+                                onClick={handleCreateDiscussion}
+                                sx={{ mt: 2 }}
+                            >
+                                Create
+                            </Button>
+                        </Box>
+                    </Modal>
                 </>
             )}
         </>
