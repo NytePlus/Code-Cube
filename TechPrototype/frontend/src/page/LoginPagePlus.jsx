@@ -4,10 +4,10 @@ import ViewInArIcon from "@mui/icons-material/ViewInAr";
 import {
     Avatar,
     Box,
-    Button,
+    Button, Divider,
     IconButton,
     Input,
-    InputLabel, Link, ListItem,
+    InputLabel, Link, List, ListItem,
     ListItemAvatar,
     ListItemText,
     Paper,
@@ -19,12 +19,13 @@ import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined
 import PublicOutlinedIcon from "@mui/icons-material/PublicOutlined";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
-import {FormControl, FormHelperText, TextField} from "@mui/joy";
+import {FormControl, FormHelperText, Textarea, TextField} from "@mui/joy";
 import {useAuth} from "../component/AuthProvider";
 import {ChatBox, ReceiverMessage, SenderMessage} from "mui-chat-box";
 import {SPRINGBOOTURL} from "../service/common";
 import Tag from "../component/tag";
 import StarButton from "../component/StarButton";
+import ReactMarkdown from "react-markdown";
 
 function FileHeader({title}){
     return (<div style={{display: 'flex'}}>
@@ -131,13 +132,44 @@ export function UploadCodeExample({open, Zoffset}) {
 
 export function DiscussionExample({open, Zoffset}) {
     const transform3d = "translate3d(1000px, -1414px, -1000px) rotateY(-225deg) rotateX(45deg)"
-        + "translateX(200px) translateY(-150px)"
+        + "translateX(300px) translateY(-150px)"
+    const messages = [{user: {name: "Nyte", avatar: "/SystemData/imgs/思索.jpg"}, date: "2024-6-19", content: "我遇到了一个问题"},
+        {user: {name: "xbc", avatar: "/SystemData/imgs/avatar-test.jpg"}, date: "2024-6-20", content: "可以尝试以下解决方法"}]
     return (<ExampleSide open={open} Zoffset={Zoffset} transform3d={transform3d} content={
         <>
             <FileHeader title={"Chat"}/>
+            <List>
+                {messages.map(msg => (
+                    <React.Fragment key={msg.id}>
+                        <ListItem alignItems="flex-start">
+                            <ListItemAvatar>
+                                <Link to={`/${msg.user?.name}/profile`} style={{ textDecoration: 'none' }}>
+                                    <Avatar src={msg.user?.avatar || ''} alt={msg.user?.name || 'Unknown'}>
+                                        {msg.user?.name ? msg.user.name[0] : 'U'}
+                                    </Avatar>
+                                </Link>
 
-
-
+                            </ListItemAvatar>
+                            <ListItemText
+                                primary={
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <span>{msg.user?.name || 'Unknown User'}</span>
+                                        <Typography variant="body2" color="textSecondary">
+                                            {new Date(msg.date).toLocaleString()}
+                                        </Typography>
+                                    </Box>
+                                }
+                                secondary={<ReactMarkdown>{msg.content}</ReactMarkdown>}
+                            />
+                        </ListItem>
+                        <Divider variant="inset" component="li" />
+                    </React.Fragment>
+                ))}
+            </List>
+            <Textarea rows={4} variant="outlined" style={{ marginTop: 16 }}/>
+            <Button variant="contained" color="primary" style={{ marginTop: 8 }}>
+                Send
+            </Button>
         </>}/>)
 }
 
@@ -168,11 +200,49 @@ export function AgentExample({open, Zoffset}) {
 export function OnlineRepoExample({open, Zoffset}) {
     const transform3d = "translate3d(-1000px, -1414px, 1000px) rotateY(-45deg) rotateX(45deg)"
          + "translateX(-200px) translateY(150px)"
+    const examples = [{name: "/Nyte/Code Cube", avatar: "/SystemData/imgs/思索.jpg", intro: "这是一个Code Cube的项目代码"},
+        {name: "/xbc/LSM tree", avatar: "/SystemData/imgs/Sleeping_Fox.png", intro: "lsm tree大作业代码"},
+        {name: "/gcw/hw11-handout", avatar: "/SystemData/imgs/avatar-test.jpg", intro: "sds homework 11"}]
     return (<ExampleSide open={open} Zoffset={Zoffset} transform3d={transform3d} content={
         <>
             <FileHeader title={"Online Repository"}/>
 
-            {/*//repos*/}
+            {examples.map((item) => {
+                return (<Box sx={{minHeight: 100, border: 1, borderColor: 'grey.300', my: 1, borderRadius: 2}}>
+                    <ListItem alignItems="flex-start" sx={{h: 50}}>
+                        <ListItemAvatar>
+                            <Avatar src={SPRINGBOOTURL + item.avatar}/>
+                        </ListItemAvatar>
+                        <ListItemText
+                            primary={
+                                <Link>
+                                    <Typography variant="h6" sx={{mt: -1}}>
+                                        {item.name}
+                                    </Typography>
+                                </Link>}
+                            secondary={
+                                <>
+                                    <Typography
+                                        sx={{display: 'block'}}
+                                        component="span"
+                                        variant="body2"
+                                        color="text.primary"
+                                    >
+                                        {item.intro}
+                                    </Typography>
+                                    <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                                        <Box sx={{flexGrow: 1}}></Box>
+                                        <Typography variant="p" sx={{mt: 1}}>
+                                            "2024-6-19"
+                                        </Typography>
+                                    </Box>
+                                </>
+                            }
+                        />
+                        <StarButton initStar={10}/>
+                    </ListItem>
+                </Box>)
+            })}
 
         </>}/>)
 }
