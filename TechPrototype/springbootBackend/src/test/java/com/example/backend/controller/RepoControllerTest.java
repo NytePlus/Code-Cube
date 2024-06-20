@@ -124,7 +124,7 @@ public class RepoControllerTest {
         List<Repo> repos = new ArrayList<>();
         when(repoService.getAllByUser(anyString())).thenReturn(repos);
 
-        List<Repo> response = repoController.getAllRepoByUserHandler();
+        List<Repo> response = repoController.getAllRepoByUserHandler("");
 
         assertEquals(repos, response);
         verify(repoService, times(1)).getAllByUser(name);

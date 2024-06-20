@@ -1,7 +1,7 @@
 import {get, getJson, post, SPRINGBOOTURL, upload} from "./common";
 
-export async function getProfile(){
-    let url = `${SPRINGBOOTURL}/user`
+export async function getProfile(name){
+    let url = `${SPRINGBOOTURL}/user?name=${name}`
     let res
     try{
         res = await getJson(url)

@@ -5,6 +5,8 @@ import com.example.backend.repository.FileRepo;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class FileDao {
     @Resource
@@ -14,5 +16,8 @@ public class FileDao {
     }
     public File findByPath(String path){
         return fileRepo.findByPath(path);
+    }
+    public List<File> findByPref(String path){
+        return fileRepo.findByPref(path);
     }
 }

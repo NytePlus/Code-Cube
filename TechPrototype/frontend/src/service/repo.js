@@ -73,10 +73,10 @@ export async function getRepoByFilter(data){
 }
 
 export async function getAllRepoByUser(data){
-    const url = SPRINGBOOTURL + "/repoGetByUser"
+    const url = SPRINGBOOTURL + `/repoGetByUser?target=${data}`
     let res
     try{
-        res = await post(url, data)
+        res = await getJson(url)
     }catch(e){
         console.error(e)
         res = []
@@ -98,6 +98,15 @@ export async function getFile(data){
 
 export async function downloadFile(data){
     const url = SPRINGBOOTURL + "/fileDownload"
+    try {
+        await download(url, data)
+    }catch (e){
+        console.error(e)
+    }
+}
+
+export async function downloadRepo(data){
+    const url = SPRINGBOOTURL + "/repoDomwload"
     try {
         await download(url, data)
     }catch (e){

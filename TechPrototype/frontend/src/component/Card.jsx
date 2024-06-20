@@ -15,6 +15,7 @@ import rehypeRaw from "rehype-raw";
 import {a11yLight, docco} from "react-syntax-highlighter/src/styles/hljs";
 import SyntaxHighlighter from "react-syntax-highlighter/dist/cjs/light";
 import FilterNoneOutlinedIcon from '@mui/icons-material/FilterNoneOutlined';
+import {FileMarkdown} from "./FileMarkdown";
 
 const style = {
     padding: '0.5rem 1rem',
@@ -123,14 +124,7 @@ export const DragCard = ({ index, moveCard, card, id}) => {
                     <ClearOutlinedIcon/>
                 </IconButton>
             </div>
-            {type === "txt"?
-                <Typography sx={{whiteSpace: "pre-wrap", mt: 1}} variant="p">{card.text}</Typography>:
-                type === "md"?
-                    <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw, rehypeHighlight]}>{card.text}</Markdown>:
-                type === "py"?
-                    <SyntaxHighlighter language="python" style={a11yLight}>{card.text}</SyntaxHighlighter>:
-                    <div><Typography sx={{whiteSpace: "pre-wrap", mt: 1, color:"red"}} variant="h6">暂不支持的预览类型</Typography>{card.text}</div>
-            }
+            <FileMarkdown text={card.text} type={type}/>
             {card.child}
         </Card>)
 }

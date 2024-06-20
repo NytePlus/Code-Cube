@@ -38,7 +38,7 @@ const RepoList = ({ repos, viewMode, onDragEnd }) => {
                                             ref={provided.innerRef}
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
-                                            sx={{ border: 1, borderColor: 'grey.300', my: 1, borderRadius: 2 }}
+                                            sx={{ minHeight: 100, border: 1, borderColor: 'grey.300', my: 1, borderRadius: 2 }}
                                         >
                                             <ListItem alignItems="flex-start" sx={{h: 50}}>
                                                 <ListItemAvatar>
@@ -66,6 +66,12 @@ const RepoList = ({ repos, viewMode, onDragEnd }) => {
                                                                     <Tag key={tag.name} label={tag.name} />
                                                                 ))}
                                                             </div>
+                                                            <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                                                                <Box sx={{flexGrow: 1}}></Box>
+                                                                <Typography variant="p" sx={{mt: 1}}>
+                                                                    {repo.date}
+                                                                </Typography>
+                                                            </Box>
                                                         </>
                                                     }
                                                 />

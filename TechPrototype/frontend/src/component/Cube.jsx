@@ -42,25 +42,27 @@ function File({item})
     const auth = useAuth()
     const [hover, setHover] = useState(false)
     const dispatch = useFileDispatch();
-    function onMouseEnterHandler()
+    const preview = usePreviewDispatch()
+    async function onMouseEnterHandler()
     {
         setHover(true)
-        // previewDispatch({type: 'preview',
-        //     info: {
-        //         layer: layer,
-        //         name: name,
-        //     }
-        // });
+        let data = {
+            userDTO: {
+                name: auth.user,
+                password: auth.token
+            },
+            path: item.path}
+        let file = await getFile(data);
+        preview.filePreviewDispatch({type: 'preview',
+            file: file
+        });
     }
     function onMouseLeaveHandler()
     {
         setHover(false)
-        // previewDispatch({type: 'endpreview',
-        //     info: {
-        //         layer: layer,
-        //         name: name,
-        //     }
-        // });
+        preview.filePreviewDispatch({type: 'endpreview',
+            file: null
+        });
     }
     async function onMouseDownHandler()
     {
@@ -89,12 +91,12 @@ function File({item})
 function Folder({name, layer, disChild, setDisChild})
 {
     const dispatch = useLayersDispatch();
-    const previewDispatch = usePreviewDispatch();
+    const preview = usePreviewDispatch();
     const [hover, setHover] = useState(false)
     function onMouseEnterHandler()
     {
         setHover(true)
-        previewDispatch({type: 'preview',
+        preview.previewDispatch({type: 'preview',
             info: {
                 layer: layer,
                 name: name,
@@ -104,7 +106,7 @@ function Folder({name, layer, disChild, setDisChild})
     function onMouseLeaveHandler()
     {
         setHover(false)
-        previewDispatch({type: 'endpreview',
+        preview.previewDispatch({type: 'endpreview',
             info: {
                 layer: layer,
                 name: name,
