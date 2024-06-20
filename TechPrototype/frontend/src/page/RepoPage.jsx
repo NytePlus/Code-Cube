@@ -24,6 +24,7 @@ import Divider from "@mui/material/Divider";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import {Upload} from "antd";
 import {FileMarkdown} from "../component/FileMarkdown";
+import StarButton from "../component/StarButton";
 
 const CubeContext = createContext(null);
 const CubeDispatchContext = createContext(null);
@@ -298,6 +299,15 @@ const RepoPage = () => {
                                                             <Typography variant="h4" sx={{mt: 1}}>
                                                                 Settings
                                                             </Typography>
+                                                            <StarButton path={repoData.path} initStar={repoData.star} text={"stars"}/>
+                                                            <Box sx={{display: 'flex'}}>
+                                                                <IconButton sx={{ml: 1}} onClick={downloadHandler}>
+                                                                    <FileDownloadOutlinedIcon/>
+                                                                </IconButton>
+                                                                <Typography variant="p" sx={{ml:2, mt: 1}}>
+                                                                    下载项目文件压缩包
+                                                                </Typography>
+                                                            </Box>
                                                             <Box sx={{display: 'flex'}}>
                                                                 <Upload
                                                                     multiple={true}
@@ -310,14 +320,6 @@ const RepoPage = () => {
                                                                 </Upload>
                                                                 <Typography variant="p" sx={{mt: 1}}>
                                                                     上传文件目录
-                                                                </Typography>
-                                                            </Box>
-                                                            <Box sx={{display: 'flex'}}>
-                                                                <IconButton sx={{ml: 1}} onClick={downloadHandler}>
-                                                                    <FileDownloadOutlinedIcon/>
-                                                                </IconButton>
-                                                                <Typography variant="p" sx={{ml:2, mt: 1}}>
-                                                                    下载项目文件压缩包
                                                                 </Typography>
                                                             </Box>
                                                         </Box>}

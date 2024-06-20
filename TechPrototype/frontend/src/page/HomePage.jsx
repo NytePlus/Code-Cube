@@ -51,10 +51,12 @@ import {MuiChipsInput} from "mui-chips-input";
 import {useFilter} from "../component/FilterProvider";
 import {useNavigate} from "react-router-dom";
 import {Textarea} from "@mui/joy";
+import { useTranslation } from 'react-i18next';
 
 const HomePage = () => {
     const auth = useAuth()
     const filter = useFilter()
+    const { t } = useTranslation();
     const navigate = useNavigate()
     const [snack, setSnack] = useState(false)
     const [viewMode, setViewMode] = useState('list'); // 默认视图模式为列表
@@ -162,7 +164,7 @@ const HomePage = () => {
                     variant="filled"
                     sx={{ width: '100%' }}
                 >
-                    项目创建成功！
+                    {t("项目创建成功！")}
                 </Alert>
             </Snackbar>
             <Dialog
@@ -175,7 +177,7 @@ const HomePage = () => {
                     open={repoCreateOpen}
                     onClose={handleCreateRepoClose}>
                     <DialogTitle id="alert-dialog-title" sx={{display: 'flex'}}>
-                        {"新建仓库"}
+                        {t("Create Repository")}
                     </DialogTitle>
                     <DialogContent>
                         <Box sx={{display: 'flex'}}>
