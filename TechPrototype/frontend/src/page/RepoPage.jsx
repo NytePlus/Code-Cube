@@ -393,7 +393,7 @@ const About = ({repoData, folder}) => {
                 <TimelineDot />
                 <TimelineConnector />
             </TimelineSeparator>
-            <TimelineContent>{t(z)}</TimelineContent>
+            <TimelineContent>{t("File size")}</TimelineContent>
         </TimelineItem>
     </Timeline>)
 }
