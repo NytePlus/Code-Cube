@@ -21,4 +21,8 @@ public class DiscussionDao {
     public List<Discussion> findByInitUser(User user) {
         return discussionRepo.findByInitUser(user);
     }
+
+    public Discussion save(Discussion discussion) {
+        return discussionRepo.save(discussion);
+    }
 }

@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Box, Avatar, Typography, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
+import {getJson, SPRINGBOOTURL} from "../service/common";
 
 const UserDiscussions = ({ userId }) => {
     const [discussions, setDiscussions] = useState([]);
 
     useEffect(() => {
-        axios.get(`/api/discussions/user/${userId}`)
-            .then(response => {
-                setDiscussions(response.data);
-            })
-            .catch(error => {
+        const fetchDiscussions = async () => {
+            try {
+                const response = await getJson(`${SPRINGBOOTURL}/api/discussions/user/${userId}`);
+                setDiscussions(response);
+            } catch (error) {
                 console.error('Error fetching discussions:', error);
-            });
+            }
+        };
+
+        if (userId) {
+            fetchDiscussions();
+        }
     }, [userId]);
 
     return (

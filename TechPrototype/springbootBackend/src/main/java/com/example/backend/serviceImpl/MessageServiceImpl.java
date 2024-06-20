@@ -10,8 +10,10 @@ import com.example.backend.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MessageServiceImpl implements MessageService {
@@ -48,5 +50,19 @@ public class MessageServiceImpl implements MessageService {
 
     public List<Conversation> getConversationsByUserName(String name) {
         return conversationRepo.findByName(name);
+    }
+
+    public Conversation createConversation(String currentUserName, String otherUserName) {
+        User currentUser = userRepo.findByName(currentUserName);
+        User otherUser = userRepo.findByName(otherUserName);
+
+        Optional<Conversation> existingConversation = conversationRepo.findByUsers(currentUser, otherUser);
+
+        if (existingConversation.isPresent())
+            return existingConversation.get();
+        List<User> partUserList = Arrays.asList(currentUser, otherUser);
+        Conversation conversation = new Conversation(partUserList);
+
+        return conversationRepo.save(conversation);
     }
 }

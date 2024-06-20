@@ -5,6 +5,8 @@ import com.example.backend.repository.CommentRepo;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -24,4 +26,13 @@ public class CommentDao {
         return savedComment;
     }
 
+    public List<Comment> findByDiscussionIdAndDate(Integer discussionId, Date date) {
+
+            return commentRepo.findByDiscussionIdAndDate(discussionId, date);
+
+    }
+
+    public List<Comment> findByDiscussionIdAndDateBetween(Integer discussionId, Date startDate, Date endDate) {
+        return commentRepo.findByDiscussionIdAndDateBetween(discussionId, startDate, endDate);
+    }
 }
