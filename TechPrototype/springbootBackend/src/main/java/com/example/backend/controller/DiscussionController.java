@@ -85,4 +85,20 @@ public class DiscussionController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    @GetMapping("/{discussionId}/comments/last")
+    public ResponseEntity<Date> getLastCommentDateByDiscussion(@PathVariable Integer discussionId) {
+        Comment lastComment = forumServiceImpl.getLastCommentByDiscussion(discussionId);
+        if (lastComment != null) {
+            return ResponseEntity.ok(lastComment.getDate());
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    @GetMapping("/all")
+    public ResponseEntity<List<Discussion>> getAllDiscussions() {
+        List<Discussion> discussions = forumServiceImpl.getAllDiscussions();
+        return ResponseEntity.ok(discussions);
+    }
 }

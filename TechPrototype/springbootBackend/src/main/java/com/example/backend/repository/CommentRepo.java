@@ -16,4 +16,5 @@ public interface CommentRepo extends JpaRepository<Comment, Integer> {
 
     List<Comment> findByDiscussionIdAndDateBetween(Integer discussionId, Date startDate, Date endDate);
 
+    Comment findTopByDiscussionIdOrderByDateDesc(Integer discussionId);
 }

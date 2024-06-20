@@ -43,6 +43,14 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
+export default function UserPage() {
+    const auth = useAuth();
+    const {user} = useParams();
+    const navigate = useNavigate();
+    const [profile, setProfile] = useState();
+    const [intro, setIntro] = useState("");
+    const [repos, setRepos] = useState([]);
+    const [introEdit, setIntroEdit] = useState(false);
 export default function UserPage()
 {
     const auth = useAuth()
@@ -54,42 +62,69 @@ export default function UserPage()
     const [repos, setRepos] = useState([])
     const [introEdit, setIntroEdit] = useState(false)
 
-    const getProfileData = async () =>{
-        let profile = await getProfile(user)
-        if(profile === 401)
-            navigate('/')
+    const getProfileData = async () => {
+        let profile = await getProfile(user);
+        if (profile === 401)
+            navigate('/');
         else {
-            setProfile(profile)
-            setIntro(profile.introduction)
+            setProfile(profile);
+            setIntro(profile.introduction);
         }
-    }
+    };
 
     const getRepoData = async () => {
         let myRepos = await getAllRepoByUser(user);
         setRepos(myRepos);
-    }
+    };
 
     const handleIntroSubmit = () => {
-        changeIntro(intro)
-        setIntroEdit(false)
-        setIntro(intro)
-    }
+        changeIntro(intro);
+        setIntroEdit(false);
+        setIntro(intro);
+    };
 
-    useEffect(() =>{
-        getProfileData()
-        getRepoData()
-    }, [])
+    useEffect(() => {
+        getProfileData();
+        getRepoData();
+    }, []);
+
+    const handleSendMessage = async () => {
+        try {
+            const params = new URLSearchParams();
+            params.append('currentUser', auth.user);
+            params.append('otherUser', profile.name);
+
+            const response = await fetch(`${SPRINGBOOTURL}/api/conversations/create`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded', // 设置为表单数据类型
+                },
+                credentials: "include",
+                body: params
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const conversation = await response.json();
+            navigate(`/history`);
+        } catch (error) {
+            console.error('Error creating conversation:', error);
+        }
+    };
+
 
     return (
-        profile?<>
+        profile ? <>
             <Header />
-            <RightTools/>
+            <RightTools />
             <div style={{marginTop: '3%', marginLeft: '10%', marginRight: '10%', display: 'flex'}}>
                 <div style={{width: 300}}>
                     {profile.avatar ?
                         <Avatar sx={{width: 300, height: 300, border: '1px solid #bdbdbd'}} alt="User Avatar"
-                                src={`${SPRINGBOOTURL}${profile.avatar}`}/>:
-                        <Avatar sx={{width: 300, height: 300}} >{profile.name}</Avatar>}
+                                src={`${SPRINGBOOTURL}${profile.avatar}`}/> :
+                        <Avatar sx={{width: 300, height: 300}}>{profile.name}</Avatar>}
                     <Typography variant="h5" color="gray " sx={{flexGrow: 1, padding: 1}}>
                         {profile.name}
                     </Typography>
@@ -100,9 +135,17 @@ export default function UserPage()
                             startIcon={<CloudUploadIcon />}>
                         {t("Upload avatar")}
                         <VisuallyHiddenInput type="file" onChange={(e) => changeAvatar(e.target.files[0])}/>
-                    </Button><br/>
-                    <WorkspacePremiumIcon/>{t("Loyal reader: achieved")}<br/>
-                    <BadgeOutlinedIcon/>{t("Real name authentication: done")}
+                    </Button>
+                    {auth.user !== profile.name && (
+                        <Button variant="contained" fullWidth
+                                sx={{mt: 2}}
+                                onClick={handleSendMessage}>
+                            发送私信
+                        </Button>
+                    )}
+                    <br/>
+                    <WorkspacePremiumIcon />Loyal reader: achieve<br/>
+                    <BadgeOutlinedIcon />Real name authentication: done
                 </div>
                 <div style={{
                     width: 1000,
@@ -117,14 +160,14 @@ export default function UserPage()
                             <Typography variant="h6" sx={{mt: 1}}>{t("Self Introduction")}</Typography>
                             <Box sx={{flexGrow: 1}}/>
                             {introEdit && <IconButton size="large" color="inherit" onClick={handleIntroSubmit}>
-                                <CheckOutlinedIcon/>
+                                <CheckOutlinedIcon />
                             </IconButton>}
                             <IconButton size="large" color="inherit" onClick={() => setIntroEdit(!introEdit)}>
-                                {introEdit ? <ClearOutlinedIcon/>: <CreateOutlinedIcon/>}
+                                {introEdit ? <ClearOutlinedIcon /> : <CreateOutlinedIcon />}
                             </IconButton>
                         </Box>
                         {introEdit ?
-                            <Textarea sx={{mr: 2, mb: 1}} onChange={(e) => setIntro(e.target.value)}/>
+                            <Textarea sx={{mr: 2, mb: 1}} onChange={(e) => setIntro(e.target.value)} />
                             :
                             <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw, rehypeHighlight]}>{`\`\`\`${profile.introduction}`}</Markdown>}
                     </Card>
@@ -149,12 +192,12 @@ export default function UserPage()
                                     <div style={{display: 'flex'}}>
                                         <Typography sx={{mt: 1}} variant="h5">{auth.user}/{item.name}</Typography>
                                         <Box sx={{flexGrow: 1}}/>
-                                        <IconButton size="large" color="inherit" onClick={()=>navigate(`${item.path}`)}>
-                                            <CreateOutlinedIcon/>
+                                        <IconButton size="large" color="inherit" onClick={() => navigate(`${item.path}`)}>
+                                            <CreateOutlinedIcon />
                                         </IconButton>
                                     </div>
                                     <Box sx={{display: 'flex'}}>
-                                        <StarOutlineRoundedIcon/>
+                                        <StarOutlineRoundedIcon />
                                         <Box style={{marginLeft: 1, color: "gray"}}>{item.star}</Box>
                                     </Box>
                                     <p style={{color: "gray"}}>{item.introduction}</p>
@@ -163,10 +206,10 @@ export default function UserPage()
                         })}
                         <Card sx={{pl: 3, minHeight: 150, height: 'min-content'}}>
                             <div style={{display: 'flex'}}>
-                                <Typography sx={{mt: 1}} variant="h5">{t("New Receiver")}</Typography>
+                                <Typography sx={{mt: 1}} variant="h5">New Receiver</Typography>
                                 <Box sx={{flexGrow: 1}}/>
                                 <IconButton size="large" color="inherit">
-                                    <AddOutlinedIcon/>
+                                    <AddOutlinedIcon />
                                 </IconButton>
                             </div>
                             <p style={{color: "gray"}}>{t("Address")}</p>
@@ -196,7 +239,7 @@ export default function UserPage()
                                         <Typography sx={{mt: 1}} variant="h5">{item.method}</Typography>
                                         <Box sx={{flexGrow: 1}}/>
                                         <IconButton size="large" color="inherit">
-                                            <CreateOutlinedIcon/>
+                                            <CreateOutlinedIcon />
                                         </IconButton>
                                     </div>
                                     <p style={{color: "gray"}}>{item.name}</p>
@@ -209,7 +252,7 @@ export default function UserPage()
                                 <Typography sx={{mt: 1}} variant="h5">{t("New Payment")}</Typography>
                                 <Box sx={{flexGrow: 1}}/>
                                 <IconButton size="large" color="inherit">
-                                    <AddOutlinedIcon/>
+                                    <AddOutlinedIcon />
                                 </IconButton>
                             </div>
                             <p style={{color: "gray"}}>{t("Username")}</p>
@@ -218,6 +261,6 @@ export default function UserPage()
                     </div>
                 </div>
             </div>
-        </>: <></>
+        </> : <></>
     )
 }
