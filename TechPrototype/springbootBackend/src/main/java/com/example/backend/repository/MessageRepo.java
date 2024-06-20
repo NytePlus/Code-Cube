@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface MessageRepo extends JpaRepository<Message, Integer> {
     List<Message> findByConversationId(Integer conversationId);
+
+    Message findTopByConversationIdOrderByDateDesc(Integer conversationId);
 }

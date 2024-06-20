@@ -12,4 +12,6 @@ public interface UserService {
     public Boolean changeAvatar(HttpServletRequest request, String name);
     public User getProfile(String name);
     public Boolean changeIntroduction(String introduciton, String name);
+
+    public User getUserByName(String name);
 }

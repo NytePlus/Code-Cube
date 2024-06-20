@@ -3,8 +3,10 @@ package com.example.backend.serviceImpl;
 import com.example.backend.domains.Conversation;
 import com.example.backend.domains.Message;
 import com.example.backend.domains.User;
+import com.example.backend.domains.UserConversation;
 import com.example.backend.repository.ConversationRepo;
 import com.example.backend.repository.MessageRepo;
+import com.example.backend.repository.UserConversationRepository;
 import com.example.backend.repository.UserRepo;
 import com.example.backend.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ import java.util.Optional;
 public class MessageServiceImpl implements MessageService {
     @Autowired
     private MessageRepo messageRepo;
+
+    @Autowired
+    private UserConversationRepository userConversationRepo;
 
     @Autowired
     private UserRepo userRepo;
@@ -60,9 +65,25 @@ public class MessageServiceImpl implements MessageService {
 
         if (existingConversation.isPresent())
             return existingConversation.get();
-        List<User> partUserList = Arrays.asList(currentUser, otherUser);
-        Conversation conversation = new Conversation(partUserList);
+        Conversation conversation = new Conversation();
+        conversationRepo.save(conversation);
+        UserConversation userConversation1 = new UserConversation();
+        userConversation1.setUser(currentUser);
+        userConversation1.setConversation(conversation);
+        userConversationRepo.save(userConversation1);
 
-        return conversationRepo.save(conversation);
+        UserConversation userConversation2 = new UserConversation();
+        userConversation2.setUser(otherUser);
+        userConversation2.setConversation(conversation);
+        userConversationRepo.save(userConversation2);
+
+        return conversation;
+
+    }
+
+
+
+    public Message getLastMessageByConversationId(Integer conversationId) {
+        return messageRepo.findTopByConversationIdOrderByDateDesc(conversationId);
     }
 }

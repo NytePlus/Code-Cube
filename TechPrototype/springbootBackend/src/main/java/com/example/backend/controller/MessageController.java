@@ -58,4 +58,16 @@ public class MessageController {
         Conversation conversation = messageServiceImpl.createConversation(currentUser, otherUser);
         return ResponseEntity.ok(conversation);
     }
+
+    // 获取特定对话的最后一条消息的发布时间
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    @GetMapping("/{conversationId}/last-message-date")
+    public ResponseEntity<String> getLastMessageDateByConversationId(@PathVariable Integer conversationId) {
+        Message lastMessage = messageServiceImpl.getLastMessageByConversationId(conversationId);
+        if (lastMessage != null) {
+            return ResponseEntity.ok(lastMessage.getDate().toString());
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
 }
